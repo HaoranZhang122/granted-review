@@ -1,0 +1,23 @@
+{
+ "id": "F7",
+ "section": "findings",
+ "order": 7,
+ "kind": "review",
+ "title": "The move costs about $27,700 once and saves about $2,700 per month",
+ "summary": "The estimate covers 31 engineer-days and 6 weeks of staging. Approve a one-time budget of $30,000, which includes a buffer of about 8%.",
+ "priority": "Low",
+ "tag": "Report §3.7",
+ "blocks": [
+  {"title": "What we estimated", "html": "<ul><li><b>[INFERRED]</b> The one-time cost is about $27,700. Engineering is about 90% of it. [src: report.md]</li><li><b>[READ]</b> The running cost goes from $7,000 to $4,300 per month, from the provider price list. The extended support fee for MySQL 5.7 stops. [src: report.md]</li><li><b>[INFERRED]</b> The saving is $2,700 per month. Payback takes about 10 months.</li></ul>"},
+  {"title": "What is not certain", "html": "<ul><li><b>[UNVERIFIED]</b> The price list does not show a contract discount for the shop.</li><li><b>[INFERRED]</b> The engineering days come from the effort of each finding. The largest items are F5 (8 days) and F6 (6.5 days).</li><li>The rollback window (D3) adds about $137 per day while MySQL runs.</li></ul>"},
+  {"title": "Proposed action", "html": "<p>Approve a one-time budget of $30,000. If the cost goes above $27,700, I will tell you before I spend the buffer.</p>"}
+ ],
+ "tables_html": "<h4>One-time cost</h4><table><thead><tr><th>Item</th><th>Cost</th></tr></thead><tbody><tr><td>Engineering: 31 engineer-days at $800</td><td>$24,800</td></tr><tr><td>Full-size PostgreSQL staging, 6 weeks</td><td>$1,900</td></tr><tr><td>CDC tool hosting, 6 weeks</td><td>$600</td></tr><tr><td>Load test tooling</td><td>$400</td></tr><tr><td><b>Total</b></td><td><b>$27,700</b></td></tr></tbody></table><h4>Running cost per month</h4><table><thead><tr><th>Item</th><th>Today (MySQL 5.7)</th><th>After (PostgreSQL 16)</th></tr></thead><tbody><tr><td>Primary and replica</td><td>$4,100</td><td>$4,300</td></tr><tr><td>Extended support fee</td><td>$2,900</td><td>$0</td></tr><tr><td><b>Total</b></td><td><b>$7,000</b></td><td><b>$4,300</b></td></tr></tbody></table>",
+ "facts": [
+  {"label": "Budget asked", "value": "$30,000"},
+  {"label": "Payback", "value": "About 10 months"},
+  {"label": "Owner", "value": "You (budget)"}
+ ],
+ "related": ["D2", "D3"],
+ "sources": [{"label": "Report §3.7", "href": "report.md"}]
+}

@@ -1,0 +1,28 @@
+{
+ "id": "D4",
+ "section": "decisions",
+ "order": 4,
+ "kind": "decision",
+ "title": "Select the freeze period for schema changes around the cutover",
+ "summary": "A schema change during replication can stop the CDC link. The plan recommends a full freeze from the start of the copy to the end of the rollback window: 12 days.",
+ "priority": "Medium",
+ "tag": "Report §5",
+ "blocks": [
+  {"title": "The problem", "html": "<p>The CDC tool maps each MySQL column to a PostgreSQL column. If a team changes the schema on one side only, the mapping breaks and the replication stops.</p>"},
+  {"title": "What we found", "html": "<ul><li><b>[TESTED]</b> In staging, the CDC tool stopped when I added a column on MySQL only. [src: report.md]</li><li><b>[READ]</b> The team merged 9 schema changes in the last 90 days, about 0.7 per week. [src: report.md]</li><li><b>[READ]</b> The peak freeze already blocks all production changes from 20 November 2026 to 4 January 2027. [src: report.md]</li></ul>"},
+  {"title": "Why it matters", "html": "<p>With option a, teams cannot change the schema from 20 November to 17 January. About 1–2 planned changes move to after 17 January. <b>[INFERRED]</b></p>"}
+ ],
+ "options": [
+  {"key": "a", "label": "Full freeze from the start of the copy to the end of the rollback window", "detail_html": "<p><b>Dates:</b> 5–17 January 2027 (12 days), with D3 option b. <b>Cost:</b> about 1–2 schema changes wait. <b>Risk:</b> low.</p>", "recommended": true},
+  {"key": "b", "label": "Short freeze from 1 day before to 2 days after the cutover", "detail_html": "<p><b>Dates:</b> 9–12 January 2027 (3 days). Outside the freeze, each change must go to MySQL, to PostgreSQL and to the CDC mapping in one release. <b>Risk:</b> medium. One missed step stops the replication.</p>"},
+  {"key": "c", "label": "No freeze, with a dual-apply procedure for each change", "detail_html": "<p><b>Effort:</b> 2 more days to write and test the procedure. Each change needs two reviewers. <b>Risk:</b> high, most of all on the night of the cutover.</p>"}
+ ],
+ "recommendation_html": "<p>Option a. It delays only 1–2 changes. It removes the most common cause of a stopped replication.</p>",
+ "facts": [
+  {"label": "Decide by", "value": "11 December 2026"},
+  {"label": "Depends on", "value": "D3 (the end of the window)"},
+  {"label": "Owner", "value": "You, with the team leads"}
+ ],
+ "related": ["D3", "D1"],
+ "sources": [{"label": "Report §5", "href": "report.md"}]
+}

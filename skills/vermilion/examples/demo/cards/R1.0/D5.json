@@ -1,0 +1,31 @@
+{
+ "id": "D5",
+ "section": "decisions",
+ "order": 5,
+ "kind": "decision",
+ "title": "Name who approves the go and who can start a rollback",
+ "summary": "At 02:00, a rollback decision must be fast. The plan recommends that you approve the go against a written checklist, and that the on-call database lead can start a rollback alone.",
+ "priority": "Medium",
+ "tag": "Report §4.4",
+ "badges": [
+  {"text": "OWNER-ONLY", "tone": "red", "tip": "Only you can give this authority."}
+ ],
+ "blocks": [
+  {"title": "The problem", "html": "<p>The cutover has two decision points. At 01:30, someone says go or no-go. After 02:00, someone must start a rollback if a check fails. Each minute of delay keeps the shop closed.</p>"},
+  {"title": "The go/no-go checklist", "html": "<ul><li>Two full rollback rehearsals passed in staging (F6).</li><li>The point-in-time recovery test passed (F6).</li><li>A load test at 1,450 writes/s for 2 hours passed, with a p95 write latency below 25 ms.</li><li>The CDC lag stayed below 5 s for the last 24 hours.</li><li>Row counts and checksums match on all 46 tables.</li><li>The support team and the on-call database lead are on call.</li></ul><p>[src: report.md]</p>"},
+  {"title": "Why it matters", "html": "<p><b>[UNVERIFIED]</b> Nobody has tested the peak rate of 1,450 writes/s. If the load test fails, the go must be a no-go. The person who approves must accept this rule in advance.</p>"}
+ ],
+ "options": [
+  {"key": "a", "label": "You approve the go and each rollback", "detail_html": "<p><b>Effect:</b> one person holds all authority. <b>Risk:</b> medium. At 02:00, a rollback waits until you answer the phone.</p>"},
+  {"key": "b", "label": "You approve the go. The on-call database lead can start a rollback alone", "detail_html": "<p><b>Effect:</b> you approve the go at 01:30 against the checklist. After 02:00, the database lead starts a rollback without a call. <b>Risk:</b> low.</p>", "recommended": true},
+  {"key": "c", "label": "A change board approves on the Thursday before the cutover", "detail_html": "<p><b>Effect:</b> four people approve 3 days in advance. The on-call lead runs the night alone. <b>Risk:</b> medium. The approval is 3 days old, and the CDC lag and the checksums can change in that time.</p>"}
+ ],
+ "recommendation_html": "<p>Option b. You keep the decision that needs judgement: the go. The person at the console gets the decision that needs speed: the rollback.</p>",
+ "facts": [
+  {"label": "Decide by", "value": "18 December 2026"},
+  {"label": "Go/no-go call", "value": "Sunday 10 January 2027, 01:30"},
+  {"label": "Owner", "value": "You"}
+ ],
+ "related": ["F6", "D2", "D3"],
+ "sources": [{"label": "Report §4.2 and §4.4", "href": "report.md"}]
+}

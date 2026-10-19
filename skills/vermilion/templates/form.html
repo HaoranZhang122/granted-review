@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" data-form-id="%%FORM_ID%%" data-version="%%VERSION%%" data-round="%%ROUND%%" data-vermilion="%%TOOL_VERSION%%" data-review-id="%%REVIEW_ID%%"%%DRAFT_ATTR%%>
+<head>
+<meta data-f charset="utf-8">
+<meta data-f name="viewport" content="width=device-width, initial-scale=1">
+<meta data-f name="generator" content="Vermilion %%TOOL_VERSION%%">
+<title data-f>%%TITLE%% · %%VERSION%%</title>
+<style data-f>%%CSS%%</style>
+</head>
+<body>
+<div data-f id="topbar">
+  <div class="brand" title="%%TITLE%% · round %%ROUND%%, version %%VERSION%%"><span class="brand-seal">朱</span><b>%%SHORT_TITLE%%</b><span class="ver">%%VERSION%%</span></div>
+  <div class="grp"><div id="progress"><div></div></div><span id="progress-text"></span></div>
+  <div class="grp main">
+    <button id="save-btn" class="primary" title="Write your answers into this HTML file (Ctrl/Cmd+S)">Save</button>
+    <button id="send-btn" class="seal-btn" title="Check your answers, save them, and copy a summary for the AI">Seal &amp; send</button>
+    <button id="next-open" title="Go to the next card that has no answer (N)">Next unanswered</button>
+    <button id="filters-btn" title="Show the filters" aria-expanded="false">Filters</button>
+    <button id="help-btn" title="Keyboard shortcuts (?)">?</button>
+    <span id="savestate"></span>
+  </div>
+  <div class="grp filters">
+    <select id="f-section" title="Part">%%SECTION_OPTIONS%%</select>
+    <select id="f-prio" title="Priority">%%PRIO_OPTIONS%%</select>
+    <select id="f-status" title="Status"><option value="">All cards</option><option value="open">Not answered</option><option value="done">Answered</option><option value="flagged">Flagged</option><option value="reason">Reason missing</option><option value="unsure">Unsure</option></select>
+    <input type="search" id="f-search" placeholder="Search…">
+    <button id="expand-all">Expand all</button><button id="collapse-all">Collapse all</button>
+  </div>
+</div>
+<div data-f id="layout">
+<nav id="toc">%%TOC%%</nav>
+<main>
+<div class="intro">
+  <h2>%%TITLE%%</h2>
+  %%INTRO%%
+  <div id="selftestbar" class="notice warn"><b>Self-test mode.</b> The form ran its self-test on a copy of the answers. Nothing here is saved, and the stored answers are not touched. Open the file without <code>#selftest</code> to answer.</div>
+  <div id="draftbar" class="notice warn"><b>Draft preview.</b> This file is for checking the cards. Answers in it are kept apart from the issued form, and the AI does not accept it as a reply.</div>
+  <div id="storagebar" class="notice warn"><b>This browser does not keep your answers between visits</b> (its local storage is blocked). Click <b>Save</b> often.</div>
+  <div id="restorebar" class="notice warn">This browser has answers from <b id="restore-time"></b>. They are newer than the answers in this file (<span id="restore-file-time"></span>). The form shows the browser answers.<span id="restore-dropped"></span> Click <b>Save</b> to write them into the file, or <button id="use-file-version">use the answers in the file</button> <button id="dismiss-restore">hide</button></div>
+  <div class="notice"><b>How it works.</b> Read a card, then answer below it. A card with a recommendation has an <b>Accept</b> button (key <span class="kbd">A</span>). The browser keeps each change. Click <b>Save</b> (or push Ctrl/Cmd+S) to write your answers <i>into this HTML file</i>. When you finish, click <b>Seal &amp; send</b>: it shows what is still open, saves your answers, and copies a short summary for the AI. Then tell the AI that you saved, or paste the summary. <span id="save-hint"></span> Push <span class="kbd">?</span> to see all keys.</div>
+  <table class="kv">
+    %%VERSION_ROW%%
+    %%SOURCES_ROW%%
+    %%LABELS_ROW%%
+    <tr><th>Form</th><td>%%TOTAL%% cards · about %%MINUTES%% min to read · built %%BUILT_AT%% · id <code>%%FORM_ID%%</code></td></tr>
+  </table>
+  <div class="who">
+    <label>Reviewer<br><input type="text" id="rev-name" placeholder="Your name"></label>
+    <label>Date<br><input type="text" id="rev-date" placeholder="YYYY-MM-DD"></label>
+  </div>
+  <p style="margin:10px 0 4px"><b>General comments</b> (about the full report: priorities, limits, deadlines)</p>
+  <textarea id="rev-general" rows="3" placeholder="General comments for the AI"></textarea>
+</div>
+%%CONFIRMED%%
+%%SECTIONS%%
+<div id="nomatch" class="notice">No card matches the filters. <button type="button" id="clear-filters">Clear the filters</button></div>
+</main>
+</div>
+<div data-f id="sendpanel" class="overlay" role="dialog" aria-modal="true" aria-labelledby="send-h">
+  <div class="panel">
+    <button class="close" data-close title="Close (Esc)">×</button>
+    <h3 id="send-h"><span class="brand-seal">朱</span> Seal &amp; send</h3>
+    <div id="send-stats" class="stats"></div>
+    <div id="send-checks"></div>
+    <div class="actions">
+      <button id="send-save" class="primary">Save again</button>
+      <button id="send-copy" class="seal-btn">Copy the summary again</button>
+      <button id="saveas-btn">Save as…</button>
+      <button id="export-md">Export .md</button>
+      <button id="export-json">Export .json</button>
+    </div>
+    <p class="sub" id="send-next">Next: tell the AI "I saved the review", or paste the summary into the chat. The saved HTML file holds all your answers and is the record.</p>
+    <textarea id="copybox" readonly></textarea>
+  </div>
+</div>
+<div data-f id="helppanel" class="overlay" role="dialog" aria-modal="true" aria-labelledby="help-h">
+  <div class="panel">
+    <button class="close" data-close title="Close (Esc)">×</button>
+    <h3 id="help-h">Keys</h3>
+    <div class="keys">
+      <span></span><span class="sub">Keys work in lower or upper case, but not while you type in a box.</span>
+      <span class="kbd">J</span><span>Next card</span>
+      <span class="kbd">K</span><span>Previous card</span>
+      <span class="kbd">N</span><span>Next unanswered card</span>
+      <span class="kbd">O</span><span>Open or close the details of the card</span>
+      <span class="kbd">1–9</span><span>Select option 1–9 (or choice 1–9 if the card has no options)</span>
+      <span class="kbd">A</span><span>Accept the recommendation</span>
+      <span class="kbd">F</span><span>Flag the card for discussion</span>
+      <span class="kbd">C</span><span>Write a comment</span>
+      <span class="kbd">Ctrl+Enter</span><span>In a comment: finish and go to the next unanswered card</span>
+      <span class="kbd">Esc</span><span>Leave the comment box, or close this panel</span>
+      <span class="kbd">Ctrl+S</span><span>Save into this file</span>
+    </div>
+  </div>
+</div>
+<div data-f id="toast"></div>
+<script type="application/json" id="vermilion-config">%%CONFIG%%</script>
+<script type="application/json" id="card-index">%%CARD_INDEX%%</script>
+<script type="application/json" id="review-state">%%STATE%%</script>
+<script data-f>%%JS%%</script>
+</body>
+</html>

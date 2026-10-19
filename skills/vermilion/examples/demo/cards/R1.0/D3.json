@@ -1,0 +1,32 @@
+{
+ "id": "D3",
+ "section": "decisions",
+ "order": 3,
+ "kind": "decision",
+ "title": "Select how long to keep the MySQL standby for a rollback",
+ "summary": "After the switch, reverse replication keeps MySQL in sync, so the shop can go back. The plan recommends a 7-day rollback window, which covers one full weekly cycle.",
+ "priority": "High",
+ "tag": "Report §4.3",
+ "blocks": [
+  {"title": "The problem", "html": "<p>After the switch, new orders go to PostgreSQL only. A rollback needs a MySQL copy that is up to date. Reverse replication keeps this copy up to date, but only while it runs.</p>"},
+  {"title": "What we found", "html": "<ul><li><b>[READ]</b> The settlement job runs each Friday night. The invoice run is on the 1st of each month. [src: report.md]</li><li><b>[INFERRED]</b> The MySQL instances cost about $137 per day while they run. [src: report.md]</li><li><b>[UNVERIFIED]</b> A rollback takes about 20 minutes. Nobody has rehearsed it yet (F6).</li></ul>"},
+  {"title": "What the window costs", "html": "<p>While the window is open:</p><ul><li>The schema freeze continues (D4).</li><li>The service cannot use PostgreSQL-only features, because the release must also run on MySQL (F1).</li><li>The MySQL instances keep costing money.</li></ul>"}
+ ],
+ "figures": [
+  {"file": "rollback.svg", "caption": "The rollback path. Reverse replication keeps the MySQL standby in sync until the window ends. A rollback switches the connection back in about 20 minutes (not rehearsed yet)."}
+ ],
+ "options": [
+  {"key": "a", "label": "48 hours", "detail_html": "<p><b>Cost:</b> about $274. <b>Covers:</b> the first weekend only. The Friday settlement job runs after the window ends.</p>"},
+  {"key": "b", "label": "7 days", "detail_html": "<p><b>Cost:</b> about $960. <b>Covers:</b> one full weekly cycle, with the Friday settlement job and one weekend.</p>", "recommended": true},
+  {"key": "c", "label": "30 days", "detail_html": "<p><b>Cost:</b> about $7,000: $4,100 for the instances, plus one more month of the MySQL 5.7 support fee. <b>Covers:</b> the invoice run on 1 February. The schema freeze lasts 35 days in total.</p>"}
+ ],
+ "recommendation_html": "<p>Option b. Most problems after a database move show in the first full weekly cycle. For the monthly invoice run, a test in staging before the cutover costs less than a 30-day window.</p>",
+ "facts": [
+  {"label": "Decide by", "value": "6 November 2026"},
+  {"label": "Depends on", "value": "D1 (option b gives the reverse path)"},
+  {"label": "Affects", "value": "D4, F1"},
+  {"label": "Owner", "value": "You"}
+ ],
+ "related": ["D1", "D4", "F1", "F6"],
+ "sources": [{"label": "Report §4.3 and §5", "href": "report.md"}]
+}

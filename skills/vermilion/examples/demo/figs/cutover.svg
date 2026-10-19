@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 360" width="900" height="360" font-family="system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">D1: three cutover methods on one time line</title>
+  <desc id="d">Big-bang copy closes the shop for about 8 hours 20 minutes. CDC replication closes it for about 15 minutes. Dual writes have no planned downtime but need 15 to 20 more engineer-days.</desc>
+  <rect x="0" y="0" width="900" height="360" fill="#ffffff"/>
+
+  <!-- Heading -->
+  <text x="24" y="30" font-size="16" font-weight="700" fill="#1f1a17">D1 — Three cutover methods on one time line</text>
+  <text x="24" y="50" font-size="11.5" fill="#8a8178">Hours from the start of the copy. Times scaled from the 10% staging sample (INFERRED). Fictional demo.</text>
+
+  <!-- Hour grid -->
+  <g stroke="#e6e1db" stroke-width="1">
+    <line x1="210" y1="66" x2="210" y2="304"/>
+    <line x1="320" y1="66" x2="320" y2="304"/>
+    <line x1="430" y1="66" x2="430" y2="304"/>
+    <line x1="540" y1="66" x2="540" y2="304"/>
+    <line x1="650" y1="66" x2="650" y2="304"/>
+    <line x1="760" y1="66" x2="760" y2="304"/>
+    <line x1="870" y1="66" x2="870" y2="304"/>
+  </g>
+
+  <!-- Lane a: big-bang copy -->
+  <text x="24" y="100" font-size="13" font-weight="700" fill="#1f1a17">a. Big-bang copy</text>
+  <text x="24" y="117" font-size="11.5" fill="#c8361d">Downtime ≈ 8 h 20 min</text>
+  <rect x="210" y="84" width="458.3" height="40" rx="3" fill="#c8361d" fill-opacity="0.08" stroke="#c8361d" stroke-width="1.2" stroke-dasharray="5 3"/>
+  <text x="214" y="79" font-size="10.5" fill="#c8361d">Write freeze for the whole run: the shop is closed</text>
+  <rect x="210" y="92" width="302.5" height="24" fill="#8a8178"/>
+  <text x="361" y="108" font-size="11" fill="#ffffff" text-anchor="middle">Copy 5 h 30 min</text>
+  <rect x="512.5" y="92" width="100.8" height="24" fill="#b5ada4"/>
+  <text x="562.9" y="108" font-size="11" fill="#1f1a17" text-anchor="middle">Indexes 1 h 50</text>
+  <rect x="613.3" y="92" width="36.7" height="24" fill="#d6d0c9"/>
+  <rect x="650" y="92" width="18.3" height="24" fill="#1f1a17"/>
+  <text x="676" y="108" font-size="10.5" fill="#1f1a17">← checks 40 min, switch 20 min</text>
+
+  <!-- Lane b: CDC replication -->
+  <text x="24" y="180" font-size="13" font-weight="700" fill="#1f1a17">b. CDC replication</text>
+  <text x="24" y="197" font-size="11.5" fill="#c8361d">Downtime ≈ 15 min</text>
+  <text x="24" y="213" font-size="11" font-weight="700" fill="#2e8b57">Recommended</text>
+  <rect x="210" y="168" width="302.5" height="24" fill="#8a8178"/>
+  <text x="361" y="184" font-size="11" fill="#ffffff" text-anchor="middle">Copy 5 h 30 min (shop open)</text>
+  <rect x="512.5" y="168" width="100.8" height="24" fill="#b5ada4"/>
+  <text x="562.9" y="184" font-size="11" fill="#1f1a17" text-anchor="middle">Indexes 1 h 50</text>
+  <rect x="613.3" y="168" width="165" height="24" fill="#2e8b57"/>
+  <text x="695.8" y="184" font-size="11" fill="#ffffff" text-anchor="middle">CDC catch-up ≈ 3 h</text>
+  <rect x="778.3" y="164" width="10" height="32" fill="#c8361d"/>
+  <rect x="788.3" y="164" width="6" height="32" fill="#1f1a17"/>
+  <line x1="791" y1="196" x2="791" y2="206" stroke="#c8361d" stroke-width="1"/>
+  <text x="870" y="217" font-size="10.5" fill="#c8361d" text-anchor="end">freeze 10 min + switch 5 min</text>
+  <text x="210" y="208" font-size="10.5" fill="#8a8178">Steady replication can run for days before the switch.</text>
+
+  <!-- Lane c: dual writes -->
+  <text x="24" y="258" font-size="13" font-weight="700" fill="#1f1a17">c. Dual writes</text>
+  <text x="24" y="275" font-size="11.5" fill="#8a8178">No planned downtime</text>
+  <text x="24" y="291" font-size="11.5" fill="#8a8178">+15–20 engineer-days</text>
+  <text x="214" y="238" font-size="10.5" fill="#2e8b57">The service writes to both databases</text>
+  <rect x="210" y="242" width="660" height="5" fill="#2e8b57" fill-opacity="0.75"/>
+  <rect x="210" y="250" width="302.5" height="24" fill="#8a8178"/>
+  <text x="361" y="266" font-size="11" fill="#ffffff" text-anchor="middle">Backfill copy 5 h 30 min</text>
+  <rect x="512.5" y="250" width="192.5" height="24" fill="#d6d0c9"/>
+  <text x="608.8" y="266" font-size="11" fill="#1f1a17" text-anchor="middle">Reconcile ≈ 3 h 30</text>
+  <rect x="705" y="250" width="6" height="24" fill="#1f1a17"/>
+  <text x="718" y="266" font-size="10.5" fill="#1f1a17">switch reads, no freeze</text>
+  <text x="210" y="290" font-size="10.5" fill="#8a8178">Risk: the two databases drift after partial failures.</text>
+
+  <!-- Axis -->
+  <line x1="210" y1="306" x2="870" y2="306" stroke="#1f1a17" stroke-width="1.2"/>
+  <g font-size="10.5" fill="#8a8178" text-anchor="middle">
+    <text x="210" y="321">0 h</text>
+    <text x="320" y="321">2 h</text>
+    <text x="430" y="321">4 h</text>
+    <text x="540" y="321">6 h</text>
+    <text x="650" y="321">8 h</text>
+    <text x="760" y="321">10 h</text>
+    <text x="870" y="321">12 h</text>
+  </g>
+
+  <!-- Legend -->
+  <g font-size="10.5" fill="#1f1a17">
+    <rect x="210" y="336" width="12" height="12" fill="#8a8178"/>
+    <text x="228" y="346">Copy or index build</text>
+    <rect x="360" y="336" width="12" height="12" fill="#2e8b57"/>
+    <text x="378" y="346">Replication or dual writes</text>
+    <rect x="540" y="336" width="12" height="12" fill="#c8361d"/>
+    <text x="558" y="346">Write freeze: the shop is closed</text>
+    <rect x="752" y="336" width="12" height="12" fill="#1f1a17"/>
+    <text x="770" y="346">Switch</text>
+  </g>
+</svg>

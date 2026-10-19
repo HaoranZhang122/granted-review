@@ -1,0 +1,29 @@
+{
+ "id": "F4",
+ "section": "findings",
+ "order": 4,
+ "kind": "review",
+ "title": "Three DATETIME columns hold local time, and the other 31 hold UTC",
+ "summary": "MySQL triggers write local time into 3 columns, and the service writes UTC into the other 31. Convert all 34 columns to timestamptz, each read in its true time zone.",
+ "priority": "High",
+ "tag": "Report §3.4",
+ "blocks": [
+  {"title": "The problem", "html": "<p>A MySQL DATETIME value has no time zone. The value means UTC or local time, depending on the code that wrote it. The copy to PostgreSQL must know which.</p>"},
+  {"title": "What we found", "html": "<ul><li><b>[READ]</b> The service sets its clock to UTC. 31 of the 34 DATETIME columns get their values from the service. [src: report.md]</li><li><b>[READ]</b> 3 columns get their values from MySQL triggers that call <code>NOW()</code>. The host runs on local time (UTC+1, with daylight saving). [src: report.md]</li><li><b>[TESTED]</b> For the same order, <code>order_events.created_at</code> is 1 or 2 hours later than <code>orders.created_at</code>. [src: report.md]</li><li><b>[INFERRED]</b> At each autumn clock change, one local hour occurs two times. About 38,000 rows fall in these hours. [src: report.md]</li></ul>"},
+  {"title": "Why it matters", "html": "<p>Reports that join these tables show times that are 1–2 hours wrong. If the copy reads all 34 columns as UTC, the error becomes permanent in PostgreSQL.</p>"},
+  {"title": "Proposed action", "html": "<p>Convert all 34 columns to <code>timestamptz</code>. Read each column in its true time zone. Mark the ambiguous rows in a new column <code>tz_ambiguous</code>. In PostgreSQL, the triggers call <code>now()</code>, which returns a <code>timestamptz</code>. New rows are then correct. Effort: 3 days.</p>"}
+ ],
+ "tables_html": "<table><thead><tr><th>Column</th><th>Written by</th><th>Zone today</th><th>Copy as</th></tr></thead><tbody><tr><td><code>order_events.created_at</code></td><td>Trigger</td><td>Local time</td><td><code>timestamptz</code>, read as local</td></tr><tr><td><code>stock_reservations.created_at</code></td><td>Trigger</td><td>Local time</td><td><code>timestamptz</code>, read as local</td></tr><tr><td><code>audit_log.changed_at</code></td><td>Trigger</td><td>Local time</td><td><code>timestamptz</code>, read as local</td></tr><tr><td>31 other columns</td><td>Service</td><td>UTC</td><td><code>timestamptz</code>, read as UTC</td></tr></tbody></table>",
+ "options": [
+  {"key": "a", "label": "Convert all 34 columns to timestamptz, each in its true zone", "detail_html": "<p>Effort: 3 days. The times become correct in all reports. About 38,000 old rows keep a flag, because their true time is ambiguous.</p>", "recommended": true},
+  {"key": "b", "label": "Copy the values as timestamp without time zone", "detail_html": "<p>Effort: half a day. The copy is simpler. The mixed time zones stay, and the reports stay wrong by 1–2 hours.</p>"}
+ ],
+ "recommendation_html": "<p>Option a. The move is the cheapest time to fix the data. After the move, each fix needs a new migration of a 288 GB table.</p>",
+ "facts": [
+  {"label": "Effort", "value": "3 days"},
+  {"label": "Owner", "value": "Database lead"},
+  {"label": "Ambiguous rows", "value": "About 38,000"}
+ ],
+ "related": ["F3"],
+ "sources": [{"label": "Report §3.4", "href": "report.md"}]
+}

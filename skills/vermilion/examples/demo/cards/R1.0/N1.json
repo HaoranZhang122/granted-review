@@ -1,0 +1,19 @@
+{
+ "id": "N1",
+ "section": "notes",
+ "order": 1,
+ "kind": "info",
+ "title": "This review did not cover analytics jobs, peak load, security or the payment database",
+ "summary": "Five areas are outside this review. Confirm that you read the list, or name an owner for a gap in your comment.",
+ "priority": "Low",
+ "tag": "Report §6",
+ "blocks": [
+  {"title": "Not covered", "html": "<ul><li><b>The analytics replica.</b> 12 ETL jobs read the MySQL replica directly. I did not read them. <b>[UNVERIFIED]</b></li><li><b>The peak load.</b> The load test reached 600 writes/s. The last peak was 1,450 writes/s. <b>[UNVERIFIED]</b></li><li><b>Security.</b> Database roles, secrets and network rules for the new instances.</li><li><b>The payment database.</b> It is a separate system.</li><li><b>Legal review.</b> Data residency of the new instance region.</li></ul><p>[src: report.md]</p>"},
+  {"title": "What I suggest", "html": "<p>The peak load test is already a go/no-go gate (D5). For the other four areas, name an owner or mark them out of scope. If the ETL jobs use MySQL-only SQL, they fail after the cutover, like the queries in F1.</p>"}
+ ],
+ "facts": [
+  {"label": "Open areas", "value": "5"}
+ ],
+ "related": ["D5", "F1"],
+ "sources": [{"label": "Report §6", "href": "report.md"}]
+}

@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 360" width="900" height="360" font-family="system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">D3: the rollback path during the rollback window</title>
+  <desc id="d">The order service writes to the PostgreSQL 16 primary. Reverse replication copies each change to a MySQL 5.7 standby. During a 7-day rollback window, the service can switch back to MySQL in about 20 minutes.</desc>
+  <defs>
+    <marker id="ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f1a17"/>
+    </marker>
+    <marker id="ah-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2e8b57"/>
+    </marker>
+    <marker id="ah-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#c8361d"/>
+    </marker>
+    <marker id="ah-grey" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a8178"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="900" height="360" fill="#ffffff"/>
+
+  <!-- Heading -->
+  <text x="24" y="30" font-size="16" font-weight="700" fill="#1f1a17">D3 — The rollback path during the rollback window</text>
+  <text x="24" y="50" font-size="11.5" fill="#8a8178">If a check fails after writes start on PostgreSQL, the shop goes back to MySQL. Fictional demo.</text>
+
+  <!-- Boxes -->
+  <rect x="24" y="72" width="176" height="78" rx="6" fill="#ffffff" stroke="#1f1a17" stroke-width="1.5"/>
+  <text x="112" y="102" font-size="13" font-weight="700" fill="#1f1a17" text-anchor="middle">Order service</text>
+  <text x="112" y="120" font-size="10.5" fill="#8a8178" text-anchor="middle">the release runs on</text>
+  <text x="112" y="134" font-size="10.5" fill="#8a8178" text-anchor="middle">both databases (F1)</text>
+
+  <rect x="330" y="72" width="220" height="78" rx="6" fill="#2e8b57" fill-opacity="0.07" stroke="#2e8b57" stroke-width="2"/>
+  <text x="440" y="102" font-size="13" font-weight="700" fill="#1f1a17" text-anchor="middle">PostgreSQL 16 primary</text>
+  <text x="440" y="120" font-size="10.5" fill="#8a8178" text-anchor="middle">takes all writes after the switch</text>
+  <text x="440" y="134" font-size="10.5" fill="#8a8178" text-anchor="middle">at T (Sun 10 Jan, 02:15)</text>
+
+  <rect x="680" y="72" width="196" height="78" rx="6" fill="#ffffff" stroke="#8a8178" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="778" y="102" font-size="13" font-weight="700" fill="#1f1a17" text-anchor="middle">MySQL 5.7 standby</text>
+  <text x="778" y="120" font-size="10.5" fill="#8a8178" text-anchor="middle">kept in sync, no writes</text>
+  <text x="778" y="134" font-size="10.5" fill="#8a8178" text-anchor="middle">about $137 per day</text>
+
+  <!-- Normal flow -->
+  <line x1="200" y1="111" x2="326" y2="111" stroke="#1f1a17" stroke-width="2" marker-end="url(#ah-ink)"/>
+  <text x="263" y="103" font-size="11" fill="#1f1a17" text-anchor="middle">reads + writes</text>
+
+  <line x1="550" y1="111" x2="676" y2="111" stroke="#2e8b57" stroke-width="2.5" marker-end="url(#ah-green)"/>
+  <text x="613" y="103" font-size="11" fill="#2e8b57" text-anchor="middle">reverse replication</text>
+  <text x="613" y="127" font-size="10.5" fill="#2e8b57" text-anchor="middle">lag target &lt; 5 s</text>
+
+  <!-- Rollback path -->
+  <path d="M112,150 V184 H778 V154" fill="none" stroke="#c8361d" stroke-width="2" stroke-dasharray="7 4" marker-end="url(#ah-red)"/>
+  <text x="445" y="177" font-size="11.5" font-weight="700" fill="#c8361d" text-anchor="middle">Rollback: switch the connection back to MySQL</text>
+  <text x="445" y="204" font-size="11" fill="#1f1a17" text-anchor="middle">1 Freeze writes  →  2 Wait until the lag is 0  →  3 Switch the connection  →  4 Open the shop</text>
+  <text x="445" y="221" font-size="10.5" fill="#8a8178" text-anchor="middle">About 20 minutes. UNVERIFIED: nobody has rehearsed it yet (F6).</text>
+
+  <!-- Time line -->
+  <rect x="80" y="252" width="350" height="26" rx="3" fill="#c8361d" fill-opacity="0.12" stroke="#c8361d" stroke-width="1.5"/>
+  <text x="255" y="270" font-size="11.5" font-weight="700" fill="#c8361d" text-anchor="middle">Rollback window: 7 days (recommended, option b)</text>
+  <line x1="180" y1="246" x2="180" y2="290" stroke="#c8361d" stroke-width="1.2" stroke-dasharray="3 3"/>
+
+  <line x1="80" y1="290" x2="780" y2="290" stroke="#1f1a17" stroke-width="1.2"/>
+  <line x1="780" y1="290" x2="856" y2="290" stroke="#8a8178" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#ah-grey)"/>
+  <g stroke="#1f1a17" stroke-width="1.2">
+    <line x1="80" y1="285" x2="80" y2="295"/>
+    <line x1="180" y1="285" x2="180" y2="295"/>
+    <line x1="430" y1="285" x2="430" y2="295"/>
+    <line x1="780" y1="285" x2="780" y2="295"/>
+  </g>
+  <g font-size="10.5" fill="#1f1a17" text-anchor="middle">
+    <text x="80" y="307">T: switch</text>
+    <text x="180" y="307">48 h (a)</text>
+    <text x="430" y="307">7 days (b)</text>
+    <text x="780" y="307">14 days</text>
+    <text x="856" y="307" text-anchor="end">30 days (c)</text>
+  </g>
+  <text x="440" y="246" font-size="10.5" fill="#8a8178">After the window: stop reverse replication. Keep a final snapshot 30 days.</text>
+  <text x="80" y="330" font-size="10.5" fill="#8a8178">The schema freeze (D4) and the dual-database release (F1) last until the window ends.</text>
+  <text x="80" y="347" font-size="10.5" fill="#8a8178">If the reverse lag reaches 0 before the switch back, no orders are lost (INFERRED).</text>
+</svg>

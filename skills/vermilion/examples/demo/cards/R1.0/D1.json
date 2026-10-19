@@ -1,0 +1,30 @@
+{
+ "id": "D1",
+ "section": "decisions",
+ "order": 1,
+ "kind": "decision",
+ "title": "Select the cutover method for the orders database",
+ "summary": "Three cutover methods are possible. The plan recommends CDC replication and then a 15-minute switch, because it gives the shortest downtime and a path back to MySQL.",
+ "priority": "High",
+ "tag": "Report §5",
+ "blocks": [
+  {"title": "The problem", "html": "<p>At one moment, the shop stops its writes to MySQL and starts its writes to PostgreSQL. The method of this switch sets three things:</p><ul><li>the downtime of the shop</li><li>the extra engineering work</li><li>the path back if the switch fails</li></ul>"},
+  {"title": "What we found", "html": "<ul><li><b>[TESTED]</b> The bulk copy of the 10% staging sample took 33 minutes. The index build took 11 minutes. [src: report.md]</li><li><b>[INFERRED]</b> At full size, the copy takes about 5 h 30 min and the index build about 1 h 50 min. [src: report.md]</li><li><b>[TESTED]</b> At 600 writes/s, the CDC lag stayed between 1 and 3 s. [src: report.md]</li><li><b>[READ]</b> On a typical Sunday, about 22,000 orders arrive between 02:00 and 10:20. [src: report.md]</li></ul>"}
+ ],
+ "figures": [
+  {"file": "cutover.svg", "caption": "The three methods on one time line, in hours from the start of the copy. The shop is closed only in the vermilion parts. The times come from the 10% staging sample, scaled to full size (INFERRED)."}
+ ],
+ "options": [
+  {"key": "a", "label": "Big-bang copy in one long downtime window", "detail_html": "<p><b>Downtime:</b> about 8 h 20 min. <b>Effort:</b> 3 days less (no forward CDC). <b>Risk:</b> high. A failed step makes the window longer. The shop loses about 22,000 Sunday orders. The rollback path (F6) is still necessary after the shop opens.</p>"},
+  {"key": "b", "label": "CDC replication, then a 15-minute switch", "detail_html": "<p><b>Downtime:</b> about 15 minutes (10 min write freeze, 5 min switch). <b>Effort:</b> 3 days for CDC setup, in the estimate (F7). <b>Risk:</b> low to medium. A CDC mapping error can copy wrong values. Row counts and checksums find them before the switch.</p>", "recommended": true},
+  {"key": "c", "label": "Dual writes from the order service", "detail_html": "<p><b>Downtime:</b> none planned. <b>Effort:</b> 15–20 more engineer-days ($12,000–$16,000). <b>Risk:</b> high. After a partial failure, the two databases drift. A reconciliation job must find and fix each difference.</p>"}
+ ],
+ "recommendation_html": "<p>Option b. The downtime stays at about 15 minutes. The CDC tool also gives the reverse path for the rollback (D3). Its 3 days of work are already in the cost estimate (F7).</p>",
+ "facts": [
+  {"label": "Decide by", "value": "30 October 2026"},
+  {"label": "Blocks", "value": "D2, D3, D4"},
+  {"label": "Owner", "value": "You"}
+ ],
+ "related": ["D2", "D3", "F2", "F6"],
+ "sources": [{"label": "Report §5 and §4.2", "href": "report.md"}]
+}

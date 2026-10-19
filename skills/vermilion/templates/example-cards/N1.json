@@ -1,0 +1,9 @@
+{
+ "id": "N1",
+ "section": "notes",
+ "order": 1,
+ "kind": "info",
+ "title": "This review did not check the mobile app",
+ "summary": "The review read only the server code. The mobile app needs a separate review.",
+ "blocks": [{"title": "Scope", "html": "<p>The review read the server code and its tests. It did not read the mobile app.</p>"}]
+}

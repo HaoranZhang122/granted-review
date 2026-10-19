@@ -1,0 +1,31 @@
+{
+ "id": "D2",
+ "section": "decisions",
+ "order": 2,
+ "kind": "decision",
+ "title": "Select the date and the 30-minute downtime window for the cutover",
+ "summary": "The cutover needs a 30-minute window with low traffic. The plan recommends Sunday 10 January 2027, 02:00–02:30, after the peak freeze, so the rollback window does not overlap the peak.",
+ "priority": "High",
+ "tag": "Report §5",
+ "badges": [
+  {"text": "OWNER-ONLY", "tone": "red", "tip": "Only you can accept the downtime and the date."}
+ ],
+ "blocks": [
+  {"title": "The problem", "html": "<p>With CDC (D1 option b), the shop is closed for about 15 minutes. The window adds 15 minutes of buffer for the smoke tests and a rollback start. The date must leave time to close F5 and F6 first.</p>"},
+  {"title": "What we found", "html": "<ul><li><b>[READ]</b> The peak freeze runs from 20 November 2026 to 4 January 2027. No production changes are allowed in it. [src: report.md]</li><li><b>[READ]</b> Sunday 02:00–02:30 has the lowest traffic: 41 orders per minute. Tuesday 03:00–03:30 has 57. [src: report.md]</li><li><b>[INFERRED]</b> The work for the move is 31 engineer-days. With 2 engineers, that is about 16 working days. [src: report.md]</li></ul>"},
+  {"title": "If you change D1", "html": "<p>If you select D1 option a, the window must be about 9 hours long. Then only a Sunday night from 00:00 to 09:00 is possible.</p>"}
+ ],
+ "options": [
+  {"key": "a", "label": "Sunday 15 November 2026, 02:00–02:30", "detail_html": "<p><b>Effect:</b> the savings start 2 months earlier (about $5,400). <b>Risk:</b> high. The plan has no slack. The ORM release (F5) gets less than one week on MySQL. The 7-day rollback window ends on 22 November, after the peak freeze starts.</p>"},
+  {"key": "b", "label": "Sunday 10 January 2027, 02:00–02:30", "detail_html": "<p><b>Effect:</b> about 6 weeks of slack after the staging work. Traffic is 41 orders per minute. <b>Cost:</b> about $5,400 of savings come later. <b>Risk:</b> low.</p>", "recommended": true},
+  {"key": "c", "label": "Tuesday 12 January 2027, 03:00–03:30", "detail_html": "<p><b>Effect:</b> a working day, so the full team is at work the next morning. Traffic is 57 orders per minute, about 1.4 times the Sunday rate. <b>Cost:</b> the same as option b.</p>"}
+ ],
+ "recommendation_html": "<p>Option b. The rollback window and the peak freeze do not overlap. The plan also gets time to close F5 and F6 before the cutover. The cost is a delay of savings, not new spending.</p>",
+ "facts": [
+  {"label": "Decide by", "value": "6 November 2026"},
+  {"label": "Depends on", "value": "D1, F5, F6"},
+  {"label": "Owner", "value": "You"}
+ ],
+ "related": ["D1", "D3", "F5", "F6"],
+ "sources": [{"label": "Report §4.1 and §5", "href": "report.md"}]
+}

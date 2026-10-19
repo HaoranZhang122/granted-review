@@ -1,0 +1,107 @@
+{
+ "schema": 1,
+ "slug": "my-review",
+ "review_id": "",
+ "title": "Review of the plan",
+ "short_title": "Plan review",
+ "intro_html": "<p>This form has one card for each item that needs your review or your decision. Read a card, then answer below it. Your answers are saved inside this HTML file.</p>",
+ "sources": [
+  {
+   "label": "The full report",
+   "href": "../report.md"
+  }
+ ],
+ "link_base": "",
+ "figs_dir": "figs",
+ "priorities": [
+  "Critical",
+  "High",
+  "Medium",
+  "Low"
+ ],
+ "labels": [
+  {
+   "name": "TESTED",
+   "meaning": "A script or a test ran and its output is saved."
+  },
+  {
+   "name": "READ",
+   "meaning": "Found by reading the code or a document."
+  },
+  {
+   "name": "INFERRED",
+   "meaning": "A conclusion from reasoning. Not tested."
+  },
+  {
+   "name": "UNVERIFIED",
+   "meaning": "Not checked."
+  },
+  {
+   "name": "OWNER-ONLY",
+   "meaning": "Only you can do this."
+  }
+ ],
+ "sections": [
+  {
+   "key": "findings",
+   "title": "Part A — Findings",
+   "kind": "review",
+   "intro": "Each card is one finding. Tell me if you agree with it and with the proposed action."
+  },
+  {
+   "key": "decisions",
+   "title": "Part B — Decisions only you can make",
+   "kind": "decision",
+   "intro": "Select one option for each decision. The recommended option has a mark."
+  },
+  {
+   "key": "notes",
+   "title": "Part C — For your information",
+   "kind": "info",
+   "intro": "Nothing to decide here. Mark each card as noted, or write a comment."
+  }
+ ],
+ "choices": [
+  {
+   "value": "agree",
+   "label": "Agree: do the proposed action",
+   "seal": "准",
+   "seal_en": "Approved",
+   "confirms": true,
+   "accept": true
+  },
+  {
+   "value": "modify",
+   "label": "Agree with the problem, but change the action",
+   "seal": "改",
+   "seal_en": "Revise",
+   "needs_reason": true
+  },
+  {
+   "value": "disagree",
+   "label": "Disagree",
+   "seal": "驳",
+   "seal_en": "Rejected",
+   "needs_reason": true,
+   "tone": "ink"
+  },
+  {
+   "value": "defer",
+   "label": "Defer: not now",
+   "seal": "缓",
+   "seal_en": "Deferred",
+   "tone": "gray",
+   "confirms": true,
+   "defers": true
+  },
+  {
+   "value": "info",
+   "label": "I need more information",
+   "seal": "问",
+   "seal_en": "Question",
+   "needs_reason": true,
+   "tone": "blue"
+  }
+ ],
+ "seal_style": "cjk"
+}

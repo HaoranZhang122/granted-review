@@ -1,0 +1,15 @@
+{
+ "id": "F1",
+ "section": "findings",
+ "order": 1,
+ "title": "The backup restore was never tested",
+ "summary": "The nightly backups run, but nobody restored one. The plan proposes one restore test each month.",
+ "priority": "Critical",
+ "tag": "Report §4.1",
+ "badges": [{"text": "TESTED", "tone": "green", "tip": "A script checked the backup job log."}],
+ "blocks": [
+  {"title": "What we found", "html": "<p>The backup job ran on 30 of the last 30 nights. [TESTED] The log has no restore [src: ../report.md].</p>"},
+  {"title": "Proposed action", "html": "<p>Restore the newest backup into a test server on the first Monday of each month. Record the time that the restore takes.</p>"}
+ ],
+ "related": ["D1"]
+}

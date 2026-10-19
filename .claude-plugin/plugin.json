@@ -1,0 +1,7 @@
+{
+  "name": "vermilion",
+  "version": "1.0.0",
+  "description": "Review long AI reports like an emperor: one card per decision, answers saved inside a single HTML file, versioned rounds until every item is decided.",
+  "license": "MIT",
+  "keywords": ["review", "feedback", "decisions", "human-in-the-loop", "html-form", "report"]
+}

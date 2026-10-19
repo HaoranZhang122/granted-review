@@ -1,0 +1,16 @@
+{
+  "$schema": "https://www.schemastore.org/claude-code-marketplace.json",
+  "name": "vermilion-review",
+  "description": "Vermilion: versioned, self-saving HTML review forms for long AI reports.",
+  "owner": {
+    "name": "HaoranZhang122"
+  },
+  "plugins": [
+    {
+      "name": "vermilion",
+      "description": "Turn a long AI report into a review form: one card per decision, answers saved in the HTML file, rounds until every item is decided.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}

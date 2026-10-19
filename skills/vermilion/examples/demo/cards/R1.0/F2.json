@@ -1,0 +1,28 @@
+{
+ "id": "F2",
+ "section": "findings",
+ "order": 2,
+ "kind": "review",
+ "title": "11 foreign keys have no index in PostgreSQL, so one endpoint is 450 times slower",
+ "summary": "MySQL creates an index for each foreign key, but PostgreSQL does not. Build the 11 missing indexes after the bulk copy and before the CDC catch-up.",
+ "priority": "High",
+ "tag": "Report §3.2",
+ "blocks": [
+  {"title": "The problem", "html": "<p>MySQL (InnoDB) creates an index for each foreign key without a request. PostgreSQL does not. The schema conversion copied the foreign keys, but not these hidden indexes.</p>"},
+  {"title": "What we found", "html": "<ul><li><b>[TESTED]</b> The converted schema has 23 foreign keys. 11 of them have no index. [src: report.md]</li><li><b>[TESTED]</b> In staging, <code>GET /orders/{id}/items</code> took 4,100 ms at p95. On MySQL it takes 9 ms. With the index, it took 7 ms. [src: report.md]</li><li><b>[TESTED]</b> In staging, the 11 indexes took 11 minutes to build. [src: report.md]</li><li><b>[INFERRED]</b> At full size, the build takes about 1 h 50 min. [src: report.md]</li></ul>"},
+  {"title": "Why it matters", "html": "<p>The order page and the support dashboard use this endpoint. Staging holds only 10% of the rows. At full size, the endpoint without the index is slower than in staging. <b>[INFERRED]</b></p>"},
+  {"title": "Proposed action", "html": "<p>Add the 11 indexes to the migration script. Build them after the bulk copy and before the CDC catch-up. Effort: 1 day.</p>"}
+ ],
+ "options": [
+  {"key": "a", "label": "Build the indexes after the copy, before the catch-up", "detail_html": "<p>Effort: 1 day. The copy keeps its speed (about 5 h 30 min). The build adds about 1 h 50 min. With CDC (D1 option b), the shop stays open during both steps.</p>", "recommended": true},
+  {"key": "b", "label": "Create the indexes before the copy", "detail_html": "<p>Effort: half a day. The script is simpler. The copy becomes about 40% slower (+2 h 10 min). If you select D1 option a, this time adds to the downtime.</p>"}
+ ],
+ "recommendation_html": "<p>Option a. The total time is shorter, and the downtime stays short with each D1 option.</p>",
+ "facts": [
+  {"label": "Effort", "value": "1 day"},
+  {"label": "Owner", "value": "Database lead"},
+  {"label": "Missing indexes", "value": "11 of 23 foreign keys"}
+ ],
+ "related": ["D1"],
+ "sources": [{"label": "Report §3.2", "href": "report.md"}]
+}

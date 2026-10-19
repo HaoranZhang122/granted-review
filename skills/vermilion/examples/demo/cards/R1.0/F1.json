@@ -1,0 +1,29 @@
+{
+ "id": "F1",
+ "section": "findings",
+ "order": 1,
+ "kind": "review",
+ "title": "Three native queries use MySQL-only syntax and fail on PostgreSQL",
+ "summary": "Three of the 43 native SQL queries stop with a syntax error on PostgreSQL. Rewrite them, with a per-database version where no common form exists.",
+ "priority": "High",
+ "tag": "Report §3.1",
+ "blocks": [
+  {"title": "The problem", "html": "<p>The order service has 43 native SQL queries. The ORM does not write them, so they do not change with the database. Three of them use syntax that only MySQL accepts.</p>"},
+  {"title": "What we found", "html": "<ul><li><b>[READ]</b> A search of the code found 3 MySQL-only forms: <code>ON DUPLICATE KEY UPDATE</code>, <code>GROUP_CONCAT</code> and <code>LIMIT 40, 20</code>. [src: report.md]</li><li><b>[TESTED]</b> In staging, 40 queries pass. These 3 fail with a syntax error. [src: report.md]</li><li><b>[INFERRED]</b> During the rollback window, the same release must run on MySQL and on PostgreSQL. Q3 has one form that both accept. Q1 and Q2 do not. [src: report.md]</li></ul>"},
+  {"title": "Why it matters", "html": "<ul><li>Q1 adds items to the cart. If Q1 fails, customers cannot buy.</li><li>Q2 feeds the nightly report.</li><li>Q3 pages the order search for the support team.</li></ul>"},
+  {"title": "Proposed action", "html": "<p>Rewrite the 3 queries. Use <code>LIMIT 20 OFFSET 40</code> for Q3, because both databases accept it. Keep a per-database version of Q1 and Q2. The service selects the version at start-up. Effort: 2 days.</p>"}
+ ],
+ "tables_html": "<table><thead><tr><th>Query</th><th>Where</th><th>MySQL form</th><th>PostgreSQL form</th></tr></thead><tbody><tr><td>Q1 cart upsert</td><td><code>CartRepository.upsertLine</code></td><td><code>ON DUPLICATE KEY UPDATE qty = qty + VALUES(qty)</code></td><td><code>ON CONFLICT (cart_id, sku) DO UPDATE SET qty = cart_lines.qty + EXCLUDED.qty</code></td></tr><tr><td>Q2 SKU list</td><td><code>NightlyReport.skuList</code></td><td><code>GROUP_CONCAT(sku ORDER BY sku SEPARATOR ',')</code></td><td><code>string_agg(sku, ',' ORDER BY sku)</code></td></tr><tr><td>Q3 search page</td><td><code>OrderSearch.page</code></td><td><code>LIMIT 40, 20</code></td><td><code>LIMIT 20 OFFSET 40</code> (both databases)</td></tr></tbody></table>",
+ "options": [
+  {"key": "a", "label": "Rewrite in SQL, with a per-database version of Q1 and Q2", "detail_html": "<p>Effort: 2 days. Risk: low. The 3 queries keep their speed. The two versions of Q1 and Q2 stay in the code until the rollback window ends. Then remove the MySQL versions.</p>", "recommended": true},
+  {"key": "b", "label": "Move the 3 queries to the ORM query API", "detail_html": "<p>Effort: 4 days. The ORM writes the SQL for each database. Risk: medium. The ORM has no upsert. Q1 becomes a read and then a write, with a race between parallel requests.</p>"}
+ ],
+ "recommendation_html": "<p>Option a. It takes half the time, and it keeps the cart upsert atomic.</p>",
+ "facts": [
+  {"label": "Effort", "value": "2 days"},
+  {"label": "Owner", "value": "Order service team"},
+  {"label": "Release by", "value": "17 November 2026, with the ORM upgrade (F5)"}
+ ],
+ "related": ["F5", "D3"],
+ "sources": [{"label": "Report §3.1", "href": "report.md"}]
+}

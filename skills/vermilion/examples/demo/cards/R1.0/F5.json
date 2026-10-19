@@ -1,0 +1,24 @@
+{
+ "id": "F5",
+ "section": "findings",
+ "order": 5,
+ "kind": "review",
+ "title": "The ORM must move from version 5.2 to 6.4 and run on MySQL before the cutover",
+ "summary": "Hibernate 5.2 does not handle PostgreSQL 16, and 61 service tests fail. Upgrade to 6.4 and run it in production on MySQL for one week before the cutover.",
+ "priority": "Medium",
+ "tag": "Report §3.5",
+ "blocks": [
+  {"title": "The problem", "html": "<p>The order service uses Hibernate 5.2.18. Its support ended in 2018. Its newest PostgreSQL dialect targets PostgreSQL 9.5, not 16.</p>"},
+  {"title": "What we found", "html": "<ul><li><b>[TESTED]</b> With 5.2 against staging, 61 of 1,912 service tests fail. Most failures come from identity columns and the JSON column <code>orders.metadata</code>. [src: report.md]</li><li><b>[TESTED]</b> On a trial branch with 6.4, 14 of 1,912 tests fail. Each of the 14 failures traces to F1 or F3. [src: report.md]</li><li><b>[INFERRED]</b> Version 6.4 changes some query results, for example the order of NULL values in sorted lists. [src: report.md]</li></ul>"},
+  {"title": "Why it matters", "html": "<p>The upgrade changes how the service builds its queries. If the upgrade and the database move go out together, a new error has two possible causes. One week on MySQL separates the two causes.</p>"},
+  {"title": "Proposed action", "html": "<ol><li>Upgrade to 6.4 on a branch. Fix the 14 failing tests with F1 and F3.</li><li>Release on MySQL by 17 November 2026, before the peak freeze starts on 20 November.</li><li>Watch the error rate for one week.</li></ol><p>Effort: 8 days.</p>"}
+ ],
+ "facts": [
+  {"label": "Effort", "value": "8 days"},
+  {"label": "Release by", "value": "17 November 2026"},
+  {"label": "Blocks", "value": "Load test, D2"},
+  {"label": "Owner", "value": "Order service team"}
+ ],
+ "related": ["F1", "F3", "D2"],
+ "sources": [{"label": "Report §3.5", "href": "report.md"}]
+}

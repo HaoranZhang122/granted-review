@@ -1,0 +1,28 @@
+{
+ "id": "F6",
+ "section": "findings",
+ "order": 6,
+ "kind": "review",
+ "title": "Nobody has tested a restore or a rollback, and point-in-time recovery fails today",
+ "summary": "The binlog upload stopped on 9 October, and the rollback path does not exist. Fix the upload now, then build the rollback path and rehearse it two times before the cutover.",
+ "priority": "Critical",
+ "tag": "Report §3.6",
+ "badges": [
+  {"text": "Blocks D2", "tone": "amber", "tip": "The cutover date depends on two passed rollback rehearsals."},
+  {"text": "Act now", "tone": "red", "tip": "Step 1 needs no decision. Each day without it adds risk."}
+ ],
+ "blocks": [
+  {"title": "The problem", "html": "<p>A backup has value only if a restore works. A cutover is safe only if a rollback works. Nobody has tested either one.</p>"},
+  {"title": "What we found", "html": "<ul><li><b>[READ]</b> The run book has no record of a restore test. [src: report.md]</li><li><b>[TESTED]</b> I restored last night's snapshot to a scratch instance. The restore took 6 h 12 min. The row counts match on all 46 tables. [src: report.md]</li><li><b>[TESTED]</b> Point-in-time recovery failed. The binlog upload job stopped on 9 October 2026, after a credential change. [src: report.md]</li><li><b>[READ]</b> The reverse replication from PostgreSQL to MySQL does not exist yet. [src: report.md]</li><li><b>[UNVERIFIED]</b> The rollback time of about 20 minutes is an estimate. Nobody has rehearsed it.</li></ul>"},
+  {"title": "Why it matters", "html": "<ul><li>Today, a failure loses up to 24 hours of orders. <b>[INFERRED]</b></li><li>After the cutover, a failure without a rollback path loses every order since the switch. <b>[INFERRED]</b></li></ul>"},
+  {"title": "Proposed action", "html": "<ol><li>Fix the binlog upload now. Add an alert for the case that no file arrives in 1 hour.</li><li>Repeat the restore test, with point-in-time recovery.</li><li>Build the reverse replication.</li><li>Rehearse a full rollback in staging two times.</li><li>Make two passed rehearsals a go/no-go gate (D5).</li></ol><p>Effort: 6.5 days.</p>"}
+ ],
+ "facts": [
+  {"label": "Effort", "value": "6.5 days"},
+  {"label": "Orders at risk today", "value": "Up to 24 hours"},
+  {"label": "Owner", "value": "Database lead"},
+  {"label": "Blocks", "value": "D2, the go/no-go gates (D5)"}
+ ],
+ "related": ["D2", "D3", "D5"],
+ "sources": [{"label": "Report §3.6", "href": "report.md"}, {"label": "Report §4.3 (rollback path)", "href": "report.md"}]
+}

@@ -1,0 +1,23 @@
+{
+ "id": "F3",
+ "section": "findings",
+ "order": 3,
+ "kind": "review",
+ "title": "Implicit type casts and zero dates break on PostgreSQL",
+ "summary": "Seven call sites compare text with numbers, and 18,516 rows hold the zero date. Bind the parameters as strings and convert each zero date to NULL during the copy.",
+ "priority": "Medium",
+ "tag": "Report §3.3",
+ "blocks": [
+  {"title": "The problem", "html": "<p>MySQL converts types without a warning. PostgreSQL does not. Two patterns in the code and the data depend on the MySQL behaviour.</p>"},
+  {"title": "What we found", "html": "<ul><li><b>[READ]</b> 7 call sites compare a VARCHAR column with a number. An example is <code>WHERE order_number = ?</code> with a <code>long</code> parameter. [src: report.md]</li><li><b>[TESTED]</b> PostgreSQL rejects 5 of the 7 with <code>operator does not exist: character varying = bigint</code>. [src: report.md]</li><li><b>[UNVERIFIED]</b> The staging tests do not reach the other 2 call sites. I expect the same error.</li><li><b>[TESTED]</b> 18,204 rows in <code>orders.shipped_at</code> and 312 rows in <code>returns.closed_at</code> hold <code>0000-00-00 00:00:00</code>. PostgreSQL does not accept this value. [src: report.md]</li><li><b>[READ]</b> The service already reads the zero date as NULL (<code>zeroDateTimeBehavior=convertToNull</code>). [src: report.md]</li></ul>"},
+  {"title": "Why it matters", "html": "<p>A failed comparison returns an error page to the customer. A zero date stops the bulk copy of its table.</p>"},
+  {"title": "Proposed action", "html": "<ol><li>Bind the 7 parameters as strings.</li><li>Add a test for each of the 7 call sites.</li><li>Set the copy tool to write NULL for each zero date.</li></ol><p>Effort: 1.5 days. The service already reads the zero date as NULL, so its behaviour does not change.</p>"}
+ ],
+ "facts": [
+  {"label": "Effort", "value": "1.5 days"},
+  {"label": "Call sites", "value": "7 (5 tested)"},
+  {"label": "Rows with zero dates", "value": "18,516"}
+ ],
+ "related": ["F5"],
+ "sources": [{"label": "Report §3.3", "href": "report.md"}]
+}

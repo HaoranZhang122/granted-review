@@ -1,0 +1,20 @@
+{
+ "id": "D1",
+ "section": "decisions",
+ "order": 1,
+ "title": "Select the release date for version 2",
+ "summary": "Two dates are possible. The plan recommends 1 March, because the security audit ends on 20 February.",
+ "priority": "High",
+ "tag": "Report §2",
+ "blocks": [
+  {"title": "The problem", "html": "<p>Version 2 needs a release date. The security audit must end before the release [src: ../report.md].</p>"},
+  {"title": "Why it matters", "html": "<ul><li>The sales team needs the date 4 weeks before the release.</li><li>[INFERRED] If the audit finds a problem, the team needs about 1 week to fix it.</li></ul>"}
+ ],
+ "options": [
+  {"key": "a", "label": "15 February", "detail_html": "<p>The release is before the audit ends. A problem found by the audit goes into version 2.1.</p>"},
+  {"key": "b", "label": "1 March", "detail_html": "<p>The audit ends first. The team has 1 week to fix a problem.</p>", "recommended": true}
+ ],
+ "recommendation_html": "<p>Option b. It is the earliest date after the audit.</p>",
+ "facts": [{"label": "Decide by", "value": "10 January"}, {"label": "Owner", "value": "You"}],
+ "related": ["F1"]
+}
