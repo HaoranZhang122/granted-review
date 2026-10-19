@@ -689,6 +689,8 @@ def render_card(c: dict, idx: int, total: int, cfg: dict, ids: set, figs: Path, 
     title = {"decision": "Your decision", "review": "Your review", "info": "Your note"}[kind]
     resp = [f'<div class="resp" data-card="{attr(cid)}" data-kind="{kind}"><div class="resp-title">{title}'
             + (f'<button type="button" class="accept-btn" title="Key A">{acc}</button>' if acc else "") + "</div>"]
+    if str(c.get("action") or "").strip() and kind != "info":
+        resp.append(f'<div class="if-agree"><b>If you agree:</b> {plain(c["action"], lb)}</div>')
     if opts:
         resp.append('<div class="opts"><div class="sub">Select one option:</div>')
         for n, o in enumerate(opts, 1):
@@ -981,6 +983,18 @@ def cardset_manifest(cdir: Path) -> str:
     return "".join(f"{sha256(f)}  {f.name}\n" for f in sorted(cdir.glob("*.json")))
 
 
+def issued_cards(rdir: Path, cfg: dict, e: dict) -> list:
+    """The cards of an issued version, read with the config that was frozen when it was issued. Any load error stops the tool."""
+    if not e or not e.get("cards") or not inside(rdir / e["cards"], rdir) or not (rdir / e["cards"]).is_dir():
+        die(f"the card set of {e.get('version') if e else '?'} is missing from the review folder")
+    c0 = load_config(rdir, rdir / e["config"]) if e.get("config") and (rdir / e["config"]).is_file() else cfg
+    errs = []
+    cards = load_cards(rdir / e["cards"], c0, errs, [])
+    if errs:
+        die(f"the issued card set {e['cards']} of {e.get('version')} cannot be read: " + "; ".join(errs[:5]))
+    return cards
+
+
 def find_issued(entries: list, version: str):
     return next((e for e in reversed(entries) if e["event"] == "issued" and e["version"] == version), None)
 
@@ -1121,6 +1135,15 @@ def answers_markdown(a: dict) -> str:
     return "\n".join(md) + "\n"
 
 
+def answer_times(a: dict) -> dict:
+    """When each answer (and each confirmed-row note) was last changed, as the form recorded it."""
+    t = {r["id"]: str(r.get("updatedAt") or "") for r in a["answers"] if r["answered"] or r["flag"]}
+    for k, v in (a.get("reopen") or {}).items():
+        if isinstance(v, dict):
+            t[f"_reopen:{k}"] = str(v.get("updatedAt") or "")
+    return t
+
+
 def answers_signature(a: dict) -> dict:
     sig = {r["id"]: (r["option"], r["choice"], str(r.get("comment") or "").strip(), r["flag"], r["confidence"])
            for r in a["answers"] if r["answered"] or r["flag"]}
@@ -1185,14 +1208,26 @@ def action_text(card: dict, r: dict, choices: dict) -> str:
     return " ".join(str(card.get("summary", "")).split())[:400]
 
 
+def logged_decisions(rdir: Path, p: Path) -> dict:
+    """A decisions file that next-round wrote and logged, unchanged since (sha256)."""
+    entries = reg_load(rdir)
+    e = next((e for e in entries if e["event"] == "decisions" and e.get("file") == rel(p, rdir)), None)
+    if not e:
+        die(f"{p.name} is not in the log: only next-round writes decisions files")
+    if sha256(p) != e.get("sha256"):
+        die(f"{p.name} changed after next-round wrote it. Decisions are write-once: restore it, or use next-round --amend.")
+    return read_json(p, "decisions")
+
+
 def round_decisions(rdir: Path, n: int):
     """The decisions of round n, with amendments applied, or None."""
     base = rdir / f"DECISIONS_after_R{n}.json"
     if not base.exists():
         return None
-    d = read_json(base, "decisions")
-    for am in sorted(rdir.glob(f"DECISIONS_after_R{n}.amend*.json"), key=lambda p: int(re.search(r"amend(\d+)", p.name).group(1))):
-        a = read_json(am, "decisions amendment")
+    d = logged_decisions(rdir, base)
+    ams = [p_ for p_ in rdir.glob(f"DECISIONS_after_R{n}.amend*.json") if re.fullmatch(rf"DECISIONS_after_R{n}\.amend(\d+)\.json", p_.name)]
+    for am in sorted(ams, key=lambda p: int(re.search(r"amend(\d+)", p.name).group(1))):
+        a = logged_decisions(rdir, am)
         if a.get("supersedes"):
             d = a
             continue
@@ -1216,7 +1251,7 @@ ING_OK = {"during", "string", "strings", "thing", "things", "something", "nothin
           "headings", "meaning", "building", "missing", "remaining", "existing", "pending", "leading", "trailing",
           "matching", "corresponding", "logging", "caching", "testing", "staging", "routing", "rendering", "padding",
           "encoding", "mapping", "ranking", "scoring", "timing", "spacing", "pricing", "parsing", "debugging",
-          "processing", "versioning", "hashing", "tracking", "engineering", "billing", "onboarding", "outstanding", "underlying"}
+          "processing", "versioning", "hashing", "tracking", "engineering", "finding", "findings", "billing", "onboarding", "outstanding", "underlying"}
 PASSIVE_RE = re.compile(r"\b(?i:is|are|was|were|be|been|being)\s+(?:\w+ly\s+)?([a-z]+ed|built|done|made|given|shown|known|written|"
                         r"run|found|kept|taken|set|put|chosen|seen|sent|lost|held|paid|read|told|left|broken|drawn)\b")
 MODAL_RE = re.compile(r"(?i:\b(?:should|would|could|might|shall)\b)|\bmay\b|^May\b(?!\s+\d)")
@@ -1224,7 +1259,8 @@ CONTR_RE = re.compile(r"\b\w+(n't|'re|'ll|'ve|'m)\b|\b(it's|that's|there's|what'
 
 
 def card_prose(c: dict) -> list:
-    parts = [c.get("title"), c.get("summary"), c.get("tables_html"), c.get("recommendation_html"), c.get("reply_html"), c.get("changes_html")]
+    parts = [c.get("title"), c.get("summary"), c.get("tables_html"), c.get("recommendation_html"), c.get("reply_html"), c.get("changes_html"),
+             c.get("action")]
     parts += [b.get("html") for b in c.get("blocks") or []]
     for o in c.get("options") or []:
         parts += [o.get("label"), o.get("detail_html")]
@@ -1236,8 +1272,9 @@ def card_prose(c: dict) -> list:
         t = re.sub(r"<code>.*?</code>", " CODE ", str(p), flags=re.S)
         t = re.sub(r"<t[dh][^>]*>.*?</t[dh]>", " ", t, flags=re.S) if "<table" in t else t  # table cells are not sentences
         t = SRC_RE.sub(" ", text_of(t))
+        t = re.sub(r"\[[A-Z][A-Z-]{2,}\]\s*", "", t)  # evidence labels such as [INFERRED]
         for line in t.split("\n"):
-            for s in re.split(r"(?<=[.!?])\s+(?=[A-Z0-9\"'(])", line.strip()):
+            for s in re.split(r"(?<=[.!?])\s+(?=[A-Z0-9\"'(\[])", line.strip()):
                 if len(s.split()) >= 3:
                     out.append(s.strip())
     return out
@@ -1286,7 +1323,7 @@ def polarity(text) -> collections.Counter:
 
 def field_texts(c: dict) -> dict:
     f = {"title": c.get("title"), "summary": c.get("summary"), "tables_html": c.get("tables_html"),
-         "recommendation_html": c.get("recommendation_html")}
+         "recommendation_html": c.get("recommendation_html"), "action": c.get("action")}
     for i, b in enumerate(c.get("blocks") or []):
         f[f"blocks[{i}]"] = b.get("html")
     for o in c.get("options") or []:
@@ -1306,7 +1343,7 @@ def field_polarity(c: dict) -> dict:
 def field_facts(c: dict) -> dict:
     """Facts per field path, so that a number cannot move from one claim to another unnoticed."""
     f = {"title": c.get("title"), "summary": c.get("summary"), "tables_html": c.get("tables_html"),
-         "recommendation_html": c.get("recommendation_html")}
+         "recommendation_html": c.get("recommendation_html"), "action": c.get("action")}
     for i, b in enumerate(c.get("blocks") or []):
         f[f"blocks[{i}]"] = b.get("html")
     for o in c.get("options") or []:
@@ -1367,7 +1404,7 @@ def older_cards(rdir: Path, cfg: dict, entries: list, version: str) -> dict:
         mm = VERSION_RE.fullmatch(str(e.get("version") or ""))
         if not mm or (int(mm.group(1)), int(mm.group(2))) >= cur or not (rdir / e["cards"]).is_dir():
             continue
-        for c in load_cards(rdir / e["cards"], cfg, [], []):
+        for c in issued_cards(rdir, cfg, e):
             out.setdefault(c["id"], (c, e["version"]))
     return out
 
@@ -1413,12 +1450,37 @@ def wording_diffs(o: dict, c: dict) -> list:
     return E
 
 
+def config_drift(rdir: Path, cfg: dict, entries: list) -> list:
+    """Config changes after the first issue that would break the earlier rounds."""
+    frozen = [e for e in entries if e["event"] == "issued" and e.get("config") and (rdir / e["config"]).is_file()]
+    if not frozen:
+        return []
+    old = load_config(rdir, rdir / frozen[-1]["config"])
+    E = []
+    for k in ("review_id", "slug"):
+        if old[k] != cfg[k]:
+            E.append(f"vermilion.json: {k} changed after issue ({old[k]!r} -> {cfg[k]!r}). Put it back: the earlier forms and answers use it.")
+    oc, nc = {c["value"]: c for c in old["choices"]}, {c["value"]: c for c in cfg["choices"]}
+    for v, c in oc.items():
+        if v not in nc:
+            E.append(f"vermilion.json: choice {v!r} was removed after issue. Keep it (you may change its label).")
+        elif any(bool(c.get(f)) != bool(nc[v].get(f)) for f in ("confirms", "accept", "defers")):
+            E.append(f"vermilion.json: choice {v!r} changed what it means (confirms/accept/defers) after issue. Use a new value instead.")
+    os_, ns = {s_["key"]: s_ for s_ in old["sections"]}, {s_["key"]: s_ for s_ in cfg["sections"]}
+    for k, s_ in os_.items():
+        if k not in ns:
+            E.append(f"vermilion.json: section {k!r} was removed or renamed after issue. Keep it (you may change its title).")
+        elif s_.get("kind", "review") != ns[k].get("kind", "review"):
+            E.append(f"vermilion.json: section {k!r} changed its kind after issue.")
+    return E
+
+
 def changed_cards(rdir: Path, cfg: dict, entries: list, cards: list, old_version: str) -> tuple:
     """({id: reasons} for cards that changed more than their wording since old_version, incl. a changed figure; removed ids)."""
     e = find_issued(entries, old_version)
     if not e or not e.get("cards") or not inside(rdir / e["cards"], rdir):
         return {}, []
-    old = {c["id"]: c for c in load_cards(rdir / e["cards"], cfg, [], [])}
+    old = {c["id"]: c for c in issued_cards(rdir, cfg, e)}
     fdir, old_figs, out = rdir / cfg["figs_dir"], e.get("figSha256") or {}, {}
     for c in cards:
         o = old.get(c["id"])
@@ -1471,9 +1533,12 @@ def run_check(rdir: Path, cfg: dict, cdir: Path, against, wording_only: bool, pl
         elif is_relative(h) and not (rdir / h.split("#")[0]).exists():
             warns.append(f"config source {s.get('label')!r}: {h!r} does not exist (relative to {rdir})")
     entries = reg_load(rdir) if (rdir / "registry.json").exists() else []
+    errors.extend(config_drift(rdir, cfg, entries))
     m = VERSION_RE.fullmatch(version or "")
-    if m and int(m.group(1)) > 1 and int(m.group(2)) == 0:  # a new round: every open item of the last round must be here
+    if m and int(m.group(1)) > 1:  # a later round: every open item of the last round must be here, and the confirmed table must be true
         d = round_decisions(rdir, int(m.group(1)) - 1)
+        if d and d.get("confirmed") and not confp.exists():
+            errors.append(f"_confirmed.json is missing: round {int(m.group(1)) - 1} has {len(d['confirmed'])} confirmed items that the form must show")
         if d and confp.exists():
             dec_conf = {x["id"]: x for x in d.get("confirmed") or []}
             items = {str(it.get("id")): it for it in (read_json(confp).get("items") or []) if isinstance(it, dict)}
@@ -1481,8 +1546,13 @@ def run_check(rdir: Path, cfg: dict, cdir: Path, against, wording_only: bool, pl
                 errors.append(f"_confirmed.json lists {sorted(set(items) ^ set(dec_conf))[:8]} differently from the decisions of round "
                               f"{int(m.group(1)) - 1}: only next-round decides what is confirmed (use --amend to change it)")
             for k, it in items.items():
-                if k in dec_conf and str(it.get("decision")) != str(dec_conf[k].get("decision")):
-                    errors.append(f"_confirmed.json: the decision of {k} differs from the decisions file (you may edit only 'action')")
+                if k not in dec_conf:
+                    continue
+                for f in ("decision", "title", "since"):
+                    if str(it.get(f)) != str(dec_conf[k].get(f)):
+                        errors.append(f"_confirmed.json: the {f} of {k} differs from the decisions file (you may edit only 'action')")
+                if str(it.get("action")) != str(dec_conf[k].get("action")):
+                    warns.append(f"_confirmed.json: you changed the 'action' text of {k}. The form shows it, and the decisions of this round record it.")
         if d:
             have = {c["id"] for c in cards} | set(conf_ids)
             for it in d.get("open") or []:
@@ -1495,11 +1565,33 @@ def run_check(rdir: Path, cfg: dict, cdir: Path, against, wording_only: bool, pl
             o = oc.get(c["id"])
             if o:
                 warns.extend(label_warnings(o[0], c, o[1]))
-    if against:
-        against = Path(against)
-        if not against.is_dir() and VERSION_RE.fullmatch(str(against)):
-            against = cards_dir_for(rdir, entries, str(against))
-        old = {c["id"]: c for c in load_cards(against, cfg, [], [])}
+    base_e = None  # the issued version that --against (or --wording-only alone) compares with
+    if against is not None:
+        if VERSION_RE.fullmatch(str(against)) and not Path(against).is_dir():
+            base_e = find_issued(entries, str(against))
+            if not base_e:
+                errors.append(f"--against {against}: that version is not in the log as issued")
+        else:
+            base_e = next((e for e in reversed(entries) if e["event"] == "issued" and e.get("cards")
+                           and (rdir / e["cards"]).resolve() == Path(against).resolve()), None)
+    elif wording_only:
+        pv = prev_version(entries, version) if version else (prev_version(entries, cdir.name) if VERSION_RE.fullmatch(cdir.name) else None)
+        base_e = find_issued(entries, pv) if pv else None
+        if not base_e:
+            errors.append("--wording-only needs --against <version or folder>, or a card set whose version has an earlier issued version")
+    if base_e:
+        chg, removed = changed_cards(rdir, cfg, entries, cards, base_e["version"])
+        old = {c["id"]: c for c in issued_cards(rdir, cfg, base_e)}
+        for c in cards:
+            if c["id"] in old:
+                warns.extend(label_warnings(old[c["id"]], c, base_e["version"]))
+        if wording_only:
+            errors.extend(f"{k}: " + "; ".join(v) for k, v in chg.items())
+            missing = sorted(set(removed) - set(conf_ids))
+            if missing:
+                errors.append(f"cards {missing} are in {base_e['version']} but not in {cdir}")
+    elif against is not None and Path(against).is_dir():  # a folder that the log does not know: compare it as it is
+        old = {c["id"]: c for c in load_cards(Path(against), cfg, [], [])}
         for c in cards:
             o = old.get(c["id"])
             if not o:
@@ -1578,9 +1670,13 @@ def cmd_build(a) -> int:
     entries = reg_load(rdir)
     if not a.draft and find_issued(entries, a.version):
         die(f"{a.version} was issued already. Use the next revision (R{rnd}.{rev + 1}) or the next round.")
-    if rev > 0 and round_decisions(rdir, rnd) and not a.force:
+    if rev > 0 and round_decisions(rdir, rnd):
         die(f"round {rnd} is closed (DECISIONS_after_R{rnd}.md exists). Changes now go into round {rnd + 1}.")
-    if rev == 0 and rnd > 1 and round_decisions(rdir, rnd - 1) is None:
+    if rev > 0 and not a.draft and not any(e["event"] == "issued" and VERSION_RE.fullmatch(str(e.get("version") or "")) and
+                                           int(VERSION_RE.fullmatch(e["version"]).group(1)) == rnd and int(VERSION_RE.fullmatch(e["version"]).group(2)) < rev
+                                           for e in entries):
+        die(f"R{rnd}.{rev} is a revision, but no earlier version of round {rnd} was issued. Start with R{rnd}.0.")
+    if rnd > 1 and round_decisions(rdir, rnd - 1) is None:
         msg = f"round {rnd - 1} is not decided (no DECISIONS_after_R{rnd - 1}.json). Run {VM} next-round --dir {q(rdir)} first: it writes cards/R{rnd}.0."
         if a.draft:
             warns.append(msg)
@@ -1642,7 +1738,7 @@ def cmd_build(a) -> int:
             mm = VERSION_RE.fullmatch(str(e.get("version") or ""))
             if e["event"] == "issued" and e.get("formId") and mm and int(mm.group(1)) == rnd and int(mm.group(2)) < rev and e["formId"] not in seen:
                 chg, _ = changed_cards(rdir, cfg, entries, cards, e["version"])
-                olds = {c["id"] for c in load_cards(rdir / e["cards"], cfg, [], [])} if inside(rdir / e["cards"], rdir) else set()
+                olds = {c["id"] for c in issued_cards(rdir, cfg, e)}
                 prev.append({"id": e["formId"], "restorable": sorted({c["id"] for c in cards} & olds - set(chg) - no_restore)})
                 seen.add(e["formId"])
     for fid in a.prev_form_id or []:  # an id that the log does not know: only comments come back
@@ -1769,7 +1865,13 @@ def find_saved(rdir: Path, cfg: dict, entries: list) -> tuple:
             st = b.get("review-state") if isinstance(b.get("review-state"), dict) else {}
             fid = st.get("formId") or b.get("_data-form-id")
             if b.get("_data-draft") or str(fid or "").endswith("-draft"):
-                if parse_iso(st.get("savedAt")):  # the build's own preview is never saved: skip it silently
+                t, ver = parse_iso(st.get("savedAt")), st.get("formVersion") or b.get("_data-version")
+                iss = find_issued(entries, str(ver)) if ver else None
+                newest = [e for e in entries if e["event"] == "issued"][-1:] if entries else []
+                got_after = any(e["event"] == "received" and e["version"] == ver and parse_iso(e.get("savedAt")) and t
+                                and parse_iso(e["savedAt"]) >= t for e in entries)
+                # report a draft only if the reader may have answered it instead of the issued form
+                if t and iss and newest and newest[0]["version"] == ver and parse_iso(iss.get("time")) and t > parse_iso(iss["time"]) and not got_after:
                     drafts.append(p)
                 continue
             t = parse_iso(st.get("savedAt"))
@@ -1828,19 +1930,19 @@ def receive_one(rdir: Path, cfg: dict, entries: list, src: Path, a) -> int:
                 problems.append(f"its {k} block differs from the issued form (the file was changed by hand or comes from another build)")
     if iss:
         try:
-            issued_cards = {c["id"]: c for c in load_cards(rdir / iss["cards"], cfg, [], [])} if inside(rdir / iss["cards"], rdir) else {}
+            issued_set = {c["id"]: c for c in issued_cards(rdir, cfg, iss)}
         except Fail:
-            issued_cards = {}
-        if not issued_cards:
+            issued_set = {}
+        if not issued_set:
             problems.append(f"the issued card set {iss.get('cards')!r} of {version} cannot be read, so the answers cannot be checked")
         got = {r["id"] for r in ans["answers"]}
-        if issued_cards and got != set(issued_cards):
-            problems.append(f"its cards differ from the issued card set (extra {sorted(got - set(issued_cards))[:6]}, missing {sorted(set(issued_cards) - got)[:6]})")
-        changed = [r["id"] for r in ans["answers"] if r["id"] in issued_cards and r.get("hash") != card_hash(issued_cards[r["id"]])]
+        if issued_set and got != set(issued_set):
+            problems.append(f"its cards differ from the issued card set (extra {sorted(got - set(issued_set))[:6]}, missing {sorted(set(issued_set) - got)[:6]})")
+        changed = [r["id"] for r in ans["answers"] if r["id"] in issued_set and r.get("hash") != card_hash(issued_set[r["id"]])]
         if changed:
             problems.append(f"the text of cards {changed[:8]} differs from the issued text (the reader saw other cards)")
         for r in ans["answers"]:
-            c = issued_cards.get(r["id"])
+            c = issued_set.get(r["id"])
             if c and r["option"] and r["option"] != "other" and r["option"] not in {str(o.get("key")) for o in c.get("options") or []}:
                 problems.append(f"{r['id']}: option {r['option']!r} is not an option of the issued card")
     if problems and not a.force:
@@ -1978,13 +2080,20 @@ def pick_answers(rdir: Path, entries: list, given):
         print(f"round {top} has {len(cs)} answer files:")
         for c in cs:
             print(f"  {q(c[2])}  version {c[3]['formVersion']}  saved {c[3].get('savedAt')}  {sum(r['answered'] for r in c[3]['answers'])} answered")
-        lost = []
+        lost, later = [], []
         nsig = answers_signature(newest[3])
+        ntime = answer_times(newest[3])
         for c in cs[:-1]:
-            lost += [i for i in answers_signature(c[3]) if i not in nsig]
+            osig, otime = answers_signature(c[3]), answer_times(c[3])
+            lost += [i for i in osig if i not in nsig]
+            later += [f"{i} ({otime[i]} in {q(c[2])} vs {ntime.get(i) or 'no time'})" for i in osig
+                      if i in nsig and osig[i] != nsig[i] and otime.get(i) and otime[i] > (ntime.get(i) or "")]
         if lost:
             die(f"the newest file ({q(newest[2])}) has no answer for {sorted(set(lost))[:10]}, which an older file has. "
                 "Ask the user which file is right, then give it with --answers <file>.")
+        if later:
+            die("an older save holds a LATER answer than the newest save for: " + "; ".join(later[:6]) +
+                ". The reader probably answered in two copies of the form. Ask the user which answers are right, then give that file with --answers <file>.")
         print(f"using the newest: {rel(newest[2], rdir)}")
     return newest[2], newest[3]
 
@@ -1999,10 +2108,11 @@ def decide(rdir: Path, cfg: dict, entries: list, ap: Path, ans: dict, opens: lis
     if ans.get("reviewId") and ans["reviewId"] != cfg["review_id"]:
         die(f"{ap} belongs to another review (id {ans['reviewId']}, this review is {cfg['review_id']})")
     choices = dict(ans.get("choices") or {}) or {c["value"]: c for c in cfg["choices"] + INFO_CHOICES}
-    cdir = cards_dir_for(rdir, entries, version)
-    if not inside(cdir, rdir):
-        die(f"the card set of {version} is outside the review folder")
-    cards = {c["id"]: c for c in load_cards(cdir, cfg, [], [])}
+    iss = find_issued(entries, version)
+    if not iss:
+        die(f"{version} is not in the log as issued")
+    cdir = rdir / iss["cards"]
+    cards = {c["id"]: c for c in issued_cards(rdir, cfg, iss)}
     if not cards:
         die(f"the card set of {version} ({rel(cdir, rdir)}) has no cards: nothing can be decided")
     prev_conf = {"items": []}
@@ -2012,9 +2122,9 @@ def decide(rdir: Path, cfg: dict, entries: list, ap: Path, ans: dict, opens: lis
         prev_conf = {"items": [dict({k: v for k, v in x.items() if k != "answer"}, action=(shown_conf.get(x["id"]) or {}).get("action") or x.get("action"))
                                for x in dprev.get("confirmed") or []]}
     rows = {r["id"]: r for r in ans["answers"] if ID_RE.fullmatch(str(r.get("id") or ""))}
-    for extra in sorted(set(rows) - set(cards)):
-        print(f"WARN  {extra} is in the answers but not in the issued card set: ignored")
-        rows.pop(extra)
+    extra = sorted(set(rows) - set(cards))
+    if extra:
+        die(f"the answers hold cards {extra[:8]} that are not in the issued card set of {version}: the answers file does not fit this review")
     for missing in sorted(set(cards) - set(rows)):
         rows[missing] = {"id": missing, "title": cards[missing].get("title"), "section": cards[missing]["section"], "kind": cards[missing]["kind"],
                          "option": None, "option_label": None, "choice": None, "choice_label": None, "comment": "", "flag": False,
@@ -2060,9 +2170,29 @@ def decide(rdir: Path, cfg: dict, entries: list, ap: Path, ans: dict, opens: lis
     for e in entries:  # every card that any issued revision of this round showed
         mm = VERSION_RE.fullmatch(str(e.get("version") or ""))
         if e["event"] == "issued" and mm and int(mm.group(1)) == rnd and e.get("cards") and inside(rdir / e["cards"], rdir):
-            round_ids |= {c["id"] for c in load_cards(rdir / e["cards"], cfg, [], [])}
+            round_ids |= {c["id"] for c in issued_cards(rdir, cfg, e)}
+    shown_in = {}
+    for e in entries:
+        mm = VERSION_RE.fullmatch(str(e.get("version") or ""))
+        if e["event"] == "issued" and mm and int(mm.group(1)) == rnd and e.get("cards"):
+            for c in issued_cards(rdir, cfg, e):
+                shown_in.setdefault(c["id"], []).append((int(mm.group(2)), e["version"], c.get("title")))
+    cur_rev = int(mv.group(2))
     for i in sorted(round_ids - set(cards) - prev_ids):
-        lost.append({"id": i, "title": i, "status": "open", "reason": "A revision removed it from the form, so it has no decision", "item": {}})
+        vers = sorted(shown_in.get(i, []))
+        added_later = all(r_ > cur_rev for r_, _, _ in vers)
+        earlier = None  # the reader's last answer to it in any save of this round
+        for e in reversed([e for e in entries if e["event"] == "answers"]):
+            mm = VERSION_RE.fullmatch(str(e.get("version") or ""))
+            if mm and int(mm.group(1)) == rnd and (rdir / e["file"]).is_file():
+                row = next((r_ for r_ in read_json(rdir / e["file"]).get("answers") or [] if r_.get("id") == i and r_.get("answered")), None)
+                if row:
+                    earlier = row
+                    break
+        reason = (f"It was added in {vers[0][1]}, after the version that you answered ({version})" if added_later and vers else
+                  "A revision removed it from the form, so it has no decision")
+        lost.append({"id": i, "title": (vers[-1][2] if vers else i), "status": "open", "reason": reason,
+                     "item": {"previous": earlier or {}}})
     if rnd > 1:  # an item that was open after the last round must not vanish because the form lost it
         d = round_decisions(rdir, rnd - 1)
         known = set(cards) | prev_ids | {x["id"] for x in lost}
@@ -2116,7 +2246,8 @@ def write_plan(rdir: Path, entries: list, P: dict, dec_md: Path, dec_json: Path,
     dec = {"round": rnd, "from_answers": rel(P["ap"], rdir), "from_version": version, "written": now_iso(),
            "confirmed": [dict(x, answer=answers_by_id.get(x["id"])) for x in new_conf],
            "open": [{"id": it["id"], "title": it["title"], "reason": it["reason"],
-                     "previous": it.get("answer") or {"comment": it.get("comment")}} for it in P["open"] + P["reopened"] + P["lost"]],
+                     "previous": it.get("answer") or (it.get("item") or {}).get("previous") or {"comment": it.get("comment")}}
+                    for it in P["open"] + P["reopened"] + P["lost"]],
            "next_version": nxt if n_open else None}
     if extra:
         dec.update(extra)
@@ -2149,6 +2280,8 @@ def write_plan(rdir: Path, entries: list, P: dict, dec_md: Path, dec_json: Path,
             (tmp / "_confirmed.json").write_text(json.dumps({"round": rnd + 1, "items": new_conf}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
         write_new(dec_md, "\n".join(L) + "\n")
         write_new(dec_json, json.dumps(dec, ensure_ascii=False, indent=1) + "\n")
+        make_readonly(dec_md)
+        make_readonly(dec_json)
         if tmp:
             os.replace(tmp, ncdir)
             tmp = None
@@ -2220,7 +2353,8 @@ def draft_card(rdir: Path, entries: list, cards: dict, it: dict, version: str):
     c["status_reason"] = it["reason"]
     c["disposition"] = ""
     c["reply_html"] = (f"<p>{TODO_MARK}: reply to the reader. Answer each question in the comment, add the explanation that was "
-                       "asked for, and say what you changed. Add a new option (with a new key) for a choice that the reader proposed.</p>")
+                       "asked for, and say what you changed. On a decision card, or a card with options, add the reader's proposal as a new option "
+                       "with a new key. On a review card without options, rewrite the proposed action (or 'action') and list the change in changes_html.</p>")
     return c
 
 
@@ -2281,7 +2415,7 @@ def amend_round(rdir: Path, cfg: dict, entries: list, opens: list, confirms: lis
     confp = ncdir / "_confirmed.json"
     cur = read_json(confp) if confp.exists() else {"round": n + 1, "items": [{k2: v for k2, v in x.items() if k2 != "answer"} for x in d.get("confirmed") or []]}
     version = d.get("from_version")
-    src_cards = {c["id"]: c for c in load_cards(cards_dir_for(rdir, entries, version), cfg, [], [])} if version else {}
+    src_cards = {c["id"]: c for c in issued_cards(rdir, cfg, find_issued(entries, version))} if version and find_issued(entries, version) else {}
     for i in opens:
         x = conf[i]
         it = {"id": i, "title": x.get("title"), "reason": "The AI reopened it after reading your comment", "answer": x.get("answer"),
@@ -2295,6 +2429,8 @@ def amend_round(rdir: Path, cfg: dict, entries: list, opens: list, confirms: lis
     write_new(am_json, json.dumps({"round": n, "amend": k, "written": now_iso(), "reopened": opens}, ensure_ascii=False, indent=1) + "\n")
     write_new(am_md, f"# Amendment {k} to the decisions after round {n}\n\nWritten {now_iso()}. These confirmed items are open again "
                      f"(the AI reopened them after reading the comments): {', '.join(opens)}.\n")
+    make_readonly(am_json)
+    make_readonly(am_md)
     reg_add(rdir, entries, "decisions", version or f"R{n}.0", am_json, f"amendment {k}: reopened {', '.join(opens)}")
     reg_save(rdir, entries)
     print(f"reopened {', '.join(opens)}: new cards in {ncdir}/, removed from _confirmed.json, recorded in {am_md.name}")
@@ -2309,7 +2445,7 @@ def cmd_revise(a) -> int:
     if not mf or not mt or mf.group(1) != mt.group(1) or int(mt.group(2)) <= int(mf.group(2)):
         die("--from and --to must be versions of the same round, for example --from R1.0 --to R1.1")
     entries = reg_load(rdir)
-    if round_decisions(rdir, int(mf.group(1))) and not a.force:
+    if round_decisions(rdir, int(mf.group(1))):
         die(f"round {mf.group(1)} is closed (DECISIONS_after_R{mf.group(1)}.md exists). Changes now go into the next round.")
     src = cards_dir_for(rdir, entries, a.from_)
     dst = rdir / "cards" / a.to
@@ -2323,7 +2459,7 @@ def cmd_revise(a) -> int:
         shutil.copyfile(f, dst / f.name)  # copyfile does not copy the read-only mode
         n += 1
     print(f"copied {n} files from {src} to {dst} (writable). Edit them, then:\n"
-          f"  {VM} check --dir {q(rdir)} --cards {q(dst)} --against {q(src)} --wording-only\n"
+          f"  {VM} check --dir {q(rdir)} --version {a.to} --wording-only\n"
           f"  {VM} build --dir {q(rdir)} --version {a.to} --cards {q(dst)} --carry <the newest received file> --note \"...\"")
     return 0
 
@@ -2340,8 +2476,14 @@ def cmd_status(a) -> int:
     issued = [e for e in entries if e["event"] == "issued"]
     if issued:
         last = issued[-1]
-        got = [e for e in entries if e["event"] == "received" and e["version"] == last["version"]]
-        print(f"latest issued: {last['version']} ({last['file']}); " + (f"received {len(got)} time(s)" if got else "waiting for the user"))
+        li = max(i for i, e in enumerate(entries) if e is last)
+        rn = VERSION_RE.fullmatch(last["version"]).group(1)
+        got = [e for e in entries[li + 1:] if e["event"] == "received" and str(e["version"]).startswith(f"R{rn}.")]
+        older = [e for e in got if e["version"] != last["version"]]
+        decided = round_decisions(rdir, int(rn)) is not None
+        print(f"latest issued: {last['version']} ({last['file']}); " +
+              (f"received {len(got)} save(s) since then" + (f", {len(older)} of them from an older revision" if older else "") +
+               ("" if decided else f". next: {VM} next-round --dir {q(rdir)} --dry-run") if got else "waiting for the user"))
         rounds = sorted(int(m_.group(1)) for p_ in rdir.glob("DECISIONS_after_R*.json") for m_ in [re.fullmatch(r"DECISIONS_after_R(\d+)\.json", p_.name)] if m_)
         if rounds:
             d = round_decisions(rdir, rounds[-1]) or {}
@@ -2457,7 +2599,7 @@ def main(argv=None) -> int:
     p.add_argument("--dir", default="review")
     p.add_argument("--from", dest="from_", required=True)
     p.add_argument("--to", required=True)
-    p.add_argument("--force", action="store_true", help="revise a round that is closed already")
+
     p = sub.add_parser("status", help="show the log")
     p.add_argument("--dir", default="review")
     p = sub.add_parser("selftest", help="run the self-test of a form in a headless browser")

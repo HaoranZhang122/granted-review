@@ -101,6 +101,7 @@ figure.zoom img{cursor:zoom-out;max-width:none}figcaption{font-size:13px;color:v
 .confrow label{display:flex;gap:4px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:1px 9px;cursor:pointer}
 .confrow label:has(input:checked){border-color:var(--acc-line);background:var(--acc-soft);color:var(--ink)}
 .confrow input{margin:0}
+.if-agree{font-size:13.5px;background:var(--ok-soft);border-radius:6px;padding:5px 9px;margin:2px 0 6px}
 .reason-hint{display:none;font-size:13px;color:var(--amber);margin:4px 0}.card.reason .reason-hint{display:block}
 .card.reason textarea{border-color:var(--amber)}
 .resp-foot{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:4px;font-size:13px;color:var(--mut)}

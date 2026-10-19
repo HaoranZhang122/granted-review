@@ -48,7 +48,7 @@ In imperial China, ministers sent long memorials (奏章) to the throne. The emp
 - **Rule fast.** <kbd>A</kbd> accepts the recommendation. <kbd>1</kbd>–<kbd>9</kbd> select an option. <kbd>J</kbd>/<kbd>K</kbd> move between cards. <kbd>N</kbd> jumps to the next unanswered card. <kbd>F</kbd> flags a card. <kbd>C</kbd> opens a comment. A vermilion seal (准 Approved, 改 Revise, 驳 Rejected, 缓 Deferred, 问 Question) stamps each card that you decide.
 - **Say how sure you are.** Sure, leaning or unsure. If you are unsure, the agent explains more in the next round.
 - **Reasons where they matter.** If you disagree, ask for a change or select "Other", the form asks you for one sentence of reason.
-- **Seal & send.** One click lists what is unanswered, unsure or without a reason, saves your answers into the file and copies a short summary for the chat. Then you tell the agent "saved", and it can find the file by itself.
+- **Seal & send.** One click lists what is unanswered, unsure or without a reason, saves your answers into the file and copies a short summary for the chat. Then you tell the agent "saved". It finds the file by itself if you saved it in the form's folder, Downloads or Desktop; otherwise give it the path.
 - **Round 2 is short.** It shows a table of everything that is confirmed (you can reopen a row) and a card only for each open item. Each open card has your previous answer and the agent's reply to your comment.
 
 **For the agent**
@@ -58,7 +58,7 @@ In imperial China, ministers sent long memorials (奏章) to the throne. The emp
 - `next-round` sorts every item into Confirmed or Open, with a reason. It writes `DECISIONS_after_R<n>.md` and drafts the next card set, with a `TODO(AI)` in each place where a reply is due. Nothing can drop out of the review without a decision.
 
 **For the record**
-- **The answers live inside the HTML file.** In Chrome and Edge, Save writes into the file itself. Other browsers and the VS Code preview download an updated copy.
+- **The answers live inside the HTML file.** In Chrome and Edge, the first Save opens a Save dialog: choose the form file itself and confirm Replace, and later saves write into it directly. Other browsers and the VS Code preview download an updated copy.
 - **Every issued and returned file is frozen** (a read-only copy) and logged with its sha256 in `REVIEW_LOG.md`. Each card carries a fingerprint of its text, and `receive` checks it against the issued form, so each answer traces to the card set that you were given.
 - **Versions** are `R<round>.<revision>`. Option letters never change their meaning. A revision (R1.1) fixes wording and keeps your answers. A new round (R2.0) asks only what is open.
 - **Private by design.** There is no server, no network call and no CDN. The form is one file on your disk.
@@ -114,7 +114,7 @@ What Vermilion adds is the record. promptback and grill-me-batch keep the answer
 
 ## FAQ
 
-**Which browser?** Chrome or Edge saves into the file directly. Firefox, Safari and the VS Code preview work too: Save downloads an updated copy. Give that copy to the agent.
+**Which browser?** In Chrome or Edge, the first Save asks where to save: choose the form file itself. Firefox, Safari and the VS Code preview work too: Save downloads an updated copy. Give that copy to the agent.
 
 **I closed the tab without saving.** Open the same file in the same browser. The form offers the answers that the browser kept.
 

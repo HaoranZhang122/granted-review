@@ -18,7 +18,7 @@ Files in a card folder whose name starts with `_` are not cards. `next-round` wr
 |---|---|---|
 | `schema` | yes | Always `1`. |
 | `slug` | yes | A short name, `[a-z0-9-]+`. It starts the form id and the file names. |
-| `review_id` | no | 8 random hex characters that `init` writes. The browser keeps the answers under it, so two reviews with the same slug never mix. Do not change it after the first issue. |
+| `review_id` | no | 8 random hex characters that `init` writes. The browser keeps the answers under it, so two reviews with the same slug never mix. |
 | `title` | yes | The heading of the form. |
 | `short_title` | no | The title in the top bar. Keep it short (≤ 28 characters). |
 | `intro_html` | no | The text at the top of the form. |
@@ -44,6 +44,10 @@ Each choice says what it means. The form and `next-round` use these flags, not t
 | `tone` | The colour of the seal: empty (vermilion), `ink`, `gray` or `blue`. | disagree ink, defer gray, info blue |
 
 If you use the default values (`agree`, `modify`, `disagree`, `defer`, `info`), missing flags come from the defaults. The values `other` and `noted` are reserved.
+
+### What must not change after the first issue
+
+`check` (and so `build`) refuses these changes, because the earlier forms, answers and decisions depend on them: `review_id`, `slug`, a removed choice value, a choice whose `confirms`, `accept` or `defers` flag changed, and a removed, renamed or re-kinded section. Titles, labels, `intro_html`, `sources` and `labels` can change. Each issued version also keeps a frozen copy of the config (`cards/<version>.config.json`), and the tool reads the cards of that version with it.
 
 ## A card
 
