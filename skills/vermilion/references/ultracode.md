@@ -1,6 +1,6 @@
 # Ultracode: write and verify the cards with many agents
 
-For a short report, one agent can write the cards. For a long report (more than about 15 items), or when a wrong card is expensive, split the work: independent writers, independent verifiers that try to refute each card, and one consistency pass. In Claude Code, turn on **Ultracode** (put the word `ultracode` in your prompt, or turn it on for the session) so that the agent orchestrates this with the Workflow tool.
+For a short report, one agent can write the cards. For a long report (more than about 15 items), or when a wrong card is expensive, split the work: independent writers, independent verifiers that try to refute each card, and one consistency pass. In Claude Code, turn on **Ultracode** (put the word `ultracode` in your prompt, or turn it on for the session) so that the agent orchestrates this with the Workflow tool. Ultracode needs dynamic workflows (see `/config`), and some setups do not offer it. Without it, and in Codex, do the same phases one after another, as SKILL.md says.
 
 ## The recipe
 
@@ -15,7 +15,7 @@ For a short report, one agent can write the cards. For a long report (more than 
 
 For round 2 and later, use the same shape on the open cards: one agent per card writes `reply_html` from the reader's comment, and a verifier checks that the reply answers every question and adds no unsupported claim.
 
-**Why a separate verifier:** a writer that condenses a long report tends to drop hedges, change numbers and merge options. A fresh agent that checks only one card against the source finds these errors. In our own use, the verifiers fixed several writer errors per card on average.
+**Why a separate verifier:** a writer that condenses a long report tends to drop hedges, change numbers and merge options. A fresh agent that checks only one card against the source finds these errors.
 
 ## A workflow template
 

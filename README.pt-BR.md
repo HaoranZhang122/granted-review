@@ -10,7 +10,7 @@ Sua IA escreve o memorial. Você segura o pincel vermelhão.
 
 [English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · **Português (Brasil)** · [Русский](README.ru.md)
 
-[![Claude Code skill](https://img.shields.io/badge/Claude%20Code-skill-c8361d)](#instalação)
+[![Claude Code and Codex skill](https://img.shields.io/badge/Claude%20Code%20%7C%20Codex-skill-c8361d)](#instalação)
 [![Zero dependências](https://img.shields.io/badge/dependencies-0-2e7d4f)](#o-que-você-recebe)
 [![Um arquivo HTML](https://img.shields.io/badge/form-one%20HTML%20file-1f1a17)](#o-que-você-recebe)
 [![MIT](https://img.shields.io/badge/license-MIT-6b625a)](LICENSE)
@@ -81,7 +81,7 @@ No Codex, `$vermilion` aciona a skill.
 
 **3. Repita.** O agente lê suas respostas e envia um formulário mais curto, só com os itens em aberto, cada um com a resposta dele ao seu comentário. Quando nada mais estiver em aberto, ele escreve o registro final de decisões.
 
-> **O modo Ultracode é altamente recomendado.** Para um relatório longo, deixe o agente rodar um fluxo de trabalho com vários agentes: um redator por cartão, um verificador independente por cartão, que o confere com a fonte, e uma verificação de consistência. Redatores que condensam relatórios longos omitem ressalvas e alteram números. Os verificadores detectam isso. No Claude Code, adicione `ultracode` ao prompt. O Codex não tem modo Ultracode: peça a ele que siga as etapas de redator e de verificador descritas em [references/ultracode.md](skills/vermilion/references/ultracode.md) (em inglês).
+> **O modo Ultracode é altamente recomendado.** Para um relatório longo, deixe o agente rodar um fluxo de trabalho com vários agentes: um redator por cartão, um verificador independente por cartão, que o confere com a fonte, e uma verificação de consistência. Redatores que condensam relatórios longos costumam omitir ressalvas e alterar números. Os verificadores detectam isso. No Claude Code, adicione `ultracode` ao prompt (é preciso ativar a opção “Dynamic workflows” em `/config`). Sem o Ultracode, e no Codex, o agente segue as mesmas etapas de redator e de verificador, uma após a outra: veja [references/ultracode.md](skills/vermilion/references/ultracode.md) (em inglês).
 
 **Experimente agora, sem agente:** clone o repositório e abra no navegador os arquivos em [`skills/vermilion/examples/demo/forms/`](skills/vermilion/examples/demo/forms/) (o próprio GitHub mostra arquivos HTML como código-fonte). Eles contêm uma revisão fictícia de uma migração de banco de dados: a rodada 1 vazia, a rodada 1 do jeito que um revisor a devolveu, e a rodada 2.
 

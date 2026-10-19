@@ -1840,13 +1840,39 @@ def cmd_rebuild(a) -> int:
     return 0 if same else 1
 
 
+def save_dirs(rdir: Path) -> list:
+    """The review folder, then Downloads and Desktop: the English names, the XDG names (also localized ones) and OneDrive."""
+    home = Path.home()
+    dirs = [rdir, home / "Downloads", home / "Desktop"]
+    try:
+        text = (home / ".config" / "user-dirs.dirs").read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        text = ""
+    for key in ("XDG_DOWNLOAD_DIR", "XDG_DESKTOP_DIR"):
+        m = re.search(rf'^\s*{key}="([^"\n]+)"', text, re.M)
+        val = os.environ.get(key) or (m.group(1) if m else "")
+        if val:
+            dirs.append(Path(val.replace("$HOME", str(home))).expanduser())
+    dirs += [home / "OneDrive" / "Downloads", home / "OneDrive" / "Desktop"]
+    out, seen = [], set()
+    for d in dirs:
+        try:
+            k = d.resolve()
+        except OSError:
+            k = d
+        if k not in seen:
+            seen.add(k)
+            out.append(d)
+    return out
+
+
 def find_saved(rdir: Path, cfg: dict, entries: list) -> tuple:
-    """New saves of this review in the review folder, ~/Downloads and ~/Desktop: (saves oldest first, drafts, skipped)."""
+    """New saves of this review in the review folder, Downloads and Desktop: (saves oldest first, drafts, skipped)."""
     issued_ids = {e.get("formId") for e in entries if e["event"] == "issued"}
     received = {e.get("sha256") for e in entries if e["event"] == "received"}
     issued_sha = {e.get("sha256") for e in entries if e["event"] == "issued"}
     found, drafts, skipped = [], [], []
-    for d in (rdir, Path.home() / "Downloads", Path.home() / "Desktop"):
+    for d in save_dirs(rdir):
         try:
             cands = list(d.glob(f"{cfg['slug']}_R*.htm*")) if d.is_dir() else []
         except OSError:
@@ -2006,7 +2032,7 @@ def cmd_receive(a) -> int:
         for p in skipped:
             print(f"  skipped (unreadable or no valid save time): {shown(p)}")
         if not saves:
-            die(f"no new saved form of '{cfg['slug']}' found in {rdir}, ~/Downloads or ~/Desktop. Ask the user for the path.")
+            die(f"no new saved form of '{cfg['slug']}' found in {rdir}, Downloads or Desktop. Ask the user for the path.")
         rc = 0
         for p in saves:  # every new save, oldest first: next-round then uses the newest and stops if they disagree
             print(f"  found: {shown(p)}")

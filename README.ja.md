@@ -10,7 +10,7 @@ AI が上奏文を書き、あなたが朱筆を執る。
 
 [English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · **日本語** · [한국어](README.ko.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Português (Brasil)](README.pt-BR.md) · [Русский](README.ru.md)
 
-[![Claude Code skill](https://img.shields.io/badge/Claude%20Code-skill-c8361d)](#インストール)
+[![Claude Code and Codex skill](https://img.shields.io/badge/Claude%20Code%20%7C%20Codex-skill-c8361d)](#インストール)
 [![依存なし](https://img.shields.io/badge/依存-0-2e7d4f)](#得られるもの)
 [![HTML ファイル 1 つ](https://img.shields.io/badge/フォーム-HTML%20ファイル%201%20つ-1f1a17)](#得られるもの)
 [![MIT](https://img.shields.io/badge/license-MIT-6b625a)](LICENSE)
@@ -81,7 +81,7 @@ Codex では、`$vermilion` でスキルを呼び出します。
 
 **3. 繰り返す。** エージェントは回答を読み、未決の項目だけを載せた短いフォームを送ります。各項目には、あなたのコメントへの返信が付きます。未決がなくなると、最終的な決定記録を書きます。
 
-> **Ultracode モードを強く推奨します。** 長いレポートでは、エージェントにマルチエージェントのワークフローを実行させてください。カードごとに書き手を 1 人、元の資料と照合する独立した検証者をカードごとに 1 人置き、さらに一貫性チェックを行います。長いレポートを要約する書き手は、但し書きや留保を落とし、数字を変えてしまいます。検証者がそれを見つけます。Claude Code では、プロンプトに `ultracode` を加えます。Codex には Ultracode モードがありません。代わりに、[references/ultracode.md](skills/vermilion/references/ultracode.md)（英語）にある書き手と検証者の手順に従うよう頼んでください。
+> **Ultracode モードを強く推奨します。** 長いレポートでは、エージェントにマルチエージェントのワークフローを実行させてください。カードごとに書き手を 1 人、元の資料と照合する独立した検証者をカードごとに 1 人置き、さらに一貫性チェックを行います。長いレポートを要約する書き手は、但し書きや留保を落とし、数字を変えてしまうことがよくあります。検証者がそれを見つけます。Claude Code では、プロンプトに `ultracode` を加えます（`/config` の「Dynamic workflows」設定が必要です）。Ultracode を使えない場合や Codex では、エージェントが書き手と検証者の手順を一つずつ順に行います。詳しくは [references/ultracode.md](skills/vermilion/references/ultracode.md)（英語）を参照してください。
 
 **エージェントなしで今すぐ試す：** リポジトリをクローンし、[`skills/vermilion/examples/demo/forms/`](skills/vermilion/examples/demo/forms/) のファイルをブラウザで開きます（GitHub 上では HTML ファイルはソースコードとして表示されます）。中身は架空のデータベース移行レビューで、空の 1 回目、レビュアーが回答して返した 1 回目、そして 2 回目が入っています。
 

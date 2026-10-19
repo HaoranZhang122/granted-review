@@ -10,7 +10,7 @@ Tu IA escribe el memorial. Tú tienes el pincel bermellón.
 
 [English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · **Español** · [Français](README.fr.md) · [Deutsch](README.de.md) · [Português (Brasil)](README.pt-BR.md) · [Русский](README.ru.md)
 
-[![Claude Code skill](https://img.shields.io/badge/Claude%20Code-skill-c8361d)](#instalación)
+[![Claude Code and Codex skill](https://img.shields.io/badge/Claude%20Code%20%7C%20Codex-skill-c8361d)](#instalación)
 [![Sin dependencias](https://img.shields.io/badge/dependencies-0-2e7d4f)](#qué-obtienes)
 [![Un archivo HTML](https://img.shields.io/badge/form-one%20HTML%20file-1f1a17)](#qué-obtienes)
 [![MIT](https://img.shields.io/badge/license-MIT-6b625a)](LICENSE)
@@ -81,7 +81,7 @@ En Codex, `$vermilion` invoca la skill.
 
 **3. Repite.** El agente lee tus respuestas y te envía un formulario más corto, solo con los puntos abiertos, cada uno con su respuesta a tu comentario. Cuando no queda nada abierto, escribe el registro final de decisiones.
 
-> **Se recomienda encarecidamente el modo Ultracode.** Con un informe largo, deja que el agente ejecute un flujo de trabajo con varios agentes: un redactor por tarjeta, un verificador independiente por tarjeta que la compara con la fuente, y una revisión de coherencia. Los redactores que condensan informes largos eliminan las salvedades y cambian las cifras. Los verificadores lo detectan. En Claude Code, añade `ultracode` a tu petición. Codex no tiene modo Ultracode: pídele que siga los pasos de redactor y verificador de [references/ultracode.md](skills/vermilion/references/ultracode.md) (en inglés).
+> **Se recomienda encarecidamente el modo Ultracode.** Con un informe largo, deja que el agente ejecute un flujo de trabajo con varios agentes: un redactor por tarjeta, un verificador independiente por tarjeta que la compara con la fuente, y una revisión de coherencia. Los redactores que condensan informes largos suelen eliminar las salvedades y cambiar las cifras. Los verificadores lo detectan. En Claude Code, añade `ultracode` a tu petición (requiere el ajuste «Dynamic workflows» en `/config`). Sin Ultracode, y en Codex, el agente sigue los mismos pasos de redactor y verificador uno tras otro: consulta [references/ultracode.md](skills/vermilion/references/ultracode.md) (en inglés).
 
 **Pruébalo ahora, sin agente:** clona el repositorio y abre en tu navegador los archivos de [`skills/vermilion/examples/demo/forms/`](skills/vermilion/examples/demo/forms/) (el propio GitHub muestra los archivos HTML como código fuente). Contienen una revisión ficticia de una migración de base de datos: la ronda 1 vacía, la ronda 1 tal como la devolvió un revisor, y la ronda 2.
 

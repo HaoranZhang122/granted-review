@@ -17,7 +17,7 @@
  ],
  "options": [
   {"key": "a", "label": "Sunday 15 November 2026, 02:00–02:30", "detail_html": "<p><b>Effect:</b> the savings start 2 months earlier (about $5,400). <b>Risk:</b> high. The plan has no slack. The ORM release (F5) gets less than one week on MySQL. The 7-day rollback window ends on 22 November, after the peak freeze starts.</p>"},
-  {"key": "b", "label": "Sunday 10 January 2027, 02:00–02:30", "detail_html": "<p><b>Effect:</b> about 6 weeks of slack after the staging work. Traffic is 41 orders per minute. <b>Cost:</b> about $5,400 of savings come later. <b>Risk:</b> low.</p>", "recommended": true},
+  {"key": "b", "label": "Sunday 10 January 2027, 02:00–02:30", "detail_html": "<p><b>Effect:</b> the plan keeps its schedule: staging ends on 18 December, and the cutover comes after the peak freeze. Traffic is 41 orders per minute. <b>Cost:</b> about $5,400 of savings come later. <b>Risk:</b> low.</p>", "recommended": true},
   {"key": "c", "label": "Tuesday 12 January 2027, 03:00–03:30", "detail_html": "<p><b>Effect:</b> a working day, so the full team is at work the next morning. Traffic is 57 orders per minute, about 1.4 times the Sunday rate. <b>Cost:</b> the same as option b.</p>"}
  ],
  "recommendation_html": "<p>Option b. The rollback window and the peak freeze do not overlap. The plan also gets time to close F5 and F6 before the cutover. The cost is a delay of savings, not new spending.</p>",

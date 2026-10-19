@@ -10,7 +10,7 @@ AI는 상소문을 씁니다. 붉은 붓은 당신이 듭니다.
 
 [English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · **한국어** · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Português (Brasil)](README.pt-BR.md) · [Русский](README.ru.md)
 
-[![Claude Code skill](https://img.shields.io/badge/Claude%20Code-skill-c8361d)](#설치)
+[![Claude Code and Codex skill](https://img.shields.io/badge/Claude%20Code%20%7C%20Codex-skill-c8361d)](#설치)
 [![의존성 없음](https://img.shields.io/badge/dependencies-0-2e7d4f)](#얻을-수-있는-것)
 [![HTML 파일 하나](https://img.shields.io/badge/form-one%20HTML%20file-1f1a17)](#얻을-수-있는-것)
 [![MIT](https://img.shields.io/badge/license-MIT-6b625a)](LICENSE)
@@ -81,7 +81,7 @@ Codex에서는 `$vermilion`으로 스킬을 호출합니다.
 
 **3. 반복하기.** 에이전트는 당신의 답을 읽고, 미결 항목만 담은 더 짧은 양식을 보냅니다. 각 항목에는 당신의 코멘트에 대한 답이 붙어 있습니다. 미결 항목이 없으면 최종 결정 기록을 작성합니다.
 
-> **Ultracode 모드를 강력히 권장합니다.** 긴 보고서라면 에이전트가 멀티 에이전트 워크플로를 실행하게 하세요. 카드마다 작성자 한 명과, 그 카드를 원문과 대조하는 독립된 검증자 한 명을 두고, 일관성 점검도 한 번 거칩니다. 긴 보고서를 요약하는 작성자는 유보적인 표현을 빠뜨리고 숫자를 바꿉니다. 검증자가 이를 잡아냅니다. Claude Code에서는 프롬프트에 `ultracode`를 추가하세요. Codex에는 Ultracode 모드가 없으므로, [references/ultracode.md](skills/vermilion/references/ultracode.md)(영어)에 있는 작성자 단계와 검증자 단계를 따르라고 요청하세요.
+> **Ultracode 모드를 강력히 권장합니다.** 긴 보고서라면 에이전트가 멀티 에이전트 워크플로를 실행하게 하세요. 카드마다 작성자 한 명과, 그 카드를 원문과 대조하는 독립된 검증자 한 명을 두고, 일관성 점검도 한 번 거칩니다. 긴 보고서를 요약하는 작성자는 유보적인 표현을 빠뜨리고 숫자를 바꾸는 경우가 많습니다. 검증자가 이를 잡아냅니다. Claude Code에서는 프롬프트에 `ultracode`를 추가하세요(`/config`에서 'Dynamic workflows' 설정이 켜져 있어야 합니다). Ultracode를 쓸 수 없을 때나 Codex에서는 에이전트가 작성자 단계와 검증자 단계를 차례로 진행합니다. 자세한 내용은 [references/ultracode.md](skills/vermilion/references/ultracode.md)(영어)를 참고하세요.
 
 **에이전트 없이 지금 바로 해 보기:** 저장소를 클론하고 [`skills/vermilion/examples/demo/forms/`](skills/vermilion/examples/demo/forms/)의 파일을 브라우저에서 여세요(GitHub에서는 HTML 파일이 소스 코드로 보입니다). 가상의 데이터베이스 마이그레이션 리뷰가 들어 있습니다. 비어 있는 1라운드, 리뷰어가 돌려준 상태의 1라운드, 그리고 2라운드입니다.
 

@@ -10,7 +10,7 @@ AI 寫奏章，你執朱筆。
 
 [English](README.md) · [简体中文](README.zh-CN.md) · **繁體中文** · [日本語](README.ja.md) · [한국어](README.ko.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Português (Brasil)](README.pt-BR.md) · [Русский](README.ru.md)
 
-[![Claude Code skill](https://img.shields.io/badge/Claude%20Code-skill-c8361d)](#安裝)
+[![Claude Code and Codex skill](https://img.shields.io/badge/Claude%20Code%20%7C%20Codex-skill-c8361d)](#安裝)
 [![零依賴](https://img.shields.io/badge/依賴-0-2e7d4f)](#你能得到什麼)
 [![一個 HTML 檔案](https://img.shields.io/badge/表單-一個%20HTML%20檔案-1f1a17)](#你能得到什麼)
 [![MIT](https://img.shields.io/badge/license-MIT-6b625a)](LICENSE)
@@ -81,7 +81,7 @@ flowchart LR
 
 **3. 重複。** 代理讀取你的回覆，傳給你一個更短的表單：只有未決事項，每一項都附有它對你評論的回覆。沒有未決事項時，它會寫出最終的決定紀錄。
 
-> **強烈建議使用 Ultracode 模式。** 報告很長時，讓代理執行多代理工作流程：每張卡片由一位撰寫者負責，再由一位獨立的查核者對照原始資料檢查，並做一次一致性檢查。撰寫者在濃縮長報告時，常會漏掉限定語、改錯數字；查核者能抓出這些問題。在 Claude Code 中，只要在提示詞裡加上 `ultracode` 即可。Codex 沒有 Ultracode 模式：請它依照 [references/ultracode.md](skills/vermilion/references/ultracode.md)（英文）中撰寫者與查核者的步驟來做。
+> **強烈建議使用 Ultracode 模式。** 報告很長時，讓代理執行多代理工作流程：每張卡片由一位撰寫者負責，再由一位獨立的查核者對照原始資料檢查，並做一次一致性檢查。撰寫者在濃縮長報告時，常會漏掉限定語、改錯數字；查核者能抓出這些問題。在 Claude Code 中，在提示詞裡加上 `ultracode`（需要在 `/config` 中開啟「Dynamic workflows」設定）。沒有 Ultracode 時，以及在 Codex 中，代理會依序完成同樣的撰寫與查核步驟，詳見 [references/ultracode.md](skills/vermilion/references/ultracode.md)（英文）。
 
 **不用代理，現在就試試：** 複製（clone）本儲存庫，在瀏覽器裡開啟 [`skills/vermilion/examples/demo/forms/`](skills/vermilion/examples/demo/forms/) 中的檔案（GitHub 本身只會把 HTML 檔案顯示成原始碼）。裡面是一個虛構的資料庫遷移審查：空白的第一輪、審閱人交回的第一輪，以及第二輪。
 

@@ -10,7 +10,7 @@ Your AI writes the memorial. You hold the vermilion brush.
 
 **English** · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Português (Brasil)](README.pt-BR.md) · [Русский](README.ru.md)
 
-[![Claude Code skill](https://img.shields.io/badge/Claude%20Code-skill-c8361d)](#install)
+[![Claude Code and Codex skill](https://img.shields.io/badge/Claude%20Code%20%7C%20Codex-skill-c8361d)](#install)
 [![Zero dependencies](https://img.shields.io/badge/dependencies-0-2e7d4f)](#what-you-get)
 [![One HTML file](https://img.shields.io/badge/form-one%20HTML%20file-1f1a17)](#what-you-get)
 [![MIT](https://img.shields.io/badge/license-MIT-6b625a)](LICENSE)
@@ -79,7 +79,7 @@ In Codex, `$vermilion` calls the skill.
 
 **3. Repeat.** The agent reads your answers and sends a shorter form with only the open items, each with its reply to your comment. When nothing is open, it writes the final decision register.
 
-> **Ultracode mode is highly recommended.** For a long report, let the agent run a multi-agent workflow: one writer per card, an independent verifier per card that checks it against the source, and a consistency pass. Writers that condense long reports drop hedges and change numbers. Verifiers catch this. In Claude Code, add `ultracode` to the prompt. Codex has no Ultracode mode: ask it to follow the writer and verifier steps in [references/ultracode.md](skills/vermilion/references/ultracode.md).
+> **Ultracode mode is highly recommended.** For a long report, let the agent run a multi-agent workflow: one writer per card, an independent verifier per card that checks it against the source, and a consistency pass. Writers that condense long reports often drop hedges and change numbers. Verifiers catch this. In Claude Code, add `ultracode` to the prompt (this needs the "Dynamic workflows" setting in `/config`). Without Ultracode, and in Codex, the agent does the same writer and verifier steps one after another: see [references/ultracode.md](skills/vermilion/references/ultracode.md).
 
 **Try it now, with no agent:** clone the repo and open the files in [`skills/vermilion/examples/demo/forms/`](skills/vermilion/examples/demo/forms/) in your browser (GitHub itself shows HTML files as source code). They hold a fictional database migration review: round 1 empty, round 1 as a reviewer returned it, and round 2.
 

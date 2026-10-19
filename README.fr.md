@@ -10,7 +10,7 @@ Votre IA rédige le mémoire. Vous tenez le pinceau vermillon.
 
 [English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Español](README.es.md) · **Français** · [Deutsch](README.de.md) · [Português (Brasil)](README.pt-BR.md) · [Русский](README.ru.md)
 
-[![Claude Code skill](https://img.shields.io/badge/Claude%20Code-skill-c8361d)](#installation)
+[![Claude Code and Codex skill](https://img.shields.io/badge/Claude%20Code%20%7C%20Codex-skill-c8361d)](#installation)
 [![Zéro dépendance](https://img.shields.io/badge/dependencies-0-2e7d4f)](#ce-que-vous-obtenez)
 [![Un seul fichier HTML](https://img.shields.io/badge/form-one%20HTML%20file-1f1a17)](#ce-que-vous-obtenez)
 [![MIT](https://img.shields.io/badge/license-MIT-6b625a)](LICENSE)
@@ -81,7 +81,7 @@ Dans Codex, `$vermilion` appelle le skill.
 
 **3. Recommencez.** L'agent lit vos réponses et vous envoie un formulaire plus court, avec seulement les points ouverts, chacun avec sa réponse à votre commentaire. Quand plus rien n'est ouvert, il rédige le registre final des décisions.
 
-> **Le mode Ultracode est vivement recommandé.** Pour un long rapport, laissez l'agent exécuter un workflow multi-agents : un rédacteur par carte, un vérificateur indépendant par carte qui la contrôle par rapport à la source, et une passe de cohérence. Les rédacteurs qui condensent de longs rapports suppriment les réserves et modifient les chiffres. Les vérificateurs le repèrent. Dans Claude Code, ajoutez `ultracode` à votre prompt. Codex n'a pas de mode Ultracode : demandez-lui de suivre les étapes du rédacteur et du vérificateur décrites dans [references/ultracode.md](skills/vermilion/references/ultracode.md) (en anglais).
+> **Le mode Ultracode est vivement recommandé.** Pour un long rapport, laissez l'agent exécuter un workflow multi-agents : un rédacteur par carte, un vérificateur indépendant par carte qui la contrôle par rapport à la source, et une passe de cohérence. Les rédacteurs qui condensent de longs rapports suppriment souvent les réserves et modifient les chiffres. Les vérificateurs le repèrent. Dans Claude Code, ajoutez `ultracode` à votre prompt (cela nécessite le réglage « Dynamic workflows » dans `/config`). Sans Ultracode, et dans Codex, l'agent suit les mêmes étapes du rédacteur et du vérificateur l'une après l'autre : voir [references/ultracode.md](skills/vermilion/references/ultracode.md) (en anglais).
 
 **Essayez tout de suite, sans agent :** clonez le dépôt et ouvrez dans votre navigateur les fichiers de [`skills/vermilion/examples/demo/forms/`](skills/vermilion/examples/demo/forms/) (GitHub lui-même affiche les fichiers HTML sous forme de code source). Ils contiennent une revue fictive d'une migration de base de données : le tour 1 vide, le tour 1 tel qu'un relecteur l'a renvoyé, et le tour 2.
 

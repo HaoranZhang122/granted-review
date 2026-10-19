@@ -10,7 +10,7 @@ Deine KI schreibt die Denkschrift. Du hältst den Zinnoberpinsel.
 
 [English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Español](README.es.md) · [Français](README.fr.md) · **Deutsch** · [Português (Brasil)](README.pt-BR.md) · [Русский](README.ru.md)
 
-[![Claude Code skill](https://img.shields.io/badge/Claude%20Code-skill-c8361d)](#installation)
+[![Claude Code and Codex skill](https://img.shields.io/badge/Claude%20Code%20%7C%20Codex-skill-c8361d)](#installation)
 [![Keine Abhängigkeiten](https://img.shields.io/badge/dependencies-0-2e7d4f)](#was-du-bekommst)
 [![Eine HTML-Datei](https://img.shields.io/badge/form-one%20HTML%20file-1f1a17)](#was-du-bekommst)
 [![MIT](https://img.shields.io/badge/license-MIT-6b625a)](LICENSE)
@@ -81,7 +81,7 @@ In Codex ruft `$vermilion` den Skill auf.
 
 **3. Wiederholen.** Der Agent liest deine Antworten und schickt ein kürzeres Formular, nur mit den offenen Punkten, jeweils mit seiner Antwort auf deinen Kommentar. Wenn nichts mehr offen ist, schreibt er das endgültige Entscheidungsregister.
 
-> **Der Ultracode-Modus wird dringend empfohlen.** Lass den Agenten bei einem langen Bericht einen Multi-Agent-Workflow ausführen: ein Autor pro Karte, ein unabhängiger Prüfer pro Karte, der sie mit der Quelle abgleicht, und ein Konsistenzdurchgang. Autoren, die lange Berichte verdichten, lassen Vorbehalte weg und ändern Zahlen. Die Prüfer fangen das ab. Schreib in Claude Code `ultracode` in den Prompt. Codex hat keinen Ultracode-Modus: Bitte Codex darum, die Schritte für Autoren und Prüfer aus [references/ultracode.md](skills/vermilion/references/ultracode.md) (auf Englisch) zu befolgen.
+> **Der Ultracode-Modus wird dringend empfohlen.** Lass den Agenten bei einem langen Bericht einen Multi-Agent-Workflow ausführen: ein Autor pro Karte, ein unabhängiger Prüfer pro Karte, der sie mit der Quelle abgleicht, und ein Konsistenzdurchgang. Autoren, die lange Berichte verdichten, lassen oft Vorbehalte weg und ändern Zahlen. Die Prüfer fangen das ab. Schreib in Claude Code `ultracode` in den Prompt (dafür muss in `/config` die Einstellung „Dynamic workflows“ aktiv sein). Ohne Ultracode und in Codex führt der Agent dieselben Schritte für Autoren und Prüfer nacheinander aus: siehe [references/ultracode.md](skills/vermilion/references/ultracode.md) (auf Englisch).
 
 **Sofort ausprobieren, ohne Agent:** Klone das Repo und öffne die Dateien in [`skills/vermilion/examples/demo/forms/`](skills/vermilion/examples/demo/forms/) in deinem Browser (GitHub selbst zeigt HTML-Dateien als Quellcode an). Sie enthalten ein fiktives Review einer Datenbankmigration: Runde 1 leer, Runde 1 so, wie ein Reviewer sie zurückgegeben hat, und Runde 2.
 

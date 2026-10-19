@@ -10,7 +10,7 @@ AI 写奏章，你执朱笔。
 
 [English](README.md) · **简体中文** · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Português (Brasil)](README.pt-BR.md) · [Русский](README.ru.md)
 
-[![Claude Code skill](https://img.shields.io/badge/Claude%20Code-skill-c8361d)](#安装)
+[![Claude Code and Codex skill](https://img.shields.io/badge/Claude%20Code%20%7C%20Codex-skill-c8361d)](#安装)
 [![零依赖](https://img.shields.io/badge/依赖-0-2e7d4f)](#你能得到什么)
 [![一个 HTML 文件](https://img.shields.io/badge/表单-一个%20HTML%20文件-1f1a17)](#你能得到什么)
 [![MIT](https://img.shields.io/badge/license-MIT-6b625a)](LICENSE)
@@ -81,7 +81,7 @@ flowchart LR
 
 **3. 循环。** 智能体读取你的答复，发给你一个更短的表单：只有未决事项，每一项都附有它对你评论的回复。所有事项都定下来后，它会写出最终的决定记录。
 
-> **强烈推荐使用 Ultracode 模式。** 报告很长时，让智能体运行多智能体工作流：每张卡片一个撰写者，每张卡片一个独立核查者对照原始材料检查，最后做一次一致性检查。浓缩长报告的撰写者容易丢掉限定语、改错数字，核查者能发现这些问题。使用 Claude Code 时，在提示词里加上 `ultracode` 即可。Codex 没有 Ultracode 模式：请让它按照 [references/ultracode.md](skills/vermilion/references/ultracode.md)（英文）中撰写者和核查者的步骤来做。
+> **强烈推荐使用 Ultracode 模式。** 报告很长时，让智能体运行多智能体工作流：每张卡片一个撰写者，每张卡片一个独立核查者对照原始材料检查，最后做一次一致性检查。浓缩长报告的撰写者容易丢掉限定语、改错数字，核查者能发现这些问题。使用 Claude Code 时，在提示词里加上 `ultracode`（需要在 `/config` 中开启 “Dynamic workflows” 设置）。没有 Ultracode 时，以及在 Codex 中，智能体会依次完成同样的撰写和核查步骤，详见 [references/ultracode.md](skills/vermilion/references/ultracode.md)（英文）。
 
 **不用智能体，现在就试试：** 克隆本仓库，在浏览器里打开 [`skills/vermilion/examples/demo/forms/`](skills/vermilion/examples/demo/forms/) 中的文件（GitHub 网页上 HTML 文件只显示源码）。里面是一个虚构的数据库迁移评审：空白的第一轮、审阅人交回的第一轮，以及第二轮。
 
