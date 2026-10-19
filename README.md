@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="assets/logo.svg" width="96" alt="Vermilion seal">
+<img src="assets/logo.svg" width="96" alt="Granted seal">
 
-# Vermilion · 朱批skill
+# Granted · 准奏skill
 
 **Review long AI reports like an emperor.**
 
@@ -15,9 +15,9 @@ Your AI writes the memorial. You hold the vermilion brush.
 [![One HTML file](https://img.shields.io/badge/form-one%20HTML%20file-1f1a17)](#what-you-get)
 [![MIT](https://img.shields.io/badge/license-MIT-6b625a)](LICENSE)
 
-<a href="assets/vermilion-demo.mp4"><img src="assets/vermilion-demo.gif" width="860" alt="A long AI report becomes one review form, the reviewer rules on each card, and round 2 holds only the open items"></a>
+<a href="assets/granted-demo.mp4"><img src="assets/granted-demo.gif" width="860" alt="A long AI report becomes one review form, the reviewer rules on each card, and round 2 holds only the open items"></a>
 
-⭐ **If Vermilion helps you, please give it a star.** It helps other people find it.
+⭐ **If Granted helps you, please give it a star.** It helps other people find it.
 
 </div>
 
@@ -29,31 +29,31 @@ AI agents now write long reports: audits, migration plans, design reviews, resea
 
 Reading the report is fine. **Giving feedback is the painful part.** You scroll, you quote, you type "for item 7, I think…" into the chat. You lose track of what you answered. The agent misreads which item you meant. And next week nobody can say what was decided, or on which version of the text.
 
-In imperial China, ministers sent long memorials (奏章) to the throne. The emperor did not write essays back. He wrote a short decision on each one in vermilion ink: the 朱批. **Vermilion gives you that role.** The agent puts every item on its own card, with the evidence, the options and its recommendation. You rule on each card in a form. The agent reads your answers exactly, replies to your comments, and asks again only about what is still open.
+In imperial China, ministers sent long memorials (奏章) to the throne. The emperor did not write essays back. He wrote a short ruling on each one in vermilion ink. The best-known ruling, from every palace drama, is 准奏: "request granted". That is where the name comes from. **Granted gives you that role.** The agent puts every item on its own card, with the evidence, the options and its recommendation. You rule on each card in a form. The agent reads your answers exactly, replies to your comments, and asks again only about what is still open.
 
 **The result: better decisions and better feedback, with less effort.** You see every decision, and nothing is skipped. Each answer has a reason where it needs one. The agent gets structured answers instead of a paragraph to interpret.
 
 ## Install
 
-Vermilion works in **Claude Code** and in **Codex**. You need Python 3.8 or later. To run the optional self-test, you also need Chrome, Chromium or Edge.
+Granted works in **Claude Code** and in **Codex**. You need Python 3.8 or later. To run the optional self-test, you also need Chrome, Chromium or Edge.
 
 **Claude Code**
 
 ```
-/plugin marketplace add HaoranZhang122/vermilion-review
-/plugin install vermilion@vermilion-review
+/plugin marketplace add HaoranZhang122/granted-review
+/plugin install granted@granted-review
 ```
 
-Or copy `skills/vermilion/` into `~/.claude/skills/` (for all projects) or into `.claude/skills/` (for one project).
+Or copy `skills/granted/` into `~/.claude/skills/` (for all projects) or into `.claude/skills/` (for one project).
 
 **Codex**
 
 ```
-codex plugin marketplace add HaoranZhang122/vermilion-review
-codex plugin add vermilion@vermilion-review
+codex plugin marketplace add HaoranZhang122/granted-review
+codex plugin add granted@granted-review
 ```
 
-Or copy `skills/vermilion/` into `~/.codex/skills/`.
+Or copy `skills/granted/` into `~/.codex/skills/`.
 
 ## How to use
 
@@ -70,31 +70,31 @@ flowchart LR
 
 | Start | Claude Code | Codex |
 |---|---|---|
-| From a long report | `Use vermilion to turn docs/migration-report.md into a review form. ultracode` | `$vermilion Turn docs/migration-report.md into a review form.` |
-| No report | `Plan the database migration, and give me the result as a Vermilion review instead of a long report. ultracode` | `$vermilion Plan the database migration, and give me the result as a review form instead of a long report.` |
+| From a long report | `Use the granted skill to turn docs/migration-report.md into a review form. ultracode` | `$granted Turn docs/migration-report.md into a review form.` |
+| No report | `Plan the database migration, and give me the result as a Granted review instead of a long report. ultracode` | `$granted Plan the database migration, and give me the result as a review form instead of a long report.` |
 
-In Codex, `$vermilion` calls the skill.
+In Codex, `$granted` calls the skill.
 
 **2. Answer.** Open the form that the agent gives you, rule on each card, and click **Seal & send**. Tell the agent "saved".
 
 **3. Repeat.** The agent reads your answers and sends a shorter form with only the open items, each with its reply to your comment. When nothing is open, it writes the final decision register.
 
-> **Ultracode mode is highly recommended.** For a long report, let the agent run a multi-agent workflow: one writer per card, an independent verifier per card that checks it against the source, and a consistency pass. Writers that condense long reports often drop hedges and change numbers. Verifiers catch this. In Claude Code, add `ultracode` to the prompt (this needs the "Dynamic workflows" setting in `/config`). Without Ultracode, and in Codex, the agent does the same writer and verifier steps one after another: see [references/ultracode.md](skills/vermilion/references/ultracode.md).
+> **Ultracode mode is highly recommended.** For a long report, let the agent run a multi-agent workflow: one writer per card, an independent verifier per card that checks it against the source, and a consistency pass. Writers that condense long reports often drop hedges and change numbers. Verifiers catch this. In Claude Code, add `ultracode` to the prompt (this needs the "Dynamic workflows" setting in `/config`). Without Ultracode, and in Codex, the agent does the same writer and verifier steps one after another: see [references/ultracode.md](skills/granted/references/ultracode.md).
 
-**Try it now, with no agent:** clone the repo and open the files in [`skills/vermilion/examples/demo/forms/`](skills/vermilion/examples/demo/forms/) in your browser (GitHub itself shows HTML files as source code). They hold a fictional database migration review: round 1 empty, round 1 as a reviewer returned it, and round 2.
+**Try it now, with no agent:** clone the repo and open the files in [`skills/granted/examples/demo/forms/`](skills/granted/examples/demo/forms/) in your browser (GitHub itself shows HTML files as source code). They hold a fictional database migration review: round 1 empty, round 1 as a reviewer returned it, and round 2.
 
 ## What you get
 
 **For you, the reviewer**
 - **One card per decision.** Each card has a one-line summary, the evidence (expand it when you doubt), figures, the options with their costs and risks, and one recommended option.
-- **Rule fast.** <kbd>A</kbd> accepts the recommendation. <kbd>1</kbd>–<kbd>9</kbd> select an option. <kbd>J</kbd>/<kbd>K</kbd> move between cards. <kbd>N</kbd> jumps to the next unanswered card. <kbd>F</kbd> flags a card. <kbd>C</kbd> opens a comment. A vermilion seal (准 Approved, 改 Revise, 驳 Rejected, 缓 Deferred, 问 Question) stamps each card that you decide.
+- **Rule fast.** <kbd>A</kbd> accepts the recommendation. <kbd>1</kbd>–<kbd>9</kbd> select an option. <kbd>J</kbd>/<kbd>K</kbd> move between cards. <kbd>N</kbd> jumps to the next unanswered card. <kbd>F</kbd> flags a card. <kbd>C</kbd> opens a comment. A seal stamps each card that you decide: 准 Approved in vermilion, and 改 Revise, 驳 Rejected, 缓 Deferred and 问 Question each in its own colour.
 - **Say how sure you are.** Sure, leaning or unsure. If you are unsure, the agent explains more in the next round.
 - **Reasons where they matter.** If you disagree, ask for a change or select "Other", the cursor goes into the comment box for one sentence of reason.
 - **Seal & send.** One click lists what is unanswered, unsure or without a reason, saves your answers into the file and copies a short summary for the chat. The agent finds the saved file by itself if it is in the form's folder, Downloads or Desktop; otherwise give it the path.
 - **Later rounds are short.** A table of everything that is confirmed (you can reopen a row), and a card only for each open item, with your previous answer and the agent's reply.
 
 **For the agent**
-- A zero-dependency Python CLI (`vermilion.py`): `init`, `check`, `build`, `receive`, `next-round`, `revise`, `rebuild`, `answers`, `status`, `selftest`.
+- A zero-dependency Python CLI (`granted.py`): `init`, `check`, `build`, `receive`, `next-round`, `revise`, `rebuild`, `answers`, `status`, `selftest`.
 - `check` validates the cards, the links and the figures. It also gives a plain-language score (about 80% ASD-STE100, optional).
 - `receive` refuses a file of another review, a draft preview, an unsaved file or a file whose cards differ from the issued form.
 - `next-round` sorts every item into Confirmed or Open, with a reason. It writes `DECISIONS_after_R<n>.md` and drafts the next card set, with a `TODO(AI)` in each place where a reply is due. Nothing can drop out of the review without a decision.
@@ -109,19 +109,19 @@ In Codex, `$vermilion` calls the skill.
 
 | Command | What it does |
 |---|---|
-| `vermilion.py init --dir review --slug NAME --title TEXT` | Create the review folder and its config. |
-| `vermilion.py check --dir review --version R1.0` | Validate the cards. Report the plain-language score. |
-| `vermilion.py build --dir review --version R1.0 [--draft]` | Build a preview (`--draft`), or issue the form: a working copy, a frozen copy and a log entry. |
-| `vermilion.py receive --dir review --find` | Receive every new save of this review in the review folder, ~/Downloads and ~/Desktop, oldest first (or give `--file SAVED.html`). Freeze each one, extract its answers (`.md` and `.json`) and log them. |
-| `vermilion.py next-round --dir review [--dry-run] [--open ID ...]` | Classify the answers. Write the decisions file and draft the next round. |
-| `vermilion.py revise --dir review --from R1.0 --to R1.1` | Copy a card set for a revision. |
-| `vermilion.py build --dir review --version R1.1 --carry SAVED.html` | Issue a revision that keeps the answers of the round. |
-| `vermilion.py rebuild --dir review --version R1.0 --out FILE` | Rebuild an issued form from the log and compare it byte for byte. |
-| `vermilion.py answers SAVED.html` | Print the answers of any form. Logs nothing. |
-| `vermilion.py status --dir review` | Show the log and where the review stands. |
-| `vermilion.py selftest FORM.html` | Run the form's built-in self-test in a headless browser. |
+| `granted.py init --dir review --slug NAME --title TEXT` | Create the review folder and its config. |
+| `granted.py check --dir review --version R1.0` | Validate the cards. Report the plain-language score. |
+| `granted.py build --dir review --version R1.0 [--draft]` | Build a preview (`--draft`), or issue the form: a working copy, a frozen copy and a log entry. |
+| `granted.py receive --dir review --find` | Receive every new save of this review in the review folder, ~/Downloads and ~/Desktop, oldest first (or give `--file SAVED.html`). Freeze each one, extract its answers (`.md` and `.json`) and log them. |
+| `granted.py next-round --dir review [--dry-run] [--open ID ...]` | Classify the answers. Write the decisions file and draft the next round. |
+| `granted.py revise --dir review --from R1.0 --to R1.1` | Copy a card set for a revision. |
+| `granted.py build --dir review --version R1.1 --carry SAVED.html` | Issue a revision that keeps the answers of the round. |
+| `granted.py rebuild --dir review --version R1.0 --out FILE` | Rebuild an issued form from the log and compare it byte for byte. |
+| `granted.py answers SAVED.html` | Print the answers of any form. Logs nothing. |
+| `granted.py status --dir review` | Show the log and where the review stands. |
+| `granted.py selftest FORM.html` | Run the form's built-in self-test in a headless browser. |
 
-The details are in [SKILL.md](skills/vermilion/SKILL.md) and [references/](skills/vermilion/references/): the card schema, how to write cards, plain-language rules, rounds and versions, and the Ultracode recipe.
+The details are in [SKILL.md](skills/granted/SKILL.md) and [references/](skills/granted/references/): the card schema, how to write cards, plain-language rules, rounds and versions, and the Ultracode recipe.
 
 ## FAQ
 
@@ -137,13 +137,13 @@ The details are in [SKILL.md](skills/vermilion/SKILL.md) and [references/](skill
 
 ## Star history
 
-If Vermilion saves you time, a ⭐ is the easiest way to say thanks and to help other people find it.
+If Granted saves you time, a ⭐ is the easiest way to say thanks and to help other people find it.
 
-<a href="https://star-history.com/#HaoranZhang122/vermilion-review&Date">
+<a href="https://star-history.com/#HaoranZhang122/granted-review&Date">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=HaoranZhang122/vermilion-review&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=HaoranZhang122/vermilion-review&type=Date" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=HaoranZhang122/vermilion-review&type=Date" width="640" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=HaoranZhang122/granted-review&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=HaoranZhang122/granted-review&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=HaoranZhang122/granted-review&type=Date" width="640" />
   </picture>
 </a>
 
@@ -151,7 +151,7 @@ If Vermilion saves you time, a ⭐ is the easiest way to say thanks and to help 
 
 Haoran Jack Zhang · [@HaoranZhang122](https://github.com/HaoranZhang122)
 
-Questions and ideas: [open an issue](https://github.com/HaoranZhang122/vermilion-review/issues).
+Questions and ideas: [open an issue](https://github.com/HaoranZhang122/granted-review/issues).
 
 ## License
 

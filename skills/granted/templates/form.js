@@ -3,8 +3,8 @@
 // Capture the pristine document BEFORE the script changes anything, so that a save writes the template + answers only.
 // Viewers can inject their own nodes (the VS Code preview adds a style block, a script and theme variables):
 // keep only the elements that the builder made (marked data-f) and the builder's attributes on <html>.
-var KEEP_HTML_ATTRS = ['lang', 'data-form-id', 'data-version', 'data-round', 'data-vermilion', 'data-draft', 'data-review-id'];
-var KEEP_IDS = ['vermilion-config', 'card-index', 'review-state'];  // their tags stay byte-exact: save and the reader search for them
+var KEEP_HTML_ATTRS = ['lang', 'data-form-id', 'data-version', 'data-round', 'data-granted', 'data-draft', 'data-review-id'];
+var KEEP_IDS = ['granted-config', 'card-index', 'review-state'];  // their tags stay byte-exact: save and the reader search for them
 function cleanDoc(text){
   try {
     var doc = new DOMParser().parseFromString(text, 'text/html');
@@ -20,7 +20,7 @@ function cleanDoc(text){
 var RAW_PRISTINE = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
 var PRISTINE = cleanDoc(RAW_PRISTINE);
 function nullMap(o){ var m = Object.create(null); if (o && typeof o === 'object') Object.keys(o).forEach(function(k){ m[k] = o[k]; }); return m; }
-var CFG = JSON.parse(document.getElementById('vermilion-config').textContent);
+var CFG = JSON.parse(document.getElementById('granted-config').textContent);
 var INDEX = JSON.parse(document.getElementById('card-index').textContent);
 var VERSION = document.documentElement.getAttribute('data-version') || '';
 var ROUND = document.documentElement.getAttribute('data-round') || '';
@@ -29,8 +29,8 @@ var SELFTEST = location.hash === '#selftest';
 var DRAFT = !!CFG.draft;
 // the self-test and the drafts never touch the answers that the browser keeps for the issued form
 var RID = CFG.reviewId ? CFG.reviewId + ':' : '';  // two reviews with the same slug never share stored answers
-var REAL_PREFIX = 'vermilion:' + RID;
-var LS_PREFIX = (SELFTEST ? 'vermilion-selftest:' : (DRAFT ? 'vermilion-draft:' : 'vermilion:')) + RID;
+var REAL_PREFIX = 'granted:' + RID;
+var LS_PREFIX = (SELFTEST ? 'granted-selftest:' : (DRAFT ? 'granted-draft:' : 'granted:')) + RID;
 var LS_KEY = LS_PREFIX + FORM_ID;
 var STATE_OPEN = '<' + 'script type="application/json" id="review-state">';
 var BY_ID = nullMap(); INDEX.forEach(function(c, i){ c.pos = i; BY_ID[c.id] = c; });
@@ -155,13 +155,13 @@ function sealFor(c, cs){
   if (!cs) return null;
   var ch = cs.resp ? CHOICES[cs.resp] : null;
   if (ch && (!ch.confirms || ch.defers || !cs.opt)) {  // an assessment that does not simply approve wins over the option
-    return { c: ch.seal || '批', e: ch.seal_en || ch.label, k: cs.opt ? 'option ' + cs.opt : '', t: ch.tone || '' };
+    return { c: ch.seal || '阅', e: ch.seal_en || ch.label, k: cs.opt ? 'option ' + cs.opt : '', t: ch.tone || (ch.confirms && !ch.defers ? '' : 'ink') };
   }
   if (cs.opt) {
-    if (cs.opt === 'other') return { c: '改', e: 'Other', k: '', t: '' };
+    if (cs.opt === 'other') return { c: '改', e: 'Other', k: '', t: 'amber' };
     return { c: '准', e: cs.opt === recKey(c) ? 'Approved' : 'Chosen', k: 'option ' + cs.opt, t: '' };
   }
-  if ((cs.comment || '').trim()) return { c: '批', e: 'Comment', k: '', t: '' };
+  if ((cs.comment || '').trim()) return { c: '注', e: 'Comment', k: '', t: 'purple' };
   return null;
 }
 function cardState(id){ return state.cards[id] || (state.cards[id] = {}); }
@@ -537,7 +537,7 @@ function answersList(){
 }
 function answersMarkdown(forChat){
   var k = counts(), A = answersList();
-  var md = ['----- BEGIN VERMILION ANSWERS · ' + FORM_ID + ' -----', '', '# Vermilion answers: ' + CFG.title, '',
+  var md = ['----- BEGIN GRANTED ANSWERS · ' + FORM_ID + ' -----', '', '# Granted answers: ' + CFG.title, '',
     '- Form `' + FORM_ID + '`, version ' + VERSION + ', round ' + ROUND + ', file `' + savedFileName() + '`' + (lastPickName ? ' (the file chosen in the Save dialog; its folder is not known to the form)' : ''),
     '- ' + k.done + ' of ' + INDEX.length + ' cards answered, ' + k.flagged + ' flagged, ' + k.unsure + ' unsure, ' + k.reason + ' without a needed reason',
     '- Reviewer: ' + (state.meta.reviewer || '-') + ', date: ' + (state.meta.date || '-'), '',
@@ -558,8 +558,8 @@ function answersMarkdown(forChat){
   if (k.open.length) md.push('', 'Not answered: ' + k.open.join(', '));
   var ro = Object.keys(state.reopen).filter(function(id){ var r = state.reopen[id]; return r.reopen || (r.comment || '').trim(); });
   if (ro.length) { md.push('', '## Confirmed items: reopened or commented', ''); ro.forEach(function(id){ var r = state.reopen[id]; md.push('- **' + id + '**' + (r.reopen ? ' REOPENED' : ' (still confirmed)') + (r.comment ? ': ' + r.comment.trim().replace(/\n/g, ' ') : '')); }); }
-  if (forChat) md.push('', '_For the AI: the saved HTML file holds the same answers and is the record. Run `vermilion.py receive --dir <review folder> --find` (or `--file <saved html>`), then `vermilion.py next-round --dir <review folder> --dry-run`, and read every comment before the real run._');
-  md.push('', '----- END VERMILION ANSWERS -----');
+  if (forChat) md.push('', '_For the AI: the saved HTML file holds the same answers and is the record. Run `granted.py receive --dir <review folder> --find` (or `--file <saved html>`), then `granted.py next-round --dir <review folder> --dry-run`, and read every comment before the real run._');
+  md.push('', '----- END GRANTED ANSWERS -----');
   return md.join('\n') + '\n';
 }
 $('#export-json').addEventListener('click', function(){

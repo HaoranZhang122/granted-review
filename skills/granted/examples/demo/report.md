@@ -1,4 +1,4 @@
-> Fictional example for the Vermilion demo. Every name, number and finding is invented.
+> Fictional example for the Granted demo. Every name, number and finding is invented.
 
 # Acme Shop: plan to move the orders database from MySQL 5.7 to PostgreSQL 16
 

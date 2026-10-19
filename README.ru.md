@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="assets/logo.svg" width="96" alt="Печать Vermilion">
+<img src="assets/logo.svg" width="96" alt="Печать Granted">
 
-# Vermilion · 朱批skill
+# Granted · 准奏skill
 
 **Проверяйте длинные отчёты ИИ, как император.**
 
@@ -15,9 +15,9 @@
 [![Один HTML-файл](https://img.shields.io/badge/form-one%20HTML%20file-1f1a17)](#что-вы-получаете)
 [![MIT](https://img.shields.io/badge/license-MIT-6b625a)](LICENSE)
 
-<a href="assets/vermilion-demo.mp4"><img src="assets/vermilion-demo.gif" width="860" alt="Длинный отчёт ИИ превращается в одну форму проверки, проверяющий выносит решение по каждой карточке, а во втором раунде остаются только открытые пункты"></a>
+<a href="assets/granted-demo.mp4"><img src="assets/granted-demo.gif" width="860" alt="Длинный отчёт ИИ превращается в одну форму проверки, проверяющий выносит решение по каждой карточке, а во втором раунде остаются только открытые пункты"></a>
 
-⭐ **Если Vermilion вам помогает, пожалуйста, поставьте ему звезду.** Так другим людям проще его найти.
+⭐ **Если Granted вам помогает, пожалуйста, поставьте ему звезду.** Так другим людям проще его найти.
 
 </div>
 
@@ -29,31 +29,31 @@
 
 Прочитать отчёт несложно. **Самое мучительное — дать обратную связь.** Вы прокручиваете текст, цитируете, пишете в чат «по пункту 7, я думаю…». Вы забываете, на что уже ответили. Агент неправильно понимает, какой пункт вы имели в виду. А через неделю никто не может сказать, что было решено и по какой версии текста.
 
-В императорском Китае министры подавали трону длинные доклады (奏章). Император не писал в ответ трактатов. На каждом докладе он писал киноварью короткое решение: 朱批. **Vermilion даёт вам эту роль.** Агент помещает каждый пункт на отдельную карточку, с обоснованием, вариантами и своей рекомендацией. Вы выносите решение по каждой карточке в форме. Агент точно считывает ваши ответы, отвечает на ваши комментарии и снова спрашивает только о том, что ещё открыто.
+В императорском Китае министры подавали трону длинные доклады (奏章). Император не писал в ответ трактатов. На каждом докладе он писал киноварью короткое решение. Самое известное, знакомое по любой дворцовой драме, — 准奏: «просьба удовлетворена». Отсюда и название Granted. **Granted даёт вам эту роль.** Агент помещает каждый пункт на отдельную карточку, с обоснованием, вариантами и своей рекомендацией. Вы выносите решение по каждой карточке в форме. Агент точно считывает ваши ответы, отвечает на ваши комментарии и снова спрашивает только о том, что ещё открыто.
 
 **Итог: решения и обратная связь становятся лучше, а усилий нужно меньше.** Вы видите каждое решение, и ничего не пропускается. Каждый ответ, где это нужно, сопровождается причиной. Агент получает структурированные ответы, а не абзац, который нужно толковать.
 
 ## Установка
 
-Vermilion работает в **Claude Code** и в **Codex**. Нужен Python 3.8 или новее. Для необязательного самотеста также нужен Chrome, Chromium или Edge.
+Granted работает в **Claude Code** и в **Codex**. Нужен Python 3.8 или новее. Для необязательного самотеста также нужен Chrome, Chromium или Edge.
 
 **Claude Code**
 
 ```
-/plugin marketplace add HaoranZhang122/vermilion-review
-/plugin install vermilion@vermilion-review
+/plugin marketplace add HaoranZhang122/granted-review
+/plugin install granted@granted-review
 ```
 
-Или скопируйте `skills/vermilion/` в `~/.claude/skills/` (для всех проектов) или в `.claude/skills/` (для одного проекта).
+Или скопируйте `skills/granted/` в `~/.claude/skills/` (для всех проектов) или в `.claude/skills/` (для одного проекта).
 
 **Codex**
 
 ```
-codex plugin marketplace add HaoranZhang122/vermilion-review
-codex plugin add vermilion@vermilion-review
+codex plugin marketplace add HaoranZhang122/granted-review
+codex plugin add granted@granted-review
 ```
 
-Или скопируйте `skills/vermilion/` в `~/.codex/skills/`.
+Или скопируйте `skills/granted/` в `~/.codex/skills/`.
 
 ## Как пользоваться
 
@@ -70,33 +70,33 @@ flowchart LR
 
 | Начало | Claude Code | Codex |
 |---|---|---|
-| Из длинного отчёта | `Use vermilion to turn docs/migration-report.md into a review form. ultracode` | `$vermilion Turn docs/migration-report.md into a review form.` |
-| Без отчёта | `Plan the database migration, and give me the result as a Vermilion review instead of a long report. ultracode` | `$vermilion Plan the database migration, and give me the result as a review form instead of a long report.` |
+| Из длинного отчёта | `Use the granted skill to turn docs/migration-report.md into a review form. ultracode` | `$granted Turn docs/migration-report.md into a review form.` |
+| Без отчёта | `Plan the database migration, and give me the result as a Granted review instead of a long report. ultracode` | `$granted Plan the database migration, and give me the result as a review form instead of a long report.` |
 
-(Можно просить и по-русски, например: «Используй vermilion, чтобы превратить docs/migration-report.md в форму проверки. ultracode».)
+(Можно просить и по-русски, например: «Используй skill granted, чтобы превратить docs/migration-report.md в форму проверки. ultracode».)
 
-В Codex `$vermilion` вызывает skill.
+В Codex `$granted` вызывает skill.
 
 **2. Ответьте.** Откройте форму, которую вам даст агент, вынесите решение по каждой карточке и нажмите **Seal & send** («Запечатать и отправить»). Скажите агенту «сохранено».
 
 **3. Повторите.** Агент читает ваши ответы и присылает более короткую форму только с открытыми пунктами; в каждом из них есть его ответ на ваш комментарий. Когда открытых пунктов не остаётся, он пишет итоговый реестр решений.
 
-> **Режим Ultracode настоятельно рекомендуется.** Для длинного отчёта позвольте агенту запустить многоагентный процесс: по одному автору на каждую карточку, по независимому верификатору на каждую карточку, который сверяет её с источником, и проверку согласованности. Авторы, которые сжимают длинные отчёты, часто теряют оговорки и меняют числа. Верификаторы это ловят. В Claude Code добавьте `ultracode` в запрос (для этого нужна настройка «Dynamic workflows» в `/config`). Без Ultracode, а также в Codex, агент выполняет те же шаги автора и верификатора по очереди: см. [references/ultracode.md](skills/vermilion/references/ultracode.md) (на английском).
+> **Режим Ultracode настоятельно рекомендуется.** Для длинного отчёта позвольте агенту запустить многоагентный процесс: по одному автору на каждую карточку, по независимому верификатору на каждую карточку, который сверяет её с источником, и проверку согласованности. Авторы, которые сжимают длинные отчёты, часто теряют оговорки и меняют числа. Верификаторы это ловят. В Claude Code добавьте `ultracode` в запрос (для этого нужна настройка «Dynamic workflows» в `/config`). Без Ultracode, а также в Codex, агент выполняет те же шаги автора и верификатора по очереди: см. [references/ultracode.md](skills/granted/references/ultracode.md) (на английском).
 
-**Попробуйте прямо сейчас, без агента:** клонируйте репозиторий и откройте в браузере файлы из [`skills/vermilion/examples/demo/forms/`](skills/vermilion/examples/demo/forms/) (сам GitHub показывает HTML-файлы как исходный код). В них вымышленная проверка миграции базы данных: пустой раунд 1, раунд 1 в том виде, в каком его вернул проверяющий, и раунд 2.
+**Попробуйте прямо сейчас, без агента:** клонируйте репозиторий и откройте в браузере файлы из [`skills/granted/examples/demo/forms/`](skills/granted/examples/demo/forms/) (сам GitHub показывает HTML-файлы как исходный код). В них вымышленная проверка миграции базы данных: пустой раунд 1, раунд 1 в том виде, в каком его вернул проверяющий, и раунд 2.
 
 ## Что вы получаете
 
 **Для вас, проверяющего**
 - **Одна карточка на одно решение.** На каждой карточке есть резюме в одну строку, обоснование (раскройте его, если сомневаетесь), рисунки, варианты с их стоимостью и рисками и один рекомендуемый вариант.
-- **Решайте быстро.** <kbd>A</kbd> принимает рекомендацию. <kbd>1</kbd>–<kbd>9</kbd> выбирают вариант. <kbd>J</kbd>/<kbd>K</kbd> переходят между карточками. <kbd>N</kbd> переходит к следующей карточке без ответа. <kbd>F</kbd> помечает карточку флажком. <kbd>C</kbd> открывает комментарий. Киноварная печать (准 Одобрено, 改 Доработать, 驳 Отклонено, 缓 Отложено, 问 Вопрос) ставится на каждую карточку, по которой вы приняли решение.
+- **Решайте быстро.** <kbd>A</kbd> принимает рекомендацию. <kbd>1</kbd>–<kbd>9</kbd> выбирают вариант. <kbd>J</kbd>/<kbd>K</kbd> переходят между карточками. <kbd>N</kbd> переходит к следующей карточке без ответа. <kbd>F</kbd> помечает карточку флажком. <kbd>C</kbd> открывает комментарий. На каждую карточку, по которой вы приняли решение, ставится печать: 准 Одобрено — киноварью, а 改 Доработать, 驳 Отклонено, 缓 Отложено и 问 Вопрос — каждая своим цветом.
 - **Скажите, насколько вы уверены.** Уверен, склоняюсь или не уверен. Если вы не уверены, агент объяснит подробнее в следующем раунде.
 - **Причины там, где они важны.** Если вы не согласны, запрашиваете доработку или выбираете «Другое», курсор переходит в поле комментария, чтобы вы написали причину одним предложением.
 - **Seal & send.** Один щелчок перечисляет, что осталось без ответа, в чём вы не уверены и где нет причины, сохраняет ваши ответы в файл и копирует краткую сводку для чата. Агент сам находит сохранённый файл, если он лежит в папке формы, в «Загрузках» или на рабочем столе; иначе укажите ему путь.
 - **Следующие раунды короткие.** Таблица со всем, что подтверждено (любую строку можно открыть заново), а карточки — только для открытых пунктов, с вашим прежним ответом и ответом агента.
 
 **Для агента**
-- CLI на Python без зависимостей (`vermilion.py`): `init`, `check`, `build`, `receive`, `next-round`, `revise`, `rebuild`, `answers`, `status`, `selftest`.
+- CLI на Python без зависимостей (`granted.py`): `init`, `check`, `build`, `receive`, `next-round`, `revise`, `rebuild`, `answers`, `status`, `selftest`.
 - `check` проверяет карточки, ссылки и рисунки. Ещё он выдаёт оценку простоты языка (примерно 80% ASD-STE100, по желанию).
 - `receive` отклоняет файл другой проверки, черновой предпросмотр, несохранённый файл или файл, карточки которого отличаются от выданной формы.
 - `next-round` относит каждый пункт к подтверждённым (Confirmed) или открытым (Open), с причиной. Он пишет `DECISIONS_after_R<n>.md` и готовит черновик следующего набора карточек, с `TODO(AI)` в каждом месте, где нужен ответ. Ни один пункт не может выпасть из проверки без решения.
@@ -111,19 +111,19 @@ flowchart LR
 
 | Команда | Что делает |
 |---|---|
-| `vermilion.py init --dir review --slug NAME --title TEXT` | Создаёт папку проверки и её конфигурацию. |
-| `vermilion.py check --dir review --version R1.0` | Проверяет карточки. Сообщает оценку простоты языка. |
-| `vermilion.py build --dir review --version R1.0 [--draft]` | Собирает предпросмотр (`--draft`) или выдаёт форму: рабочую копию, замороженную копию и запись в журнале. |
-| `vermilion.py receive --dir review --find` | Принимает каждое новое сохранение этой проверки из папки проверки, ~/Downloads и ~/Desktop, начиная с самого старого (или укажите `--file SAVED.html`). Замораживает каждое, извлекает его ответы (`.md` и `.json`) и записывает их в журнал. |
-| `vermilion.py next-round --dir review [--dry-run] [--open ID ...]` | Классифицирует ответы. Пишет файл решений и готовит черновик следующего раунда. |
-| `vermilion.py revise --dir review --from R1.0 --to R1.1` | Копирует набор карточек для ревизии. |
-| `vermilion.py build --dir review --version R1.1 --carry SAVED.html` | Выдаёт ревизию, которая сохраняет ответы раунда. |
-| `vermilion.py rebuild --dir review --version R1.0 --out FILE` | Пересобирает выданную форму по журналу и сравнивает её побайтно. |
-| `vermilion.py answers SAVED.html` | Выводит ответы любой формы. Ничего не записывает в журнал. |
-| `vermilion.py status --dir review` | Показывает журнал и текущее состояние проверки. |
-| `vermilion.py selftest FORM.html` | Запускает встроенный самотест формы в браузере без интерфейса (headless). |
+| `granted.py init --dir review --slug NAME --title TEXT` | Создаёт папку проверки и её конфигурацию. |
+| `granted.py check --dir review --version R1.0` | Проверяет карточки. Сообщает оценку простоты языка. |
+| `granted.py build --dir review --version R1.0 [--draft]` | Собирает предпросмотр (`--draft`) или выдаёт форму: рабочую копию, замороженную копию и запись в журнале. |
+| `granted.py receive --dir review --find` | Принимает каждое новое сохранение этой проверки из папки проверки, ~/Downloads и ~/Desktop, начиная с самого старого (или укажите `--file SAVED.html`). Замораживает каждое, извлекает его ответы (`.md` и `.json`) и записывает их в журнал. |
+| `granted.py next-round --dir review [--dry-run] [--open ID ...]` | Классифицирует ответы. Пишет файл решений и готовит черновик следующего раунда. |
+| `granted.py revise --dir review --from R1.0 --to R1.1` | Копирует набор карточек для ревизии. |
+| `granted.py build --dir review --version R1.1 --carry SAVED.html` | Выдаёт ревизию, которая сохраняет ответы раунда. |
+| `granted.py rebuild --dir review --version R1.0 --out FILE` | Пересобирает выданную форму по журналу и сравнивает её побайтно. |
+| `granted.py answers SAVED.html` | Выводит ответы любой формы. Ничего не записывает в журнал. |
+| `granted.py status --dir review` | Показывает журнал и текущее состояние проверки. |
+| `granted.py selftest FORM.html` | Запускает встроенный самотест формы в браузере без интерфейса (headless). |
 
-Подробности — в [SKILL.md](skills/vermilion/SKILL.md) и [references/](skills/vermilion/references/) (на английском): схема карточек, как писать карточки, правила простого языка, раунды и версии, а также рецепт Ultracode.
+Подробности — в [SKILL.md](skills/granted/SKILL.md) и [references/](skills/granted/references/) (на английском): схема карточек, как писать карточки, правила простого языка, раунды и версии, а также рецепт Ultracode.
 
 ## Частые вопросы
 
@@ -139,13 +139,13 @@ flowchart LR
 
 ## История звёзд
 
-Если Vermilion экономит вам время, ⭐ — самый простой способ сказать спасибо и помочь другим людям его найти.
+Если Granted экономит вам время, ⭐ — самый простой способ сказать спасибо и помочь другим людям его найти.
 
-<a href="https://star-history.com/#HaoranZhang122/vermilion-review&Date">
+<a href="https://star-history.com/#HaoranZhang122/granted-review&Date">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=HaoranZhang122/vermilion-review&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=HaoranZhang122/vermilion-review&type=Date" />
-    <img alt="График истории звёзд" src="https://api.star-history.com/svg?repos=HaoranZhang122/vermilion-review&type=Date" width="640" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=HaoranZhang122/granted-review&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=HaoranZhang122/granted-review&type=Date" />
+    <img alt="График истории звёзд" src="https://api.star-history.com/svg?repos=HaoranZhang122/granted-review&type=Date" width="640" />
   </picture>
 </a>
 
@@ -153,7 +153,7 @@ flowchart LR
 
 Haoran Jack Zhang · [@HaoranZhang122](https://github.com/HaoranZhang122)
 
-Вопросы и идеи: [откройте issue](https://github.com/HaoranZhang122/vermilion-review/issues).
+Вопросы и идеи: [откройте issue](https://github.com/HaoranZhang122/granted-review/issues).
 
 ## Лицензия
 

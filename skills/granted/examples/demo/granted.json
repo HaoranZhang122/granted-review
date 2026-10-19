@@ -1,14 +1,14 @@
 {
  "schema": 1,
- "slug": "my-review",
- "review_id": "",
- "title": "Review of the plan",
- "short_title": "Plan review",
- "intro_html": "<p>This form has one card for each item that needs your review or your decision. Read a card, then answer below it. Your answers are saved inside this HTML file.</p>",
+ "slug": "acme-db-move",
+ "review_id": "5ca1ab1e",
+ "title": "Acme Shop: move the orders database from MySQL 5.7 to PostgreSQL 16",
+ "short_title": "Acme orders DB move",
+ "intro_html": "<p><b>Fictional demo.</b> Acme Shop, its people, its numbers and its findings are invented.</p><p>The migration agent read the order service, ran checks against a PostgreSQL 16 staging copy and wrote a plan. This form has one card for each finding and each decision in that plan. Read a card, then answer below it. Your answers are saved inside this HTML file.</p><p>Start with <b>F6</b> (Critical) and <b>D1</b> (the cutover method). The other decisions depend on D1.</p>",
  "sources": [
   {
-   "label": "The full report",
-   "href": "../report.md"
+   "label": "The full report (fictional)",
+   "href": "report.md"
   }
  ],
  "link_base": "",
@@ -46,19 +46,19 @@
    "key": "findings",
    "title": "Part A — Findings",
    "kind": "review",
-   "intro": "Each card is one finding. Tell me if you agree with it and with the proposed action."
+   "intro": "Each card is one finding from the audit. Tell me if you agree with it and with the proposed action."
   },
   {
    "key": "decisions",
    "title": "Part B — Decisions only you can make",
    "kind": "decision",
-   "intro": "Select one option for each decision. The recommended option has a mark."
+   "intro": "Select one option for each decision. The recommended option has a mark. The plan in the report uses the recommended options."
   },
   {
    "key": "notes",
-   "title": "Part C — For your information",
+   "title": "Part C — Notes",
    "kind": "info",
-   "intro": "Nothing to decide here. Mark each card as noted, or write a comment."
+   "intro": "Read these cards. Confirm that you read them, or write a comment."
   }
  ],
  "choices": [
@@ -75,6 +75,7 @@
    "label": "Agree with the problem, but change the action",
    "seal": "改",
    "seal_en": "Revise",
+   "tone": "amber",
    "needs_reason": true
   },
   {

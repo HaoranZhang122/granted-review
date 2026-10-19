@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" data-form-id="%%FORM_ID%%" data-version="%%VERSION%%" data-round="%%ROUND%%" data-vermilion="%%TOOL_VERSION%%" data-review-id="%%REVIEW_ID%%"%%DRAFT_ATTR%%>
+<html lang="en" data-form-id="%%FORM_ID%%" data-version="%%VERSION%%" data-round="%%ROUND%%" data-granted="%%TOOL_VERSION%%" data-review-id="%%REVIEW_ID%%"%%DRAFT_ATTR%%>
 <head>
 <meta data-f charset="utf-8">
 <meta data-f name="viewport" content="width=device-width, initial-scale=1">
-<meta data-f name="generator" content="Vermilion %%TOOL_VERSION%%">
+<meta data-f name="generator" content="Granted %%TOOL_VERSION%%">
 <title data-f>%%TITLE%% · %%VERSION%%</title>
 <style data-f>%%CSS%%</style>
 </head>
 <body>
 <div data-f id="topbar">
-  <div class="brand" title="%%TITLE%% · round %%ROUND%%, version %%VERSION%%"><span class="brand-seal">朱</span><b>%%SHORT_TITLE%%</b><span class="ver">%%VERSION%%</span></div>
+  <div class="brand" title="%%TITLE%% · round %%ROUND%%, version %%VERSION%%"><span class="brand-seal">准</span><b>%%SHORT_TITLE%%</b><span class="ver">%%VERSION%%</span></div>
   <div class="grp"><div id="progress"><div></div></div><span id="progress-text"></span></div>
   <div class="grp main">
     <button id="save-btn" class="primary" title="Write your answers into this HTML file (Ctrl/Cmd+S)">Save</button>
@@ -42,6 +42,7 @@
     %%VERSION_ROW%%
     %%SOURCES_ROW%%
     %%LABELS_ROW%%
+    %%SEALS_ROW%%
     <tr><th>Form</th><td>%%TOTAL%% cards · about %%MINUTES%% min to read · built %%BUILT_AT%% · id <code>%%FORM_ID%%</code></td></tr>
   </table>
   <div class="who">
@@ -59,7 +60,7 @@
 <div data-f id="sendpanel" class="overlay" role="dialog" aria-modal="true" aria-labelledby="send-h">
   <div class="panel">
     <button class="close" data-close title="Close (Esc)">×</button>
-    <h3 id="send-h"><span class="brand-seal">朱</span> Seal &amp; send</h3>
+    <h3 id="send-h"><span class="brand-seal">准</span> Seal &amp; send</h3>
     <div id="send-stats" class="stats"></div>
     <div id="send-checks"></div>
     <div class="actions">
@@ -94,7 +95,7 @@
   </div>
 </div>
 <div data-f id="toast"></div>
-<script type="application/json" id="vermilion-config">%%CONFIG%%</script>
+<script type="application/json" id="granted-config">%%CONFIG%%</script>
 <script type="application/json" id="card-index">%%CARD_INDEX%%</script>
 <script type="application/json" id="review-state">%%STATE%%</script>
 <script data-f>%%JS%%</script>

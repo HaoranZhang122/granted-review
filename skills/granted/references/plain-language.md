@@ -2,7 +2,7 @@
 
 ASD-STE100 (Simplified Technical English) is a controlled language for technical documents. It makes text easier to read for people who do not speak English as a first language, and it removes ambiguity. These rules apply its writing rules to review cards. They do not replace the official specification, and they do not check words against the official STE dictionary.
 
-**"80%"** means: at least 80% of the sentences on each card pass every automatic check of `vermilion.py check`. The other sentences can break a rule only when strict STE would lose precision. Run `check --plain 80` to enforce it.
+**"80%"** means: at least 80% of the sentences on each card pass every automatic check of `granted.py check`. The other sentences can break a rule only when strict STE would lose precision. Run `check --plain 80` to enforce it.
 
 ## A. Hard rules
 
@@ -63,4 +63,4 @@ ASD-STE100 (Simplified Technical English) is a controlled language for technical
 
 ## E. What the checker flags
 
-`vermilion.py check` flags a sentence with: `LEN` (> 25 words), `SEMI` (semicolon), `MODAL` (should, would, could, might, may, shall), `PASSIVE` (a form of "be" + a past participle), `ING` (an -ing word that is not in the list of technical names), `WORD` (a word from table C) and `CONTR` (a contraction). The checks are heuristics: a flagged sentence can be correct, and a sentence without flags can still be unclear. Read the flagged sentences, and fix the ones that are really hard to read.
+`granted.py check` flags a sentence with: `LEN` (> 25 words), `SEMI` (semicolon), `MODAL` (should, would, could, might, may, shall), `PASSIVE` (a form of "be" + a past participle), `ING` (an -ing word that is not in the list of technical names), `WORD` (a word from table C) and `CONTR` (a contraction). The checks are heuristics: a flagged sentence can be correct, and a sentence without flags can still be unclear. Read the flagged sentences, and fix the ones that are really hard to read.

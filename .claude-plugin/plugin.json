@@ -1,13 +1,13 @@
 {
-  "name": "vermilion",
+  "name": "granted",
   "version": "1.0.0",
   "description": "Review long AI reports like an emperor: one card per decision, answers saved inside a single HTML file, versioned rounds until every item is decided.",
   "author": {
     "name": "HaoranZhang122",
     "url": "https://github.com/HaoranZhang122"
   },
-  "homepage": "https://github.com/HaoranZhang122/vermilion-review",
-  "repository": "https://github.com/HaoranZhang122/vermilion-review",
+  "homepage": "https://github.com/HaoranZhang122/granted-review",
+  "repository": "https://github.com/HaoranZhang122/granted-review",
   "license": "MIT",
   "keywords": [
     "review",

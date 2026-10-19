@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
-"""Vermilion: turn a long AI report into a versioned, self-saving HTML review form, and read the answers back.
+"""Granted: turn a long AI report into a versioned, self-saving HTML review form, and read the answers back.
 
-    vermilion.py init       --dir review --slug my-plan --title "Review of my plan"
-    vermilion.py check      --dir review --version R1.0
-    vermilion.py build      --dir review --version R1.0 [--draft]
-    vermilion.py receive    --dir review --file SAVED.html | --find
-    vermilion.py next-round --dir review [--dry-run] [--open ID ...] [--answers FILE] [--amend]
-    vermilion.py revise     --dir review --from R1.0 --to R1.1
-    vermilion.py build      --dir review --version R1.1 --carry RECEIVED.html --note "..."
-    vermilion.py rebuild    --dir review --version R1.0 --out /tmp/check.html
-    vermilion.py answers    SAVED.html                      (print the answers; logs nothing)
-    vermilion.py status     --dir review
-    vermilion.py selftest   FORM.html                       (headless Chrome, Chromium or Edge)
+    granted.py init       --dir review --slug my-plan --title "Review of my plan"
+    granted.py check      --dir review --version R1.0
+    granted.py build      --dir review --version R1.0 [--draft]
+    granted.py receive    --dir review --file SAVED.html | --find
+    granted.py next-round --dir review [--dry-run] [--open ID ...] [--answers FILE] [--amend]
+    granted.py revise     --dir review --from R1.0 --to R1.1
+    granted.py build      --dir review --version R1.1 --carry RECEIVED.html --note "..."
+    granted.py rebuild    --dir review --version R1.0 --out /tmp/check.html
+    granted.py answers    SAVED.html                      (print the answers; logs nothing)
+    granted.py status     --dir review
+    granted.py selftest   FORM.html                       (headless Chrome, Chromium or Edge)
 
 Rules that the tool enforces:
   * It never overwrites an issued form, a returned form, an answers file or a decisions file.
@@ -52,18 +52,18 @@ RESERVED = {"constructor", "hasOwnProperty", "isPrototypeOf", "propertyIsEnumera
             "valueOf", "__proto__", "other", "noted"}
 KINDS = ("decision", "review", "info")
 TONES = ("red", "amber", "blue", "green", "purple", "gray")
-SEAL_TONES = ("", "ink", "gray", "blue")
+SEAL_TONES = ("", "amber", "ink", "gray", "blue", "green", "purple")
 DISPOSITIONS = ("changed", "answered", "explained", "declined")
 DEFAULT_PRIORITIES = ["Critical", "High", "Medium", "Low"]
 DEFAULT_CHOICES = [
     {"value": "agree", "label": "Agree: do the proposed action", "seal": "准", "seal_en": "Approved", "confirms": True, "accept": True},
-    {"value": "modify", "label": "Agree with the problem, but change the action", "seal": "改", "seal_en": "Revise", "needs_reason": True},
+    {"value": "modify", "label": "Agree with the problem, but change the action", "seal": "改", "seal_en": "Revise", "tone": "amber", "needs_reason": True},
     {"value": "disagree", "label": "Disagree", "seal": "驳", "seal_en": "Rejected", "needs_reason": True, "tone": "ink"},
     {"value": "defer", "label": "Defer: not now", "seal": "缓", "seal_en": "Deferred", "tone": "gray", "confirms": True, "defers": True},
     {"value": "info", "label": "I need more information", "seal": "问", "seal_en": "Question", "needs_reason": True, "tone": "blue"},
 ]
 CHOICE_FLAGS = ("confirms", "accept", "defers", "needs_reason")
-INFO_CHOICES = [{"value": "noted", "label": "Noted", "seal": "阅", "seal_en": "Noted", "confirms": True, "accept": True}]
+INFO_CHOICES = [{"value": "noted", "label": "Noted", "seal": "阅", "seal_en": "Noted", "tone": "green", "confirms": True, "accept": True}]
 CONFIDENCE = [("sure", "Sure"), ("leaning", "Leaning"), ("unsure", "Unsure")]
 TODO_MARK = "TODO(AI)"
 MAX_FILE = 50_000_000
@@ -79,7 +79,7 @@ class Fail(SystemExit):
 
 
 def die(msg: str):
-    raise Fail(f"vermilion: {msg}")
+    raise Fail(f"granted: {msg}")
 
 
 def q(p) -> str:
@@ -186,8 +186,8 @@ def config_errors(cfg: dict) -> list:
             if sum(1 for c in ch if c.get("accept")) > 1:
                 errs.append("at most one choice can have \"accept\": true")
             for c in ch:
-                if c.get("tone", "") not in SEAL_TONES:
-                    errs.append(f"choice {c.get('value')}: tone must be one of {SEAL_TONES[1:]}")
+                if (c.get("tone") or "") not in SEAL_TONES:
+                    errs.append(f"choice {c.get('value')}: tone must be empty (the vermilion seal, for approval) or one of {', '.join(SEAL_TONES[1:])}")
     rid = cfg.get("review_id", "")
     if rid and not re.fullmatch(r"[a-f0-9]{8,32}", str(rid)):
         errs.append("review_id must be 8-32 lower-case hex characters")
@@ -210,7 +210,7 @@ def config_errors(cfg: dict) -> list:
 
 
 def load_config(rdir: Path, path: Path = None) -> dict:
-    p = path or rdir / "vermilion.json"
+    p = path or rdir / "granted.json"
     if not p.is_file():
         die(f"{p} not found. Run: {VM} init --dir {q(rdir)} --slug <name> --title <title>")
     cfg = read_json(p, "config")
@@ -709,11 +709,11 @@ def render_card(c: dict, idx: int, total: int, cfg: dict, ids: set, figs: Path, 
         for n, ch in enumerate(cfg["choices"], 1):
             kb = f'<span class="kbd">{n}</span>' if not opts and n <= 9 else ""
             resp.append(f'<label class="choice"><input type="radio" name="{name}-resp" value="{attr(ch["value"])}" data-field="resp">'
-                        f'{esc(ch["label"])}{kb}</label>')
+                        f'{mini_seal(cfg, ch)}{esc(ch["label"])}{kb}</label>')
         resp.append("</div>")
     if kind == "info":
         resp.append('<div class="choices">' + "".join(
-            f'<label class="choice"><input type="radio" name="{name}-resp" value="{attr(ch["value"])}" data-field="resp">{esc(ch["label"])}'
+            f'<label class="choice"><input type="radio" name="{name}-resp" value="{attr(ch["value"])}" data-field="resp">{mini_seal(cfg, ch)}{esc(ch["label"])}'
             f'<span class="kbd">{n}</span></label>' for n, ch in enumerate(INFO_CHOICES, 1)) + "</div>")
     else:
         resp.append('<div class="confrow">How sure are you?' + "".join(
@@ -758,7 +758,7 @@ def read_blocks(text: str) -> dict:
             out[m.group(1)] = None
     h = re.search(r"<html[^>]*>", text[:5000])
     if h:
-        for k in ("data-form-id", "data-version", "data-round", "data-vermilion", "data-draft", "data-review-id"):
+        for k in ("data-form-id", "data-version", "data-round", "data-granted", "data-draft", "data-review-id"):
             mm = re.search(k + r'="([^"]*)"', h.group(0))
             if mm:
                 out["_" + k] = html.unescape(mm.group(1))
@@ -798,9 +798,38 @@ def carry_state(path: Path, cards: list, warns: list) -> dict:
             "fromVersion": old.get("formVersion") or b.get("_data-version"), "fromSavedAt": old.get("savedAt"),
             "fromUpdatedAt": old.get("updatedAt"), "cards": len(kept), "answered": answered,
             "flagged": sum(1 for cs in kept.values() if cs.get("flag")), "dropped": dropped,
-            "fromReviewId": (b.get("vermilion-config") or {}).get("reviewId") if isinstance(b.get("vermilion-config"), dict) else None}
+            "fromReviewId": (b.get("granted-config") or {}).get("reviewId") if isinstance(b.get("granted-config"), dict) else None}
     return {"cards": kept, "meta": old.get("meta") or {}, "reopen": old.get("reopen") or {}, "opened": old.get("opened") or {},
             "updatedAt": old.get("updatedAt"), "carried": prov, "history": list(old.get("history") or []) + [prov]}
+
+
+def seal_tone(ch: dict) -> str:
+    """The seal colour of a choice. Without a tone, only a choice that approves gets the vermilion of 准."""
+    return ch.get("tone") or ("" if ch.get("confirms") and not ch.get("defers") else "ink")
+
+
+def mini_seal(cfg: dict, ch: dict) -> str:
+    """The small seal in front of a choice, so the reader learns which seal each answer stamps."""
+    if cfg.get("seal_style") == "latin" or not ch.get("seal"):
+        return ""
+    tone = f' t-{seal_tone(ch)}' if seal_tone(ch) else ""
+    return f'<span class="mseal{tone}" title="{attr(ch.get("seal_en") or ch["label"])}" aria-hidden="true">{esc(ch["seal"])}</span>'
+
+
+def seals_row(cfg: dict, has_info: bool) -> str:
+    """The legend of the seals: each seal with its English meaning."""
+    if cfg.get("seal_style") == "latin":
+        return ""
+    seen, items = set(), []
+    extra = [{"seal": "改", "seal_en": "Other option", "tone": "amber"}, {"seal": "注", "seal_en": "Comment only", "tone": "purple"}]
+    for ch in cfg["choices"] + (INFO_CHOICES if has_info else []) + extra:
+        key = (ch.get("seal"), ch.get("seal_en"))
+        if not ch.get("seal") or key in seen:
+            continue
+        seen.add(key)
+        tone = f' t-{seal_tone(ch)}' if seal_tone(ch) else ""
+        items.append(f'<span class="lseal"><span class="mseal{tone}" aria-hidden="true">{esc(ch["seal"])}</span>{esc(ch.get("seal_en") or ch.get("label") or "")}</span>')
+    return '<tr><th>Seals</th><td class="legend">' + " ".join(items) + "</td></tr>" if items else ""
 
 
 def build_html(cfg: dict, cards: list, confirmed: dict, version: str, built_at: str, note: str, state: dict,
@@ -856,6 +885,7 @@ def build_html(cfg: dict, cards: list, confirmed: dict, version: str, built_at: 
     if cfg["labels"]:
         lrow = ('<tr><th>Labels</th><td class="legend">' + " · ".join(f'<b>{esc(l.get("name"))}</b> {esc(l.get("meaning"))}'
                                                                for l in cfg["labels"]) + "</td></tr>")
+    srow2 = seals_row(cfg, any(c["kind"] == "info" for c in cards))
     sec_opts = '<option value="">All parts</option>' + ('<option value="_confirmed">Confirmed items</option>' if conf_sec else "") + "".join(
         f'<option value="{attr(s["key"])}">{esc(s["title"])}</option>' for s in cfg["sections"] if any(c["section"] == s["key"] for c in cards))
     prio_opts = '<option value="">All priorities</option>' + "".join(f'<option value="{attr(p)}">{esc(p)}</option>' for p in cfg["priorities"])
@@ -866,7 +896,7 @@ def build_html(cfg: dict, cards: list, confirmed: dict, version: str, built_at: 
         "CSS": (TPL / "form.css").read_text(encoding="utf-8"), "JS": (TPL / "form.js").read_text(encoding="utf-8"),
         "SECTION_OPTIONS": sec_opts, "PRIO_OPTIONS": prio_opts, "TOC": "".join(toc_html),
         "INTRO": clean_html(cfg.get("intro_html") or "", "intro_html", warns, lb), "VERSION_ROW": vrow, "SOURCES_ROW": srow,
-        "LABELS_ROW": lrow, "TOTAL": str(total), "MINUTES": f"{minutes:g}", "BUILT_AT": esc(built_at) + " UTC",
+        "LABELS_ROW": lrow, "SEALS_ROW": srow2, "TOTAL": str(total), "MINUTES": f"{minutes:g}", "BUILT_AT": esc(built_at) + " UTC",
         "CONFIRMED": conf_sec, "SECTIONS": "".join(sec_html),
         "CONFIG": json_for_script(jcfg), "CARD_INDEX": json_for_script(index), "STATE": json_for_script(state, indent=1),
     }
@@ -906,7 +936,7 @@ def reg_save(rdir: Path, entries: list) -> None:
     tmp = p.with_suffix(".tmp")
     tmp.write_text(json.dumps(entries, ensure_ascii=True, indent=1), encoding="utf-8")
     os.replace(tmp, p)
-    L = ["# Review log", "", "Generated from `registry.json` by vermilion.py. Do not edit by hand.", "",
+    L = ["# Review log", "", "Generated from `registry.json` by granted.py. Do not edit by hand.", "",
          "| # | Time | Event | Version | File | sha256 (first 12) | Answered / flagged | Note |", "|---|---|---|---|---|---|---|---|"]
     for i, e in enumerate(entries, 1):
         af = f"{e['answered']} / {e['flagged']}" if e.get("answered") is not None else ""
@@ -1040,9 +1070,9 @@ def extract_answers(path: Path, display: str = None) -> dict:
     except (OSError, UnicodeDecodeError) as e:
         die(f"{path}: cannot read ({e})")
     b = read_blocks(text)
-    st, idx, cfg = b.get("review-state"), b.get("card-index"), b.get("vermilion-config")
+    st, idx, cfg = b.get("review-state"), b.get("card-index"), b.get("granted-config")
     if not isinstance(st, dict) or not isinstance(idx, list) or not isinstance(cfg, dict):
-        die(f"{path}: this is not a Vermilion form (a script block is missing or unreadable)")
+        die(f"{path}: this is not a Granted form (a script block is missing or unreadable)")
     st, idx, cfg = clean_state(st), clean_text(idx), clean_text(cfg)
     def ok_list(v, keys):
         return v is None or (isinstance(v, list) and all(isinstance(x, dict) and all(isinstance(x.get(k), str) for k in keys) for x in v))
@@ -1360,10 +1390,10 @@ def field_facts(c: dict) -> dict:
 
 def cmd_init(a) -> int:
     rdir = Path(a.dir)
-    cfgp = rdir / "vermilion.json"
+    cfgp = rdir / "granted.json"
     if cfgp.exists():
         die(f"{cfgp} exists already. Edit it, or use another --dir")
-    cfg = read_json(TPL / "vermilion.json", "template")
+    cfg = read_json(TPL / "granted.json", "template")
     cfg["slug"], cfg["title"], cfg["review_id"] = a.slug, a.title, os.urandom(4).hex()
     cfg["short_title"] = a.short_title or textwrap.shorten(a.title, 28, placeholder="…")
     errs = config_errors(cfg)
@@ -1459,19 +1489,19 @@ def config_drift(rdir: Path, cfg: dict, entries: list) -> list:
     E = []
     for k in ("review_id", "slug"):
         if old[k] != cfg[k]:
-            E.append(f"vermilion.json: {k} changed after issue ({old[k]!r} -> {cfg[k]!r}). Put it back: the earlier forms and answers use it.")
+            E.append(f"granted.json: {k} changed after issue ({old[k]!r} -> {cfg[k]!r}). Put it back: the earlier forms and answers use it.")
     oc, nc = {c["value"]: c for c in old["choices"]}, {c["value"]: c for c in cfg["choices"]}
     for v, c in oc.items():
         if v not in nc:
-            E.append(f"vermilion.json: choice {v!r} was removed after issue. Keep it (you may change its label).")
+            E.append(f"granted.json: choice {v!r} was removed after issue. Keep it (you may change its label).")
         elif any(bool(c.get(f)) != bool(nc[v].get(f)) for f in ("confirms", "accept", "defers")):
-            E.append(f"vermilion.json: choice {v!r} changed what it means (confirms/accept/defers) after issue. Use a new value instead.")
+            E.append(f"granted.json: choice {v!r} changed what it means (confirms/accept/defers) after issue. Use a new value instead.")
     os_, ns = {s_["key"]: s_ for s_ in old["sections"]}, {s_["key"]: s_ for s_ in cfg["sections"]}
     for k, s_ in os_.items():
         if k not in ns:
-            E.append(f"vermilion.json: section {k!r} was removed or renamed after issue. Keep it (you may change its title).")
+            E.append(f"granted.json: section {k!r} was removed or renamed after issue. Keep it (you may change its title).")
         elif s_.get("kind", "review") != ns[k].get("kind", "review"):
-            E.append(f"vermilion.json: section {k!r} changed its kind after issue.")
+            E.append(f"granted.json: section {k!r} changed its kind after issue.")
     return E
 
 
@@ -1771,7 +1801,7 @@ def cmd_build(a) -> int:
             die(f"refusing to overwrite {p}")
     write_new(out, page)
     freeze(out, frozen)
-    freeze(rdir / "vermilion.json", cfg_copy)
+    freeze(rdir / "granted.json", cfg_copy)
     man = rdir / "cards" / f"{a.version}.sha256"
     if not man.exists():
         write_new(man, cardset_manifest(cdir))
@@ -1801,11 +1831,11 @@ def cmd_rebuild(a) -> int:
     cfg = load_config(rdir, rdir / e["config"]) if e.get("config") and (rdir / e["config"]).is_file() else load_config(rdir)
     why = []
     if e.get("toolVersion") and e["toolVersion"] != TOOL_VERSION:
-        why.append(f"it was built with Vermilion {e['toolVersion']}; this is {TOOL_VERSION}")
+        why.append(f"it was built with Granted {e['toolVersion']}; this is {TOOL_VERSION}")
     if e.get("templateSha256") and e["templateSha256"] != template_sha():
         why.append("the form template (templates/form.*) changed since the build")
     if not e.get("config"):
-        why.append("the log has no frozen config for this version, so the current vermilion.json is used")
+        why.append("the log has no frozen config for this version, so the current granted.json is used")
     cdir = rdir / e["cards"]
     if not inside(cdir, rdir) or not cdir.is_dir():
         die(f"the card set {e['cards']} of {a.version} is not in the review folder")
@@ -1951,7 +1981,7 @@ def receive_one(rdir: Path, cfg: dict, entries: list, src: Path, a) -> int:
     if iss and iss.get("frozen") and inside(rdir / iss["frozen"], rdir) and (rdir / iss["frozen"]).is_file():
         ib = read_blocks((rdir / iss["frozen"]).read_text(encoding="utf-8", errors="replace"))
         rb = read_blocks(src.read_text(encoding="utf-8", errors="replace"))
-        for k in ("card-index", "vermilion-config"):
+        for k in ("card-index", "granted-config"):
             if clean_text(ib.get(k)) != clean_text(rb.get(k)):
                 problems.append(f"its {k} block differs from the issued form (the file was changed by hand or comes from another build)")
     if iss:
@@ -2042,7 +2072,7 @@ def cmd_receive(a) -> int:
                 print(str(e))
                 rc = 1
             except Exception as e:  # one damaged file must not stop the others
-                print(f"vermilion: {shown(p)} could not be read ({type(e).__name__}): skipped")
+                print(f"granted: {shown(p)} could not be read ({type(e).__name__}): skipped")
                 rc = 1
         return rc
     if not a.file:
@@ -2537,8 +2567,8 @@ def cmd_selftest(a) -> int:
     f = Path(a.file)
     if not f.is_file():
         die(f"file not found: {f}")
-    if 'id="vermilion-config"' not in f.read_text(encoding="utf-8", errors="ignore"):
-        die(f"{f} is not a Vermilion form")
+    if 'id="granted-config"' not in f.read_text(encoding="utf-8", errors="ignore"):
+        die(f"{f} is not a Granted form")
     b = a.browser or find_browser()
     if not b:
         print("no Chrome, Chromium or Edge found. Open the form in a new tab with #selftest at the end of its URL and read the result at "
@@ -2570,8 +2600,8 @@ def cmd_selftest(a) -> int:
 
 
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(prog="vermilion.py", description="Vermilion: versioned, self-saving HTML review forms for AI reports.")
-    ap.add_argument("--version-info", action="version", version=f"vermilion {TOOL_VERSION}")
+    ap = argparse.ArgumentParser(prog="granted.py", description="Granted: versioned, self-saving HTML review forms for AI reports.")
+    ap.add_argument("--version-info", action="version", version=f"granted {TOOL_VERSION}")
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("init", help="create a review folder with a config")
     p.add_argument("--dir", default="review")

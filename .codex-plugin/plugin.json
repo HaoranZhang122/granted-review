@@ -1,27 +1,27 @@
 {
-  "name": "vermilion",
+  "name": "granted",
   "version": "1.0.0",
   "description": "Review long AI reports like an emperor: one card per decision, answers saved inside one HTML file, versioned rounds until every item is decided.",
   "author": {
     "name": "HaoranZhang122",
     "url": "https://github.com/HaoranZhang122"
   },
-  "homepage": "https://github.com/HaoranZhang122/vermilion-review",
-  "repository": "https://github.com/HaoranZhang122/vermilion-review",
+  "homepage": "https://github.com/HaoranZhang122/granted-review",
+  "repository": "https://github.com/HaoranZhang122/granted-review",
   "license": "MIT",
   "keywords": ["review", "feedback", "decisions", "human-in-the-loop", "html-form", "skills", "codex"],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Vermilion",
+    "displayName": "Granted",
     "shortDescription": "Rule on long AI reports, one card at a time",
     "longDescription": "Turn a long report, or the agent's own work, into a self-saving HTML review form: one card per decision, with evidence, options and a recommendation. The reviewer answers in the browser; the agent reads the answers back and sends a shorter round with only the open items, until every item is decided.",
     "developerName": "HaoranZhang122",
     "category": "Productivity",
     "capabilities": ["Interactive", "Write"],
-    "websiteURL": "https://github.com/HaoranZhang122/vermilion-review",
+    "websiteURL": "https://github.com/HaoranZhang122/granted-review",
     "defaultPrompt": [
-      "Use $vermilion to turn docs/report.md into a review form.",
-      "Give me the result as a Vermilion review instead of a long report.",
+      "Use $granted to turn docs/report.md into a review form.",
+      "Give me the result as a Granted review instead of a long report.",
       "I saved the review form: read my answers and start the next round."
     ],
     "brandColor": "#C8361D",

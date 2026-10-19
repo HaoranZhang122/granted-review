@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="assets/logo.svg" width="96" alt="Vermilion-Siegel">
+<img src="assets/logo.svg" width="96" alt="Granted-Siegel">
 
-# Vermilion · 朱批skill
+# Granted · 准奏skill
 
 **Prüfe lange KI-Berichte wie ein Kaiser.**
 
@@ -15,9 +15,9 @@ Deine KI schreibt die Denkschrift. Du hältst den Zinnoberpinsel.
 [![Eine HTML-Datei](https://img.shields.io/badge/form-one%20HTML%20file-1f1a17)](#was-du-bekommst)
 [![MIT](https://img.shields.io/badge/license-MIT-6b625a)](LICENSE)
 
-<a href="assets/vermilion-demo.mp4"><img src="assets/vermilion-demo.gif" width="860" alt="Ein langer KI-Bericht wird zu einem Review-Formular, der Reviewer entscheidet über jede Karte, und Runde 2 enthält nur die offenen Punkte"></a>
+<a href="assets/granted-demo.mp4"><img src="assets/granted-demo.gif" width="860" alt="Ein langer KI-Bericht wird zu einem Review-Formular, der Reviewer entscheidet über jede Karte, und Runde 2 enthält nur die offenen Punkte"></a>
 
-⭐ **Wenn Vermilion dir hilft, gib ihm bitte einen Stern.** Das hilft anderen, es zu finden.
+⭐ **Wenn Granted dir hilft, gib ihm bitte einen Stern.** Das hilft anderen, es zu finden.
 
 </div>
 
@@ -29,31 +29,31 @@ KI-Agenten schreiben heute lange Berichte: Audits, Migrationspläne, Design-Revi
 
 Den Bericht zu lesen ist kein Problem. **Feedback zu geben ist der mühsame Teil.** Du scrollst, du zitierst, du tippst „zu Punkt 7 denke ich …“ in den Chat. Du verlierst den Überblick darüber, was du schon beantwortet hast. Der Agent missversteht, welchen Punkt du gemeint hast. Und nächste Woche kann niemand mehr sagen, was entschieden wurde oder auf welche Version des Textes sich das bezog.
 
-Im kaiserlichen China schickten Minister lange Denkschriften (奏章) an den Thron. Der Kaiser antwortete nicht mit Aufsätzen. Er schrieb auf jede eine kurze Entscheidung mit Zinnobertinte: das 朱批. **Vermilion gibt dir diese Rolle.** Der Agent legt für jeden Punkt eine eigene Karte an, mit den Belegen, den Optionen und seiner Empfehlung. Du entscheidest in einem Formular über jede Karte. Der Agent liest deine Antworten exakt, antwortet auf deine Kommentare und fragt nur bei dem erneut nach, was noch offen ist.
+Im kaiserlichen China schickten Minister lange Denkschriften (奏章) an den Thron. Der Kaiser antwortete nicht mit Aufsätzen. Er schrieb auf jede eine kurze Entscheidung mit Zinnobertinte. Die bekannteste kennt man aus jedem Palastdrama: 准奏, „Antrag genehmigt“. Daher kommt der Name Granted. **Granted gibt dir diese Rolle.** Der Agent legt für jeden Punkt eine eigene Karte an, mit den Belegen, den Optionen und seiner Empfehlung. Du entscheidest in einem Formular über jede Karte. Der Agent liest deine Antworten exakt, antwortet auf deine Kommentare und fragt nur bei dem erneut nach, was noch offen ist.
 
 **Das Ergebnis: bessere Entscheidungen und besseres Feedback, mit weniger Aufwand.** Du siehst jede Entscheidung, und nichts wird übersprungen. Jede Antwort hat eine Begründung, wo sie eine braucht. Der Agent bekommt strukturierte Antworten statt eines Absatzes, den er deuten muss.
 
 ## Installation
 
-Vermilion funktioniert in **Claude Code** und in **Codex**. Du brauchst Python 3.8 oder neuer. Für den optionalen Selbsttest brauchst du außerdem Chrome, Chromium oder Edge.
+Granted funktioniert in **Claude Code** und in **Codex**. Du brauchst Python 3.8 oder neuer. Für den optionalen Selbsttest brauchst du außerdem Chrome, Chromium oder Edge.
 
 **Claude Code**
 
 ```
-/plugin marketplace add HaoranZhang122/vermilion-review
-/plugin install vermilion@vermilion-review
+/plugin marketplace add HaoranZhang122/granted-review
+/plugin install granted@granted-review
 ```
 
-Oder kopiere `skills/vermilion/` nach `~/.claude/skills/` (für alle Projekte) oder nach `.claude/skills/` (für ein einzelnes Projekt).
+Oder kopiere `skills/granted/` nach `~/.claude/skills/` (für alle Projekte) oder nach `.claude/skills/` (für ein einzelnes Projekt).
 
 **Codex**
 
 ```
-codex plugin marketplace add HaoranZhang122/vermilion-review
-codex plugin add vermilion@vermilion-review
+codex plugin marketplace add HaoranZhang122/granted-review
+codex plugin add granted@granted-review
 ```
 
-Oder kopiere `skills/vermilion/` nach `~/.codex/skills/`.
+Oder kopiere `skills/granted/` nach `~/.codex/skills/`.
 
 ## Verwendung
 
@@ -70,33 +70,33 @@ flowchart LR
 
 | Ausgangspunkt | Claude Code | Codex |
 |---|---|---|
-| Aus einem langen Bericht | `Use vermilion to turn docs/migration-report.md into a review form. ultracode` | `$vermilion Turn docs/migration-report.md into a review form.` |
-| Ohne Bericht | `Plan the database migration, and give me the result as a Vermilion review instead of a long report. ultracode` | `$vermilion Plan the database migration, and give me the result as a review form instead of a long report.` |
+| Aus einem langen Bericht | `Use the granted skill to turn docs/migration-report.md into a review form. ultracode` | `$granted Turn docs/migration-report.md into a review form.` |
+| Ohne Bericht | `Plan the database migration, and give me the result as a Granted review instead of a long report. ultracode` | `$granted Plan the database migration, and give me the result as a review form instead of a long report.` |
 
-(Du kannst auch auf Deutsch schreiben, zum Beispiel: „Mach mit vermilion aus docs/migration-report.md ein Review-Formular. ultracode“.)
+(Du kannst auch auf Deutsch schreiben, zum Beispiel: „Mach mit dem Skill granted aus docs/migration-report.md ein Review-Formular. ultracode“.)
 
-In Codex ruft `$vermilion` den Skill auf.
+In Codex ruft `$granted` den Skill auf.
 
 **2. Antworten.** Öffne das Formular, das dir der Agent gibt, entscheide über jede Karte und klicke auf **Seal & send** (Versiegeln & senden). Sag dem Agenten „gespeichert“.
 
 **3. Wiederholen.** Der Agent liest deine Antworten und schickt ein kürzeres Formular, nur mit den offenen Punkten, jeweils mit seiner Antwort auf deinen Kommentar. Wenn nichts mehr offen ist, schreibt er das endgültige Entscheidungsregister.
 
-> **Der Ultracode-Modus wird dringend empfohlen.** Lass den Agenten bei einem langen Bericht einen Multi-Agent-Workflow ausführen: ein Autor pro Karte, ein unabhängiger Prüfer pro Karte, der sie mit der Quelle abgleicht, und ein Konsistenzdurchgang. Autoren, die lange Berichte verdichten, lassen oft Vorbehalte weg und ändern Zahlen. Die Prüfer fangen das ab. Schreib in Claude Code `ultracode` in den Prompt (dafür muss in `/config` die Einstellung „Dynamic workflows“ aktiv sein). Ohne Ultracode und in Codex führt der Agent dieselben Schritte für Autoren und Prüfer nacheinander aus: siehe [references/ultracode.md](skills/vermilion/references/ultracode.md) (auf Englisch).
+> **Der Ultracode-Modus wird dringend empfohlen.** Lass den Agenten bei einem langen Bericht einen Multi-Agent-Workflow ausführen: ein Autor pro Karte, ein unabhängiger Prüfer pro Karte, der sie mit der Quelle abgleicht, und ein Konsistenzdurchgang. Autoren, die lange Berichte verdichten, lassen oft Vorbehalte weg und ändern Zahlen. Die Prüfer fangen das ab. Schreib in Claude Code `ultracode` in den Prompt (dafür muss in `/config` die Einstellung „Dynamic workflows“ aktiv sein). Ohne Ultracode und in Codex führt der Agent dieselben Schritte für Autoren und Prüfer nacheinander aus: siehe [references/ultracode.md](skills/granted/references/ultracode.md) (auf Englisch).
 
-**Sofort ausprobieren, ohne Agent:** Klone das Repo und öffne die Dateien in [`skills/vermilion/examples/demo/forms/`](skills/vermilion/examples/demo/forms/) in deinem Browser (GitHub selbst zeigt HTML-Dateien als Quellcode an). Sie enthalten ein fiktives Review einer Datenbankmigration: Runde 1 leer, Runde 1 so, wie ein Reviewer sie zurückgegeben hat, und Runde 2.
+**Sofort ausprobieren, ohne Agent:** Klone das Repo und öffne die Dateien in [`skills/granted/examples/demo/forms/`](skills/granted/examples/demo/forms/) in deinem Browser (GitHub selbst zeigt HTML-Dateien als Quellcode an). Sie enthalten ein fiktives Review einer Datenbankmigration: Runde 1 leer, Runde 1 so, wie ein Reviewer sie zurückgegeben hat, und Runde 2.
 
 ## Was du bekommst
 
 **Für dich als Reviewer**
 - **Eine Karte pro Entscheidung.** Jede Karte hat eine einzeilige Zusammenfassung, die Belege (klapp sie auf, wenn du zweifelst), Abbildungen, die Optionen mit ihren Kosten und Risiken und eine empfohlene Option.
-- **Schnell entscheiden.** <kbd>A</kbd> übernimmt die Empfehlung. <kbd>1</kbd>–<kbd>9</kbd> wählen eine Option. <kbd>J</kbd>/<kbd>K</kbd> wechseln zwischen den Karten. <kbd>N</kbd> springt zur nächsten unbeantworteten Karte. <kbd>F</kbd> markiert eine Karte. <kbd>C</kbd> öffnet einen Kommentar. Ein zinnoberrotes Siegel (准 Genehmigt, 改 Überarbeiten, 驳 Abgelehnt, 缓 Zurückgestellt, 问 Frage) wird auf jede Karte gestempelt, über die du entscheidest.
+- **Schnell entscheiden.** <kbd>A</kbd> übernimmt die Empfehlung. <kbd>1</kbd>–<kbd>9</kbd> wählen eine Option. <kbd>J</kbd>/<kbd>K</kbd> wechseln zwischen den Karten. <kbd>N</kbd> springt zur nächsten unbeantworteten Karte. <kbd>F</kbd> markiert eine Karte. <kbd>C</kbd> öffnet einen Kommentar. Auf jede Karte, über die du entscheidest, kommt ein Siegel: 准 Genehmigt in Zinnoberrot, dazu 改 Überarbeiten, 驳 Abgelehnt, 缓 Zurückgestellt und 问 Frage, jedes in einer eigenen Farbe.
 - **Sag, wie sicher du bist.** Sicher, tendenziell oder unsicher. Wenn du unsicher bist, erklärt der Agent in der nächsten Runde mehr.
 - **Begründungen, wo sie zählen.** Wenn du widersprichst, eine Änderung verlangst oder „Sonstiges“ wählst, springt der Cursor ins Kommentarfeld, damit du das in einem Satz begründest.
 - **Seal & send.** Ein Klick listet auf, was unbeantwortet, unsicher oder ohne Begründung ist, speichert deine Antworten in der Datei und kopiert eine kurze Zusammenfassung für den Chat. Der Agent findet die gespeicherte Datei selbst, wenn sie im Ordner des Formulars, im Downloads-Ordner oder auf dem Desktop liegt; sonst gib ihm den Pfad.
 - **Spätere Runden sind kurz.** Eine Tabelle mit allem, was bestätigt ist (du kannst jede Zeile wieder öffnen), und nur für jeden offenen Punkt eine Karte, mit deiner vorherigen Antwort und der Antwort des Agenten.
 
 **Für den Agenten**
-- Eine Python-CLI ohne Abhängigkeiten (`vermilion.py`): `init`, `check`, `build`, `receive`, `next-round`, `revise`, `rebuild`, `answers`, `status`, `selftest`.
+- Eine Python-CLI ohne Abhängigkeiten (`granted.py`): `init`, `check`, `build`, `receive`, `next-round`, `revise`, `rebuild`, `answers`, `status`, `selftest`.
 - `check` prüft die Karten, die Links und die Abbildungen. Es gibt außerdem eine Punktzahl für einfache Sprache aus (etwa 80 % ASD-STE100, optional).
 - `receive` weist eine Datei zurück, wenn sie zu einem anderen Review gehört, eine Entwurfsvorschau ist, nie gespeichert wurde oder Karten hat, die vom ausgegebenen Formular abweichen.
 - `next-round` ordnet jeden Punkt mit Begründung als „Bestätigt“ oder „Offen“ ein. Es schreibt `DECISIONS_after_R<n>.md` und entwirft den Kartensatz der nächsten Runde, mit einem `TODO(AI)` an jeder Stelle, an der eine Antwort fällig ist. Nichts kann ohne Entscheidung aus dem Review herausfallen.
@@ -111,19 +111,19 @@ In Codex ruft `$vermilion` den Skill auf.
 
 | Befehl | Was er macht |
 |---|---|
-| `vermilion.py init --dir review --slug NAME --title TEXT` | Legt den Review-Ordner und seine Konfiguration an. |
-| `vermilion.py check --dir review --version R1.0` | Prüft die Karten. Gibt die Punktzahl für einfache Sprache aus. |
-| `vermilion.py build --dir review --version R1.0 [--draft]` | Erstellt eine Vorschau (`--draft`) oder gibt das Formular aus: eine Arbeitskopie, eine eingefrorene Kopie und einen Logeintrag. |
-| `vermilion.py receive --dir review --find` | Empfängt jede neu gespeicherte Fassung dieses Reviews aus dem Review-Ordner, ~/Downloads und ~/Desktop, die älteste zuerst (oder gib `--file SAVED.html` an). Friert jede davon ein, extrahiert ihre Antworten (`.md` und `.json`) und protokolliert sie. |
-| `vermilion.py next-round --dir review [--dry-run] [--open ID ...]` | Klassifiziert die Antworten. Schreibt die Entscheidungsdatei und entwirft die nächste Runde. |
-| `vermilion.py revise --dir review --from R1.0 --to R1.1` | Kopiert einen Kartensatz für eine Revision. |
-| `vermilion.py build --dir review --version R1.1 --carry SAVED.html` | Gibt eine Revision aus, die die Antworten der Runde behält. |
-| `vermilion.py rebuild --dir review --version R1.0 --out FILE` | Baut ein ausgegebenes Formular aus dem Log neu und vergleicht es Byte für Byte. |
-| `vermilion.py answers SAVED.html` | Gibt die Antworten eines beliebigen Formulars aus. Protokolliert nichts. |
-| `vermilion.py status --dir review` | Zeigt das Log und den Stand des Reviews. |
-| `vermilion.py selftest FORM.html` | Führt den eingebauten Selbsttest des Formulars in einem Headless-Browser aus. |
+| `granted.py init --dir review --slug NAME --title TEXT` | Legt den Review-Ordner und seine Konfiguration an. |
+| `granted.py check --dir review --version R1.0` | Prüft die Karten. Gibt die Punktzahl für einfache Sprache aus. |
+| `granted.py build --dir review --version R1.0 [--draft]` | Erstellt eine Vorschau (`--draft`) oder gibt das Formular aus: eine Arbeitskopie, eine eingefrorene Kopie und einen Logeintrag. |
+| `granted.py receive --dir review --find` | Empfängt jede neu gespeicherte Fassung dieses Reviews aus dem Review-Ordner, ~/Downloads und ~/Desktop, die älteste zuerst (oder gib `--file SAVED.html` an). Friert jede davon ein, extrahiert ihre Antworten (`.md` und `.json`) und protokolliert sie. |
+| `granted.py next-round --dir review [--dry-run] [--open ID ...]` | Klassifiziert die Antworten. Schreibt die Entscheidungsdatei und entwirft die nächste Runde. |
+| `granted.py revise --dir review --from R1.0 --to R1.1` | Kopiert einen Kartensatz für eine Revision. |
+| `granted.py build --dir review --version R1.1 --carry SAVED.html` | Gibt eine Revision aus, die die Antworten der Runde behält. |
+| `granted.py rebuild --dir review --version R1.0 --out FILE` | Baut ein ausgegebenes Formular aus dem Log neu und vergleicht es Byte für Byte. |
+| `granted.py answers SAVED.html` | Gibt die Antworten eines beliebigen Formulars aus. Protokolliert nichts. |
+| `granted.py status --dir review` | Zeigt das Log und den Stand des Reviews. |
+| `granted.py selftest FORM.html` | Führt den eingebauten Selbsttest des Formulars in einem Headless-Browser aus. |
 
-Die Details stehen in [SKILL.md](skills/vermilion/SKILL.md) und [references/](skills/vermilion/references/) (auf Englisch): das Kartenschema, wie man Karten schreibt, Regeln für einfache Sprache, Runden und Versionen und das Ultracode-Rezept.
+Die Details stehen in [SKILL.md](skills/granted/SKILL.md) und [references/](skills/granted/references/) (auf Englisch): das Kartenschema, wie man Karten schreibt, Regeln für einfache Sprache, Runden und Versionen und das Ultracode-Rezept.
 
 ## Häufige Fragen
 
@@ -139,13 +139,13 @@ Die Details stehen in [SKILL.md](skills/vermilion/SKILL.md) und [references/](sk
 
 ## Star-Verlauf
 
-Wenn Vermilion dir Zeit spart, ist ein ⭐ der einfachste Weg, Danke zu sagen und anderen zu helfen, es zu finden.
+Wenn Granted dir Zeit spart, ist ein ⭐ der einfachste Weg, Danke zu sagen und anderen zu helfen, es zu finden.
 
-<a href="https://star-history.com/#HaoranZhang122/vermilion-review&Date">
+<a href="https://star-history.com/#HaoranZhang122/granted-review&Date">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=HaoranZhang122/vermilion-review&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=HaoranZhang122/vermilion-review&type=Date" />
-    <img alt="Star-History-Diagramm" src="https://api.star-history.com/svg?repos=HaoranZhang122/vermilion-review&type=Date" width="640" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=HaoranZhang122/granted-review&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=HaoranZhang122/granted-review&type=Date" />
+    <img alt="Star-History-Diagramm" src="https://api.star-history.com/svg?repos=HaoranZhang122/granted-review&type=Date" width="640" />
   </picture>
 </a>
 
@@ -153,7 +153,7 @@ Wenn Vermilion dir Zeit spart, ist ein ⭐ der einfachste Weg, Danke zu sagen un
 
 Haoran Jack Zhang · [@HaoranZhang122](https://github.com/HaoranZhang122)
 
-Fragen und Ideen: [eröffne ein Issue](https://github.com/HaoranZhang122/vermilion-review/issues).
+Fragen und Ideen: [eröffne ein Issue](https://github.com/HaoranZhang122/granted-review/issues).
 
 ## Lizenz
 

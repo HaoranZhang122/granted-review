@@ -23,8 +23,8 @@ Pass `args` as `{ "report": "docs/report.md", "review": "review", "version": "R1
 
 ```js
 export const meta = {
-  name: 'vermilion-cards',
-  description: 'Write and verify Vermilion review cards from a long report',
+  name: 'granted-cards',
+  description: 'Write and verify Granted review cards from a long report',
   phases: [{ title: 'Extract' }, { title: 'Write' }, { title: 'Verify' }, { title: 'Consistency' }],
 }
 const ITEMS = { type: 'object', required: ['items'], properties: { items: { type: 'array', items: {
@@ -39,7 +39,7 @@ const RULES = `Rules: ${REF}/card-schema.md, ${REF}/writing-cards.md and ${REF}/
 const card = id => `${args.review}/cards/${args.version}/${id}.json`
 
 phase('Extract')
-const first = await agent(`Read ${args.report} and ${args.review}/vermilion.json. List every item that needs the reader's decision or review. ${RULES}`, { schema: ITEMS })
+const first = await agent(`Read ${args.report} and ${args.review}/granted.json. List every item that needs the reader's decision or review. ${RULES}`, { schema: ITEMS })
 const missed = await agent(`Here is a list of review items from ${args.report}: ${JSON.stringify(first.items)}. Read the report again. ` +
   `Return ONLY items that are missing, or new items for items that the list merged by mistake (set 'replaces' to the merged ids).`, { schema: ITEMS })
 const replaced = new Set(missed.items.flatMap(m => m.replaces || []))
@@ -58,7 +58,7 @@ const done = await pipeline(items,
 
 phase('Consistency')
 const report = await agent(`Read every card in ${args.review}/cards/${args.version}/. Make terms consistent, fix related ids, merge duplicates, check priorities. ` +
-  `Then run: python3 ${args.skill}/scripts/vermilion.py check --dir ${args.review} --version ${args.version} and fix every error. Report what you changed.`)
+  `Then run: python3 ${args.skill}/scripts/granted.py check --dir ${args.review} --version ${args.version} and fix every error. Report what you changed.`)
 return { items: items.length, verify: done.filter(Boolean).flat(), report }
 ```
 

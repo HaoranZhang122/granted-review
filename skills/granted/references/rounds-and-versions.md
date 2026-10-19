@@ -12,14 +12,14 @@
 **Rules:**
 - A revision never changes the content or the options of a card that the reader answered. A change of content starts a new round.
 - An option keeps its key in every version and round. A changed option gets a new key. `check` compares each card set with the previous issued one and warns when an option label changes.
-- The form id is `<slug>-<version>-<date>` (the UTC date of the build). A draft has the id `<slug>-<version>-<date>-draft`. Each review also has a random `review_id` (in `vermilion.json`). The browser keeps the answers under the review id and the form id, so answers from different reviews, versions and drafts never mix.
+- The form id is `<slug>-<version>-<date>` (the UTC date of the build). A draft has the id `<slug>-<version>-<date>-draft`. Each review also has a random `review_id` (in `granted.json`). The browser keeps the answers under the review id and the form id, so answers from different reviews, versions and drafts never mix.
 - Each card in a form carries a fingerprint of its content. `receive` compares it with the issued card set, so an answer always belongs to the card set that the form was built from. (The fingerprint does not prove that nobody edited the visible text of a returned file by hand. Keep returned files as the user sent them.)
 - A revision offers the answers that the reader typed into an earlier revision of the same round. This is automatic for every earlier revision in the log. Add other form ids with `--prev-form-id`.
 - Each saved form records its version, its round and, if it started from an earlier file, that file's name, sha256 and version (`carried`, `history`).
 
 ## Status after a round
 
-`next-round` gives each item one status. The choice flags `confirms`, `defers` and `needs_reason` in `vermilion.json` decide what a choice means (see `card-schema.md`).
+`next-round` gives each item one status. The choice flags `confirms`, `defers` and `needs_reason` in `granted.json` decide what a choice means (see `card-schema.md`).
 
 | Status | When |
 |---|---|
@@ -40,7 +40,7 @@ Defer counts as confirmed: the decision is "not now", and the confirmed table sa
 
 ```
 review/
-  vermilion.json                    the config
+  granted.json                      the config
   <slug>_R1.0_<date>.html           working copy of an issued form (give this path to the reader)
   <slug>_R1.0_DRAFT.html            the newest draft preview (not logged, replaced by each --draft)
   REVIEW_LOG.md                     every issued and returned file with its sha256 (generated)

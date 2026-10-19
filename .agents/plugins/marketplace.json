@@ -1,11 +1,11 @@
 {
-  "name": "vermilion-review",
+  "name": "granted-review",
   "interface": {
-    "displayName": "Vermilion"
+    "displayName": "Granted"
   },
   "plugins": [
     {
-      "name": "vermilion",
+      "name": "granted",
       "source": {
         "source": "local",
         "path": "./"

@@ -1,10 +1,10 @@
 # Card schema (schema 1)
 
-A **memorial** is one review form. It has a config file, `vermilion.json`, and one JSON file for each card.
+A **memorial** is one review form. It has a config file, `granted.json`, and one JSON file for each card.
 
 ```
 review/
-  vermilion.json          the config of the form (one per review)
+  granted.json            the config of the form (one per review)
   cards/R1.0/D1.json      one file per card; the file name is the card id
   cards/R1.0/F2.json
   figs/cutover.svg        figures that the cards use (embedded into the form)
@@ -12,7 +12,7 @@ review/
 
 Files in a card folder whose name starts with `_` are not cards. `next-round` writes `_confirmed.json` there.
 
-## The config: `vermilion.json`
+## The config: `granted.json`
 
 | Key | Required | Meaning |
 |---|---|---|
@@ -41,7 +41,7 @@ Each choice says what it means. The form and `next-round` use these flags, not t
 | `accept` | The **Accept** button and the key A select this choice on a review card without options. At most one choice. | agree |
 | `defers` | The decision is "not now". The confirmed table says "Deferred. Nothing is done now." | defer |
 | `needs_reason` | The form asks for a comment, and `Seal & send` lists the card if the comment is empty. | modify, disagree, info |
-| `tone` | The colour of the seal: empty (vermilion), `ink`, `gray` or `blue`. | disagree ink, defer gray, info blue |
+| `tone` | The colour of the seal: empty (vermilion, for approval only), `amber`, `ink`, `gray`, `blue`, `green` or `purple`. A choice without a tone gets vermilion only if it confirms; otherwise ink. | modify amber, disagree ink, defer gray, info blue |
 
 If you use the default values (`agree`, `modify`, `disagree`, `defer`, `info`), missing flags come from the defaults. The values `other` and `noted` are reserved.
 

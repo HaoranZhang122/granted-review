@@ -44,7 +44,7 @@ A good card lets the reader decide in about one minute, and lets them check the 
 ## 4. Honesty
 
 - Every number and claim comes from the report or a cited file. Do not round in a way that changes the meaning. Do not add a number that has no source.
-- Label each claim with its evidence level. The default labels are TESTED, READ, INFERRED, UNVERIFIED and OWNER-ONLY. Define your own in `vermilion.json` if the work needs others.
+- Label each claim with its evidence level. The default labels are TESTED, READ, INFERRED, UNVERIFIED and OWNER-ONLY. Define your own in `granted.json` if the work needs others.
 - Say what you did not check. An `info` card "What this review did not cover" helps the reader to trust the rest.
 - Effort and time estimates are INFERRED unless you measured them.
 - Do not hide a weak point of the recommended option. The reader must see the cost before they accept it.

@@ -1,11 +1,11 @@
 ---
-name: vermilion
-description: Turn a long AI-written report, plan, audit or proposal into a versioned, self-saving HTML review form. The human rules on each item (approve, revise, reject, select an option, ask a question) and the AI reads the answers back and runs more rounds until every item is decided. Use when your output has many items that need a human decision or feedback, when the user asks for a review form, a decision form or a feedback form, when the user asks for results "as a Vermilion review" instead of a long report, or when the user must work through a long report item by item. Do not use it for one or two quick questions: ask those directly.
+name: granted
+description: 'Turn a long AI-written report, plan, audit or proposal into a versioned, self-saving HTML review form. The human rules on each item (approve, revise, reject, select an option, ask a question) and the AI reads the answers back and runs more rounds until every item is decided. Use when your output has many items that need a human decision or feedback, when the user asks for a review form, a decision form or a feedback form, when the user asks for results "as a Granted review" instead of a long report, or when the user must work through a long report item by item. Do not use it for one or two quick questions: ask those directly.'
 ---
 
-# Vermilion (朱批skill)
+# Granted (准奏skill)
 
-In imperial China, ministers sent long memorials to the throne. The emperor read each one and wrote his decision on it in vermilion ink. That decision was the 朱批 (zhūpī). Vermilion gives the human the same role: you (the AI) write the memorial, and the human holds the brush.
+In imperial China, ministers sent long memorials to the throne. The emperor read each one and wrote his ruling on it in vermilion ink. The best-known ruling, from every palace drama, is 准奏 (zhǔn zòu): "request granted", which is where the name Granted comes from. Granted gives the human the same role: you (the AI) write the memorial, and the human holds the brush.
 
 **The loop:**
 
@@ -22,7 +22,7 @@ R2.0 form ◄── next-round ◄── receive (freeze + extract + log)
 
 The form is one HTML file with no server and no dependencies. The answers are saved inside the file. Every issued and returned file is frozen and logged with its sha256, and each card carries a fingerprint, so each answer can be traced to the card set that the human was given.
 
-All commands use `scripts/vermilion.py` in the folder of this file (Python 3.8+, standard library only). Below, `VM` means `python3 <folder of this SKILL.md>/scripts/vermilion.py`. Most commands print the next step, and `VM status --dir review` tells you where the review stands.
+All commands use `scripts/granted.py` in the folder of this file (Python 3.8+, standard library only). Below, `VM` means `python3 <folder of this SKILL.md>/scripts/granted.py`. Most commands print the next step, and `VM status --dir review` tells you where the review stands.
 
 ## When to use it
 
@@ -36,7 +36,7 @@ If there are only 1–3 questions, ask them in the chat instead.
 
 There are two starts:
 - **The user gives you a long report:** read it and list every item that needs the human.
-- **The user asks for your result as a Vermilion review** (no report): do the work, then list every item that needs the human. Do not write a long report first. Keep the facts that the cards cite in short files (for example `review/notes.md`, logs or test output), so that each claim has a `[src: …]`.
+- **The user asks for your result as a Granted review** (no report): do the work, then list every item that needs the human. Do not write a long report first. Keep the facts that the cards cite in short files (for example `review/notes.md`, logs or test output), so that each claim has a `[src: …]`.
 
 Use one card for one item:
 - **decision**: the human selects one of 2–4 options. You recommend exactly one.
@@ -51,7 +51,7 @@ Split an item that holds two decisions. Merge items that cannot be decided separ
 VM init --dir review --slug <short-name> --title "<title of the review>"
 ```
 
-Edit `review/vermilion.json`: the intro, the links to the full report (`sources`, relative to the review folder), the sections and the evidence labels. See `references/card-schema.md`. After the first issue, do not change `review_id`, `slug`, the choice values and their flags, or the section keys and kinds: `check` refuses such changes, because the earlier forms and answers depend on them. Titles, labels and the intro can change.
+Edit `review/granted.json`: the intro, the links to the full report (`sources`, relative to the review folder), the sections and the evidence labels. See `references/card-schema.md`. After the first issue, do not change `review_id`, `slug`, the choice values and their flags, or the section keys and kinds: `check` refuses such changes, because the earlier forms and answers depend on them. Titles, labels and the intro can change.
 
 ## Step 3. Write the cards
 
