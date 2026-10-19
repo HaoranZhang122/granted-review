@@ -17,6 +17,8 @@ AI 写奏章，你执朱笔。
 
 <a href="assets/vermilion-demo.mp4"><img src="assets/vermilion-demo.gif" width="860" alt="一份 AI 长报告变成一个审阅表单，审阅人逐卡批阅，第二轮只留下未决事项"></a>
 
+⭐ **如果朱批skill 对你有帮助，请点个 Star。** 这能让更多人发现它。
+
 </div>
 
 ---
@@ -126,6 +128,18 @@ Plan the database migration, and give me the result as a Vermilion review instea
 **能用于其他智能体吗（Codex、Cursor、Gemini CLI）？** 命令行工具是纯 Python，SKILL.md 是纯 Markdown。任何能读文件、能运行命令的智能体都能照着用。
 
 **我的数据会被发送出去吗？** 不会。表单不发出任何网络请求，图表都嵌在文件里。
+
+## Star 趋势
+
+如果朱批skill 帮你省了时间，点个 ⭐ 是最简单的感谢方式，也能帮助更多人发现它。
+
+<a href="https://star-history.com/#HaoranZhang122/vermilion-review&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=HaoranZhang122/vermilion-review&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=HaoranZhang122/vermilion-review&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=HaoranZhang122/vermilion-review&type=Date" width="640" />
+  </picture>
+</a>
 
 ## 作者
 

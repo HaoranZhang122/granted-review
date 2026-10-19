@@ -17,6 +17,8 @@ Your AI writes the memorial. You hold the vermilion brush.
 
 <a href="assets/vermilion-demo.mp4"><img src="assets/vermilion-demo.gif" width="860" alt="A long AI report becomes one review form, the reviewer rules on each card, and round 2 holds only the open items"></a>
 
+⭐ **If Vermilion helps you, please give it a star.** It helps other people find it.
+
 </div>
 
 ---
@@ -124,6 +126,18 @@ The details are in [SKILL.md](skills/vermilion/SKILL.md) and [references/](skill
 **Does it work with other agents (Codex, Cursor, Gemini CLI)?** The CLI is plain Python and SKILL.md is plain Markdown. Any agent that can read a file and run a command can follow it.
 
 **Is my data sent anywhere?** No. The form makes no network requests. Figures are embedded in the file.
+
+## Star history
+
+If Vermilion saves you time, a ⭐ is the easiest way to say thanks and to help other people find it.
+
+<a href="https://star-history.com/#HaoranZhang122/vermilion-review&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=HaoranZhang122/vermilion-review&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=HaoranZhang122/vermilion-review&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=HaoranZhang122/vermilion-review&type=Date" width="640" />
+  </picture>
+</a>
 
 ## Author
 

@@ -17,6 +17,8 @@ Tu IA escribe el memorial. Tú tienes el pincel bermellón.
 
 <a href="assets/vermilion-demo.mp4"><img src="assets/vermilion-demo.gif" width="860" alt="Un informe largo de una IA se convierte en un formulario de revisión, el revisor decide cada tarjeta y la ronda 2 solo contiene los puntos abiertos"></a>
 
+⭐ **Si Vermilion te resulta útil, dale una estrella.** Así otras personas pueden encontrarlo.
+
 </div>
 
 ---
@@ -126,6 +128,18 @@ Los detalles están en [SKILL.md](skills/vermilion/SKILL.md) y en [references/](
 **¿Funciona con otros agentes (Codex, Cursor, Gemini CLI)?** La CLI es Python normal y SKILL.md es Markdown normal. Cualquier agente que pueda leer un archivo y ejecutar un comando puede seguirlo.
 
 **¿Se envían mis datos a algún sitio?** No. El formulario no hace ninguna petición de red. Las figuras van incrustadas en el archivo.
+
+## Historial de estrellas
+
+Si Vermilion te ahorra tiempo, una ⭐ es la forma más sencilla de dar las gracias y de ayudar a que otros lo encuentren.
+
+<a href="https://star-history.com/#HaoranZhang122/vermilion-review&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=HaoranZhang122/vermilion-review&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=HaoranZhang122/vermilion-review&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=HaoranZhang122/vermilion-review&type=Date" width="640" />
+  </picture>
+</a>
 
 ## Autor
 

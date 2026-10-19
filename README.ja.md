@@ -17,6 +17,8 @@ AI が上奏文を書き、あなたが朱筆を執る。
 
 <a href="assets/vermilion-demo.mp4"><img src="assets/vermilion-demo.gif" width="860" alt="AI の長いレポートが 1 つのレビューフォームになり、レビュアーがカードごとに裁可し、2 回目には未決の項目だけが残る"></a>
 
+⭐ **朱批skill が役に立ったら、Star をお願いします。** ほかの人が見つけやすくなります。
+
 </div>
 
 ---
@@ -126,6 +128,18 @@ Plan the database migration, and give me the result as a Vermilion review instea
 **他のエージェント（Codex、Cursor、Gemini CLI）でも使える？** CLI はただの Python、SKILL.md はただの Markdown です。ファイルを読んでコマンドを実行できるエージェントなら従えます。
 
 **データはどこかに送られる？** いいえ。フォームはネットワーク通信を一切しません。図はファイルに埋め込まれています。
+
+## Star の推移
+
+朱批skill で時間が節約できたら、⭐ がいちばん簡単なお礼になり、ほかの人が見つける助けにもなります。
+
+<a href="https://star-history.com/#HaoranZhang122/vermilion-review&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=HaoranZhang122/vermilion-review&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=HaoranZhang122/vermilion-review&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=HaoranZhang122/vermilion-review&type=Date" width="640" />
+  </picture>
+</a>
 
 ## 作者
 
