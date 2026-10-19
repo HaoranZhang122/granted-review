@@ -106,12 +106,6 @@ The agent writes the cards, checks them, and gives you a path such as `review/ac
 
 The details are in [SKILL.md](skills/vermilion/SKILL.md) and [references/](skills/vermilion/references/): the card schema, how to write cards, plain-language rules, rounds and versions, and the Ultracode recipe.
 
-## How it compares
-
-Several skills already turn agent output into an HTML page of questions with options and a "copy back to the AI" button. For example, promptback, grill-me-batch, ask-operator, decision-deck, visual-explainer and Plannotator. Vermilion's card layout follows the same good patterns.
-
-What Vermilion adds is the record. promptback and grill-me-batch keep the answers in browser storage and return them only as pasted text. Plannotator and grill-with-ui need a running local process. Vermilion saves the answers inside the HTML file itself. It keeps every issued and returned round as a frozen, sha256-logged copy. Round 2 is a short static form: the confirmed items in one table, and the agent's reply on each open card. So the returned file is the record of what was decided.
-
 ## FAQ
 
 **Which browser?** In Chrome or Edge, the first Save asks where to save: choose the form file itself. Firefox, Safari and the VS Code preview work too: Save downloads an updated copy. Give that copy to the agent.
