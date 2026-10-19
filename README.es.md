@@ -145,6 +145,8 @@ Si Vermilion te ahorra tiempo, una ⭐ es la forma más sencilla de dar las grac
 
 Haoran Jack Zhang · [@HaoranZhang122](https://github.com/HaoranZhang122)
 
+Preguntas e ideas: [abre un issue](https://github.com/HaoranZhang122/vermilion-review/issues).
+
 ## Licencia
 
 MIT. Consulta [LICENSE](LICENSE).

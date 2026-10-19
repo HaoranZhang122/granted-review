@@ -145,6 +145,8 @@ Plan the database migration, and give me the result as a Vermilion review instea
 
 Haoran Jack Zhang · [@HaoranZhang122](https://github.com/HaoranZhang122)
 
+問題和建議：請[提交 issue](https://github.com/HaoranZhang122/vermilion-review/issues)。
+
 ## 授權
 
 MIT。見 [LICENSE](LICENSE)。

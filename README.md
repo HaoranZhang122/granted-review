@@ -143,6 +143,8 @@ If Vermilion saves you time, a ⭐ is the easiest way to say thanks and to help 
 
 Haoran Jack Zhang · [@HaoranZhang122](https://github.com/HaoranZhang122)
 
+Questions and ideas: [open an issue](https://github.com/HaoranZhang122/vermilion-review/issues).
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
