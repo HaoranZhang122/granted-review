@@ -8,11 +8,11 @@
 
 Tu IA escribe el memorial. Tú tienes el pincel bermellón.
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · **Español**
+[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · **Español** · [Français](README.fr.md) · [Deutsch](README.de.md) · [Português (Brasil)](README.pt-BR.md) · [Русский](README.ru.md)
 
 [![Claude Code skill](https://img.shields.io/badge/Claude%20Code-skill-c8361d)](#instalación)
-[![Sin dependencias](https://img.shields.io/badge/dependencias-0-2e7d4f)](#qué-obtienes)
-[![Un archivo HTML](https://img.shields.io/badge/formulario-un%20archivo%20HTML-1f1a17)](#qué-obtienes)
+[![Sin dependencias](https://img.shields.io/badge/dependencies-0-2e7d4f)](#qué-obtienes)
+[![Un archivo HTML](https://img.shields.io/badge/form-one%20HTML%20file-1f1a17)](#qué-obtienes)
 [![MIT](https://img.shields.io/badge/license-MIT-6b625a)](LICENSE)
 
 <a href="assets/vermilion-demo.mp4"><img src="assets/vermilion-demo.gif" width="860" alt="Un informe largo de una IA se convierte en un formulario de revisión, el revisor decide cada tarjeta y la ronda 2 solo contiene los puntos abiertos"></a>
@@ -35,23 +35,32 @@ En la China imperial, los ministros enviaban largos memoriales (奏章) al trono
 
 ## Instalación
 
-**Como plugin de Claude Code:**
+Vermilion funciona en **Claude Code** y en **Codex**. Necesitas Python 3.8 o posterior. Para ejecutar la autoprueba opcional, también necesitas Chrome, Chromium o Edge.
+
+**Claude Code**
 
 ```
 /plugin marketplace add HaoranZhang122/vermilion-review
 /plugin install vermilion@vermilion-review
 ```
 
-**O como skill normal:** copia `skills/vermilion/` en `~/.claude/skills/` (para todos los proyectos) o en `.claude/skills/` (para un proyecto).
+O copia `skills/vermilion/` en `~/.claude/skills/` (para todos los proyectos) o en `.claude/skills/` (para un solo proyecto).
 
-Necesitas Python 3.8 o posterior. Para la autoprueba opcional, también Chrome, Chromium o Edge.
+**Codex**
+
+```
+codex plugin marketplace add HaoranZhang122/vermilion-review
+codex plugin add vermilion@vermilion-review
+```
+
+O copia `skills/vermilion/` en `~/.codex/skills/`.
 
 ## Cómo usarlo
 
 ```mermaid
 flowchart LR
   A["Un informe largo"] --> F["Formulario de revisión<br/>(un archivo HTML)"]
-  B["Sin informe:<br/>el trabajo del agente"] --> F
+  B["Sin informe:<br/>el propio trabajo del agente"] --> F
   F --> R["Decides cada tarjeta<br/>y pulsas Seal #amp; send"]
   R --> N["El agente responde.<br/>Solo vuelven los puntos abiertos."]
   N -->|"siguiente ronda, hasta que no quede nada abierto"| F
@@ -59,23 +68,22 @@ flowchart LR
 
 **1. Empieza.** Dale al agente un informe largo, o deja que se salte el informe y te entregue su resultado como formulario de revisión:
 
-```
-Use vermilion to turn docs/migration-report.md into a review form. ultracode
-```
-
-```
-Plan the database migration, and give me the result as a Vermilion review instead of a long report. ultracode
-```
+| Punto de partida | Claude Code | Codex |
+|---|---|---|
+| Desde un informe largo | `Use vermilion to turn docs/migration-report.md into a review form. ultracode` | `$vermilion Turn docs/migration-report.md into a review form.` |
+| Sin informe | `Plan the database migration, and give me the result as a Vermilion review instead of a long report. ultracode` | `$vermilion Plan the database migration, and give me the result as a review form instead of a long report.` |
 
 (También puedes pedirlo en español, por ejemplo: "Usa vermilion para convertir docs/migration-report.md en un formulario de revisión. ultracode".)
+
+En Codex, `$vermilion` invoca la skill.
 
 **2. Responde.** Abre el formulario que te da el agente, decide cada tarjeta y pulsa **Seal & send**. Dile al agente "guardado".
 
 **3. Repite.** El agente lee tus respuestas y te envía un formulario más corto, solo con los puntos abiertos, cada uno con su respuesta a tu comentario. Cuando no queda nada abierto, escribe el registro final de decisiones.
 
-> **Se recomienda encarecidamente el modo Ultracode.** Con un informe largo, deja que el agente ejecute un flujo con varios agentes: un redactor por tarjeta, un verificador independiente por tarjeta que la compara con la fuente, y una revisión de coherencia. Los redactores que resumen informes largos pierden matices y cambian cifras. Los verificadores lo detectan. Consulta [references/ultracode.md](skills/vermilion/references/ultracode.md) (en inglés).
+> **Se recomienda encarecidamente el modo Ultracode.** Con un informe largo, deja que el agente ejecute un flujo de trabajo con varios agentes: un redactor por tarjeta, un verificador independiente por tarjeta que la compara con la fuente, y una revisión de coherencia. Los redactores que condensan informes largos eliminan las salvedades y cambian las cifras. Los verificadores lo detectan. En Claude Code, añade `ultracode` a tu petición. Codex no tiene modo Ultracode: pídele que siga los pasos de redactor y verificador de [references/ultracode.md](skills/vermilion/references/ultracode.md) (en inglés).
 
-**Pruébalo ahora, sin agente:** clona el repositorio y abre en tu navegador los archivos de [`skills/vermilion/examples/demo/forms/`](skills/vermilion/examples/demo/forms/) (GitHub muestra los archivos HTML como código fuente). Contienen una revisión ficticia de una migración de base de datos: la ronda 1 vacía, la ronda 1 tal como la devolvió un revisor, y la ronda 2.
+**Pruébalo ahora, sin agente:** clona el repositorio y abre en tu navegador los archivos de [`skills/vermilion/examples/demo/forms/`](skills/vermilion/examples/demo/forms/) (el propio GitHub muestra los archivos HTML como código fuente). Contienen una revisión ficticia de una migración de base de datos: la ronda 1 vacía, la ronda 1 tal como la devolvió un revisor, y la ronda 2.
 
 ## Qué obtienes
 
@@ -121,11 +129,11 @@ Los detalles están en [SKILL.md](skills/vermilion/SKILL.md) y en [references/](
 
 **¿Qué navegador?** En Chrome o Edge, el primer guardado pregunta dónde guardar: elige el propio archivo del formulario. Firefox, Safari y la vista previa de VS Code también sirven: al guardar se descarga una copia actualizada. Dale esa copia al agente.
 
-**Cerré la pestaña sin guardar.** Abre el mismo archivo en el mismo navegador. El formulario te ofrece las respuestas que guardó el navegador.
+**Cerré la pestaña sin guardar.** Abre el mismo archivo en el mismo navegador. El formulario te ofrece las respuestas que conservó el navegador.
 
-**¿Puedo fiarme de lo que el agente dice que se decidió?** El archivo de decisiones lista cada punto con su estado y el motivo. Cada respuesta remite a una copia congelada del archivo que guardaste, con su sha256. Tus comentarios llegan al agente como palabras tuyas. El agente lee cada comentario y responde en cada tarjeta abierta de la ronda siguiente.
+**¿Puedo fiarme de lo que el agente dice que decidió?** El archivo de decisiones lista cada punto con su estado y el motivo. Cada respuesta remite a una copia congelada del archivo que guardaste, con su sha256. Tus comentarios llegan al agente con tus propias palabras. El agente lee cada comentario y responde en cada tarjeta abierta de la ronda siguiente.
 
-**¿Funciona con otros agentes (Codex, Cursor, Gemini CLI)?** La CLI es Python normal y SKILL.md es Markdown normal. Cualquier agente que pueda leer un archivo y ejecutar un comando puede seguirlo.
+**¿Funciona con otros agentes (Cursor, Gemini CLI)?** Claude Code y Codex tienen soporte directo (consulta Instalación). La CLI es Python puro y SKILL.md es Markdown simple, así que cualquier otro agente que pueda leer un archivo y ejecutar un comando también puede seguirlo.
 
 **¿Se envían mis datos a algún sitio?** No. El formulario no hace ninguna petición de red. Las figuras van incrustadas en el archivo.
 

@@ -8,7 +8,7 @@
 
 AI が上奏文を書き、あなたが朱筆を執る。
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · **日本語** · [Español](README.es.md)
+[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · **日本語** · [한국어](README.ko.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Português (Brasil)](README.pt-BR.md) · [Русский](README.ru.md)
 
 [![Claude Code skill](https://img.shields.io/badge/Claude%20Code-skill-c8361d)](#インストール)
 [![依存なし](https://img.shields.io/badge/依存-0-2e7d4f)](#得られるもの)
@@ -35,23 +35,32 @@ AI が上奏文を書き、あなたが朱筆を執る。
 
 ## インストール
 
-**Claude Code プラグインとして：**
+朱批skill は **Claude Code** と **Codex** で使えます。Python 3.8 以上が必要です。任意のセルフテストを実行するには、Chrome、Chromium または Edge も必要です。
+
+**Claude Code**
 
 ```
 /plugin marketplace add HaoranZhang122/vermilion-review
 /plugin install vermilion@vermilion-review
 ```
 
-**または通常の skill として：** `skills/vermilion/` を `~/.claude/skills/`（すべてのプロジェクト）または `.claude/skills/`（1 つのプロジェクト）にコピーします。
+または、`skills/vermilion/` を `~/.claude/skills/`（すべてのプロジェクトで使う場合）または `.claude/skills/`（1 つのプロジェクトだけで使う場合）にコピーします。
 
-Python 3.8 以上が必要です。任意のセルフテストを実行するには、Chrome、Chromium または Edge も必要です。
+**Codex**
+
+```
+codex plugin marketplace add HaoranZhang122/vermilion-review
+codex plugin add vermilion@vermilion-review
+```
+
+または、`skills/vermilion/` を `~/.codex/skills/` にコピーします。
 
 ## 使い方
 
 ```mermaid
 flowchart LR
   A["長いレポート"] --> F["レビューフォーム<br/>（HTML ファイル 1 つ）"]
-  B["レポートなし：<br/>エージェントが直接出力"] --> F
+  B["レポートなし：<br/>エージェント自身の作業"] --> F
   F --> R["カードごとに裁可し、<br/>Seal #amp; send を押す"]
   R --> N["エージェントが返信し、<br/>未決の項目だけが戻る"]
   N -->|"次の回へ。未決がなくなるまで"| F
@@ -59,23 +68,22 @@ flowchart LR
 
 **1. 始める。** エージェントに長いレポートを渡します。または、レポートを省いて、結果を直接レビューフォームで出してもらいます：
 
-```
-Use vermilion to turn docs/migration-report.md into a review form. ultracode
-```
-
-```
-Plan the database migration, and give me the result as a Vermilion review instead of a long report. ultracode
-```
+| 始め方 | Claude Code | Codex |
+|---|---|---|
+| 長いレポートから | `Use vermilion to turn docs/migration-report.md into a review form. ultracode` | `$vermilion Turn docs/migration-report.md into a review form.` |
+| レポートなし | `Plan the database migration, and give me the result as a Vermilion review instead of a long report. ultracode` | `$vermilion Plan the database migration, and give me the result as a review form instead of a long report.` |
 
 （日本語で頼んでも構いません。例：「vermilion で docs/migration-report.md をレビューフォームにして。ultracode」）
+
+Codex では、`$vermilion` でスキルを呼び出します。
 
 **2. 回答する。** エージェントから届いたフォームを開き、カードごとに裁可して **Seal & send** を押します。エージェントに「保存した」と伝えます。
 
 **3. 繰り返す。** エージェントは回答を読み、未決の項目だけを載せた短いフォームを送ります。各項目には、あなたのコメントへの返信が付きます。未決がなくなると、最終的な決定記録を書きます。
 
-> **Ultracode モードを強く推奨します。** 長いレポートでは、エージェントにマルチエージェントのワークフローを実行させてください。カードごとに 1 人の書き手、元の資料と照合する独立した検証者をカードごとに 1 人、最後に一貫性のチェック。長いレポートを要約する書き手は、但し書きを落とし、数字を変えがちです。検証者がそれを見つけます。詳しくは [references/ultracode.md](skills/vermilion/references/ultracode.md)（英語）。
+> **Ultracode モードを強く推奨します。** 長いレポートでは、エージェントにマルチエージェントのワークフローを実行させてください。カードごとに書き手を 1 人、元の資料と照合する独立した検証者をカードごとに 1 人置き、さらに一貫性チェックを行います。長いレポートを要約する書き手は、但し書きや留保を落とし、数字を変えてしまいます。検証者がそれを見つけます。Claude Code では、プロンプトに `ultracode` を加えます。Codex には Ultracode モードがありません。代わりに、[references/ultracode.md](skills/vermilion/references/ultracode.md)（英語）にある書き手と検証者の手順に従うよう頼んでください。
 
-**エージェントなしで今すぐ試す：** リポジトリをクローンし、[`skills/vermilion/examples/demo/forms/`](skills/vermilion/examples/demo/forms/) のファイルをブラウザで開きます（GitHub 上では HTML ファイルはソースとして表示されます）。架空のデータベース移行レビューで、空の 1 回目、レビュアーが返した 1 回目、2 回目が入っています。
+**エージェントなしで今すぐ試す：** リポジトリをクローンし、[`skills/vermilion/examples/demo/forms/`](skills/vermilion/examples/demo/forms/) のファイルをブラウザで開きます（GitHub 上では HTML ファイルはソースコードとして表示されます）。中身は架空のデータベース移行レビューで、空の 1 回目、レビュアーが回答して返した 1 回目、そして 2 回目が入っています。
 
 ## 得られるもの
 
@@ -121,11 +129,11 @@ Plan the database migration, and give me the result as a Vermilion review instea
 
 **どのブラウザ？** Chrome または Edge では、最初の保存で保存先を尋ねられます。フォームのファイルそのものを選んでください。Firefox、Safari、VS Code のプレビューでも使えます。保存すると更新したコピーがダウンロードされるので、そのコピーをエージェントに渡してください。
 
-**保存せずにタブを閉じた。** 同じブラウザで同じファイルを開いてください。ブラウザに残っている回答をフォームが提示します。
+**保存せずにタブを閉じた。** 同じブラウザで同じファイルを開いてください。ブラウザに残っている回答の復元を、フォームが提案します。
 
-**エージェントが言う決定を信用できる？** 決定ファイルには、すべての項目の状態と理由が載ります。各回答は、あなたが保存したファイルの凍結コピーとその sha256 までたどれます。コメントはあなたの言葉のままエージェントに渡り、エージェントはすべてのコメントを読み、次の回で未決カードごとに返信します。
+**エージェントが報告する決定は信用できる？** 決定ファイルには、すべての項目の状態と理由が載ります。各回答は、あなたが保存したファイルの凍結コピーとその sha256 までたどれます。コメントはあなたの言葉のままエージェントに渡り、エージェントはすべてのコメントを読み、次の回で未決カードごとに返信します。
 
-**他のエージェント（Codex、Cursor、Gemini CLI）でも使える？** CLI はただの Python、SKILL.md はただの Markdown です。ファイルを読んでコマンドを実行できるエージェントなら従えます。
+**他のエージェント（Cursor、Gemini CLI）でも使える？** Claude Code と Codex には直接対応しています（「インストール」を参照）。CLI はただの Python、SKILL.md はただの Markdown なので、ファイルを読み、コマンドを実行できるエージェントであれば、ほかのエージェントでも手順どおりに使えます。
 
 **データはどこかに送られる？** いいえ。フォームはネットワーク通信を一切しません。図はファイルに埋め込まれています。
 

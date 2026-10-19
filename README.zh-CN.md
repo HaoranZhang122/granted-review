@@ -8,7 +8,7 @@
 
 AI 写奏章，你执朱笔。
 
-[English](README.md) · **简体中文** · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [Español](README.es.md)
+[English](README.md) · **简体中文** · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Português (Brasil)](README.pt-BR.md) · [Русский](README.ru.md)
 
 [![Claude Code skill](https://img.shields.io/badge/Claude%20Code-skill-c8361d)](#安装)
 [![零依赖](https://img.shields.io/badge/依赖-0-2e7d4f)](#你能得到什么)
@@ -35,45 +35,53 @@ AI 写奏章，你执朱笔。
 
 ## 安装
 
-**作为 Claude Code 插件：**
+朱批skill 可在 **Claude Code** 和 **Codex** 中使用。需要 Python 3.8 或更高版本。如需运行可选的自检，还需要 Chrome、Chromium 或 Edge。
+
+**Claude Code**
 
 ```
 /plugin marketplace add HaoranZhang122/vermilion-review
 /plugin install vermilion@vermilion-review
 ```
 
-**或作为普通 skill：** 把 `skills/vermilion/` 复制到 `~/.claude/skills/`（所有项目可用）或 `.claude/skills/`（仅当前项目）。
+也可以把 `skills/vermilion/` 复制到 `~/.claude/skills/`（对所有项目生效）或 `.claude/skills/`（只对单个项目生效）。
 
-需要 Python 3.8 或更高版本。如需运行可选的自检，还需要 Chrome、Chromium 或 Edge。
+**Codex**
+
+```
+codex plugin marketplace add HaoranZhang122/vermilion-review
+codex plugin add vermilion@vermilion-review
+```
+
+也可以把 `skills/vermilion/` 复制到 `~/.codex/skills/`。
 
 ## 如何使用
 
 ```mermaid
 flowchart LR
   A["一份长报告"] --> F["审阅表单<br/>（一个 HTML 文件）"]
-  B["不要报告：<br/>智能体直接输出"] --> F
+  B["不要报告：<br/>智能体自己的工作成果"] --> F
   F --> R["你逐卡批阅，<br/>然后盖印并发送"]
   R --> N["智能体回复，<br/>只带回未决事项"]
   N -->|"下一轮，直到没有未决事项"| F
 ```
 
-**1. 开始。** 把一份长报告交给智能体；或者跳过报告，让它直接把结果做成审阅表单：
+**1. 开始。** 把一份长报告交给智能体；或者让它跳过报告，直接把结果做成审阅表单交给你：
 
-```
-Use vermilion to turn docs/migration-report.md into a review form. ultracode
-```
-
-```
-Plan the database migration, and give me the result as a Vermilion review instead of a long report. ultracode
-```
+| 开始方式 | Claude Code | Codex |
+|---|---|---|
+| 从一份长报告开始 | `Use vermilion to turn docs/migration-report.md into a review form. ultracode` | `$vermilion Turn docs/migration-report.md into a review form.` |
+| 不要报告 | `Plan the database migration, and give me the result as a Vermilion review instead of a long report. ultracode` | `$vermilion Plan the database migration, and give me the result as a review form instead of a long report.` |
 
 （用中文提问也可以，例如："用 vermilion 把 docs/migration-report.md 做成审阅表单。ultracode"）
+
+在 Codex 中，用 `$vermilion` 调用这个 skill。
 
 **2. 批阅。** 打开智能体给你的表单，逐卡作答，然后点 **Seal & send（盖印并发送）**，再告诉智能体"已保存"。
 
 **3. 循环。** 智能体读取你的答复，发给你一个更短的表单：只有未决事项，每一项都附有它对你评论的回复。所有事项都定下来后，它会写出最终的决定记录。
 
-> **强烈推荐使用 Ultracode 模式。** 报告很长时，让智能体运行多智能体工作流：每张卡片一个撰写者，每张卡片一个独立核查者对照原始材料检查，最后做一次一致性检查。浓缩长报告的撰写者容易丢掉限定语、改错数字，核查者能发现这些问题。详见 [references/ultracode.md](skills/vermilion/references/ultracode.md)（英文）。
+> **强烈推荐使用 Ultracode 模式。** 报告很长时，让智能体运行多智能体工作流：每张卡片一个撰写者，每张卡片一个独立核查者对照原始材料检查，最后做一次一致性检查。浓缩长报告的撰写者容易丢掉限定语、改错数字，核查者能发现这些问题。使用 Claude Code 时，在提示词里加上 `ultracode` 即可。Codex 没有 Ultracode 模式：请让它按照 [references/ultracode.md](skills/vermilion/references/ultracode.md)（英文）中撰写者和核查者的步骤来做。
 
 **不用智能体，现在就试试：** 克隆本仓库，在浏览器里打开 [`skills/vermilion/examples/demo/forms/`](skills/vermilion/examples/demo/forms/) 中的文件（GitHub 网页上 HTML 文件只显示源码）。里面是一个虚构的数据库迁移评审：空白的第一轮、审阅人交回的第一轮，以及第二轮。
 
@@ -121,11 +129,11 @@ Plan the database migration, and give me the result as a Vermilion review instea
 
 **用哪个浏览器？** 在 Chrome 或 Edge 中，第一次保存会询问保存位置：选择表单文件本身。Firefox、Safari 和 VS Code 预览也可以用：保存时会下载一份更新后的副本，把这份副本交给智能体即可。
 
-**我没保存就关掉了页面。** 用同一个浏览器打开同一个文件，表单会找回浏览器里保留的答复。
+**我没保存就关掉了标签页。** 用同一个浏览器打开同一个文件，表单会找回浏览器里保留的答复。
 
-**我能信任智能体说的决定吗？** 决定文件列出每个事项的状态和原因。每条答复都能追溯到你保存的那个文件的冻结副本及其 sha256。你的评论作为你的原话交给智能体；智能体会读每一条评论，并在下一轮的每张未决卡片上回复。
+**我能信任智能体说的决定吗？** 决定文件列出每个事项的状态和原因。每条答复都能追溯到你保存的那个文件的冻结副本及其 sha256。你的评论会以原话交给智能体；智能体会读每一条评论，并在下一轮的每张未决卡片上回复。
 
-**能用于其他智能体吗（Codex、Cursor、Gemini CLI）？** 命令行工具是纯 Python，SKILL.md 是纯 Markdown。任何能读文件、能运行命令的智能体都能照着用。
+**能用于其他智能体吗（Cursor、Gemini CLI）？** 朱批skill 直接支持 Claude Code 和 Codex（见"安装"）。命令行工具是纯 Python，SKILL.md 是纯 Markdown，所以其他任何能读文件、能运行命令的智能体也都能照着用。
 
 **我的数据会被发送出去吗？** 不会。表单不发出任何网络请求，图表都嵌在文件里。
 

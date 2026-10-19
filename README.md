@@ -8,7 +8,7 @@
 
 Your AI writes the memorial. You hold the vermilion brush.
 
-**English** · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [Español](README.es.md)
+**English** · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Português (Brasil)](README.pt-BR.md) · [Русский](README.ru.md)
 
 [![Claude Code skill](https://img.shields.io/badge/Claude%20Code-skill-c8361d)](#install)
 [![Zero dependencies](https://img.shields.io/badge/dependencies-0-2e7d4f)](#what-you-get)
@@ -35,16 +35,25 @@ In imperial China, ministers sent long memorials (奏章) to the throne. The emp
 
 ## Install
 
-**As a Claude Code plugin:**
+Vermilion works in **Claude Code** and in **Codex**. You need Python 3.8 or later. To run the optional self-test, you also need Chrome, Chromium or Edge.
+
+**Claude Code**
 
 ```
 /plugin marketplace add HaoranZhang122/vermilion-review
 /plugin install vermilion@vermilion-review
 ```
 
-**Or as a plain skill:** copy `skills/vermilion/` into `~/.claude/skills/` (for all projects) or into `.claude/skills/` (for one project).
+Or copy `skills/vermilion/` into `~/.claude/skills/` (for all projects) or into `.claude/skills/` (for one project).
 
-You need Python 3.8 or later. To run the optional self-test, you also need Chrome, Chromium or Edge.
+**Codex**
+
+```
+codex plugin marketplace add HaoranZhang122/vermilion-review
+codex plugin add vermilion@vermilion-review
+```
+
+Or copy `skills/vermilion/` into `~/.codex/skills/`.
 
 ## How to use
 
@@ -59,19 +68,18 @@ flowchart LR
 
 **1. Start.** Give the agent a long report, or let it skip the report and give you its result as a review form:
 
-```
-Use vermilion to turn docs/migration-report.md into a review form. ultracode
-```
+| Start | Claude Code | Codex |
+|---|---|---|
+| From a long report | `Use vermilion to turn docs/migration-report.md into a review form. ultracode` | `$vermilion Turn docs/migration-report.md into a review form.` |
+| No report | `Plan the database migration, and give me the result as a Vermilion review instead of a long report. ultracode` | `$vermilion Plan the database migration, and give me the result as a review form instead of a long report.` |
 
-```
-Plan the database migration, and give me the result as a Vermilion review instead of a long report. ultracode
-```
+In Codex, `$vermilion` calls the skill.
 
 **2. Answer.** Open the form that the agent gives you, rule on each card, and click **Seal & send**. Tell the agent "saved".
 
 **3. Repeat.** The agent reads your answers and sends a shorter form with only the open items, each with its reply to your comment. When nothing is open, it writes the final decision register.
 
-> **Ultracode mode is highly recommended.** For a long report, let the agent run a multi-agent workflow: one writer per card, an independent verifier per card that checks it against the source, and a consistency pass. Writers that condense long reports drop hedges and change numbers. Verifiers catch this. See [references/ultracode.md](skills/vermilion/references/ultracode.md).
+> **Ultracode mode is highly recommended.** For a long report, let the agent run a multi-agent workflow: one writer per card, an independent verifier per card that checks it against the source, and a consistency pass. Writers that condense long reports drop hedges and change numbers. Verifiers catch this. In Claude Code, add `ultracode` to the prompt. Codex has no Ultracode mode: ask it to follow the writer and verifier steps in [references/ultracode.md](skills/vermilion/references/ultracode.md).
 
 **Try it now, with no agent:** clone the repo and open the files in [`skills/vermilion/examples/demo/forms/`](skills/vermilion/examples/demo/forms/) in your browser (GitHub itself shows HTML files as source code). They hold a fictional database migration review: round 1 empty, round 1 as a reviewer returned it, and round 2.
 
@@ -123,7 +131,7 @@ The details are in [SKILL.md](skills/vermilion/SKILL.md) and [references/](skill
 
 **Can I trust what the agent says it decided?** The decisions file lists every item with its status and the reason. Each answer traces to a frozen copy of the file that you saved, with its sha256. Your comments go to the agent as your words. The agent reads every comment and replies on each open card in the next round.
 
-**Does it work with other agents (Codex, Cursor, Gemini CLI)?** The CLI is plain Python and SKILL.md is plain Markdown. Any agent that can read a file and run a command can follow it.
+**Does it work with other agents (Cursor, Gemini CLI)?** Claude Code and Codex are supported directly (see Install). The CLI is plain Python and SKILL.md is plain Markdown, so any other agent that can read a file and run a command can follow it too.
 
 **Is my data sent anywhere?** No. The form makes no network requests. Figures are embedded in the file.
 

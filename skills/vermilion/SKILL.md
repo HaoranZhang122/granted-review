@@ -153,7 +153,7 @@ A revision never changes the content or the options of a card that the user answ
 
 ## Large reports: use Ultracode
 
-For more than about 15 cards, or when accuracy matters, use a multi-agent workflow (Ultracode in Claude Code): one writer per card, an independent verifier per card that compares the card with the report and tries to refute each claim, a consistency pass over all cards, then the build and a browser test. `references/ultracode.md` has the recipe and a workflow template.
+For more than about 15 cards, or when accuracy matters, use a multi-agent workflow (Ultracode in Claude Code): one writer per card, an independent verifier per card that compares the card with the report and tries to refute each claim, a consistency pass over all cards, then the build and a browser test. `references/ultracode.md` has the recipe and a workflow template. In Codex, or in any agent without a multi-agent workflow tool, do the same steps one after another: write all cards, then check each card against the source in a separate pass, as if you were a new reader, then the consistency pass.
 
 ## Files
 

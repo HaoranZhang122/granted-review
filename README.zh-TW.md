@@ -8,7 +8,7 @@
 
 AI 寫奏章，你執朱筆。
 
-[English](README.md) · [简体中文](README.zh-CN.md) · **繁體中文** · [日本語](README.ja.md) · [Español](README.es.md)
+[English](README.md) · [简体中文](README.zh-CN.md) · **繁體中文** · [日本語](README.ja.md) · [한국어](README.ko.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Português (Brasil)](README.pt-BR.md) · [Русский](README.ru.md)
 
 [![Claude Code skill](https://img.shields.io/badge/Claude%20Code-skill-c8361d)](#安裝)
 [![零依賴](https://img.shields.io/badge/依賴-0-2e7d4f)](#你能得到什麼)
@@ -35,23 +35,32 @@ AI 寫奏章，你執朱筆。
 
 ## 安裝
 
-**作為 Claude Code 外掛：**
+朱批skill 可以在 **Claude Code** 和 **Codex** 中使用。需要 Python 3.8 或更新版本。如要執行選用的自我檢查，還需要 Chrome、Chromium 或 Edge。
+
+**Claude Code**
 
 ```
 /plugin marketplace add HaoranZhang122/vermilion-review
 /plugin install vermilion@vermilion-review
 ```
 
-**或作為一般 skill：** 把 `skills/vermilion/` 複製到 `~/.claude/skills/`（所有專案可用）或 `.claude/skills/`（僅目前專案）。
+或者把 `skills/vermilion/` 複製到 `~/.claude/skills/`（所有專案可用）或 `.claude/skills/`（僅限單一專案）。
 
-需要 Python 3.8 或更新版本。如要執行選用的自我檢查，還需要 Chrome、Chromium 或 Edge。
+**Codex**
+
+```
+codex plugin marketplace add HaoranZhang122/vermilion-review
+codex plugin add vermilion@vermilion-review
+```
+
+或者把 `skills/vermilion/` 複製到 `~/.codex/skills/`。
 
 ## 如何使用
 
 ```mermaid
 flowchart LR
   A["一份長報告"] --> F["審閱表單<br/>（一個 HTML 檔案）"]
-  B["不要報告：<br/>代理直接輸出"] --> F
+  B["不要報告：<br/>代理自己的工作成果"] --> F
   F --> R["你逐張批閱，<br/>然後蓋印並送出"]
   R --> N["代理回覆，<br/>只帶回未決事項"]
   N -->|"下一輪，直到沒有未決事項"| F
@@ -59,23 +68,22 @@ flowchart LR
 
 **1. 開始。** 把一份長報告交給代理；或者跳過報告，讓它直接把結果做成審閱表單：
 
-```
-Use vermilion to turn docs/migration-report.md into a review form. ultracode
-```
-
-```
-Plan the database migration, and give me the result as a Vermilion review instead of a long report. ultracode
-```
+| 開始方式 | Claude Code | Codex |
+|---|---|---|
+| 從一份長報告開始 | `Use vermilion to turn docs/migration-report.md into a review form. ultracode` | `$vermilion Turn docs/migration-report.md into a review form.` |
+| 不要報告 | `Plan the database migration, and give me the result as a Vermilion review instead of a long report. ultracode` | `$vermilion Plan the database migration, and give me the result as a review form instead of a long report.` |
 
 （用中文提問也可以，例如：「用 vermilion 把 docs/migration-report.md 做成審閱表單。ultracode」）
 
-**2. 批閱。** 開啟代理給你的表單，逐張作答，然後按 **Seal & send（蓋印並送出）**，再告訴代理「已儲存」。
+在 Codex 中，`$vermilion` 會呼叫這個 skill。
 
-**3. 循環。** 代理讀取你的回覆，傳給你一個更短的表單：只有未決事項，每一項都附有它對你評論的回覆。所有事項都決定後，它會寫出最終的決定紀錄。
+**2. 作答。** 開啟代理給你的表單，逐張批閱，然後按 **Seal & send（蓋印並送出）**，再告訴代理「已儲存」。
 
-> **強烈推薦使用 Ultracode 模式。** 報告很長時，讓代理執行多代理工作流程：每張卡片一個撰寫者，每張卡片一個獨立核查者對照原始資料檢查，最後做一次一致性檢查。濃縮長報告的撰寫者容易丟掉限定語、改錯數字，核查者能發現這些問題。詳見 [references/ultracode.md](skills/vermilion/references/ultracode.md)（英文）。
+**3. 重複。** 代理讀取你的回覆，傳給你一個更短的表單：只有未決事項，每一項都附有它對你評論的回覆。沒有未決事項時，它會寫出最終的決定紀錄。
 
-**不用代理，現在就試試：** 複製（clone）本儲存庫，在瀏覽器裡開啟 [`skills/vermilion/examples/demo/forms/`](skills/vermilion/examples/demo/forms/) 中的檔案（GitHub 網頁上 HTML 檔案只顯示原始碼）。裡面是一個虛構的資料庫遷移審查：空白的第一輪、審閱人交回的第一輪，以及第二輪。
+> **強烈建議使用 Ultracode 模式。** 報告很長時，讓代理執行多代理工作流程：每張卡片由一位撰寫者負責，再由一位獨立的查核者對照原始資料檢查，並做一次一致性檢查。撰寫者在濃縮長報告時，常會漏掉限定語、改錯數字；查核者能抓出這些問題。在 Claude Code 中，只要在提示詞裡加上 `ultracode` 即可。Codex 沒有 Ultracode 模式：請它依照 [references/ultracode.md](skills/vermilion/references/ultracode.md)（英文）中撰寫者與查核者的步驟來做。
+
+**不用代理，現在就試試：** 複製（clone）本儲存庫，在瀏覽器裡開啟 [`skills/vermilion/examples/demo/forms/`](skills/vermilion/examples/demo/forms/) 中的檔案（GitHub 本身只會把 HTML 檔案顯示成原始碼）。裡面是一個虛構的資料庫遷移審查：空白的第一輪、審閱人交回的第一輪，以及第二輪。
 
 ## 你能得到什麼
 
@@ -121,13 +129,13 @@ Plan the database migration, and give me the result as a Vermilion review instea
 
 **用哪個瀏覽器？** 在 Chrome 或 Edge 中，第一次儲存會詢問儲存位置：選擇表單檔案本身。Firefox、Safari 和 VS Code 預覽也可以用：儲存時會下載一份更新後的副本，把這份副本交給代理即可。
 
-**我沒儲存就關掉了頁面。** 用同一個瀏覽器開啟同一個檔案，表單會找回瀏覽器裡保留的回覆。
+**我沒儲存就關掉了分頁。** 用同一個瀏覽器開啟同一個檔案，表單會提示你還原瀏覽器保留下來的回覆。
 
-**我能信任代理說的決定嗎？** 決定檔列出每個事項的狀態和原因。每則回覆都能追溯到你儲存的那個檔案的凍結副本及其 sha256。你的評論作為你的原話交給代理；代理會讀每一則評論，並在下一輪的每張未決卡片上回覆。
+**代理說它做了哪些決定，我能相信嗎？** 決定檔列出每個事項的狀態和原因。每則回覆都能追溯到你儲存的那個檔案的凍結副本及其 sha256。你的評論會以你的原話交給代理；代理會讀過每一則評論，並在下一輪的每張未決卡片上回覆。
 
-**能用於其他代理嗎（Codex、Cursor、Gemini CLI）？** 命令列工具是純 Python，SKILL.md 是純 Markdown。任何能讀檔案、能執行命令的代理都能照著用。
+**可以搭配其他代理使用嗎（Cursor、Gemini CLI）？** Claude Code 和 Codex 都有直接支援（見「安裝」）。命令列工具是純 Python，SKILL.md 是純 Markdown，所以其他任何能讀取檔案、執行命令的代理也都能照著使用。
 
-**我的資料會被傳送出去嗎？** 不會。表單不發出任何網路請求，圖表都嵌在檔案裡。
+**我的資料會被傳送出去嗎？** 不會。表單不會發出任何網路請求，圖表都內嵌在檔案裡。
 
 ## Star 趨勢
 
