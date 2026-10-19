@@ -1,20 +1,23 @@
 ---
 name: vermilion
-description: Turn a long AI-written report, plan, audit or proposal into a versioned, self-saving HTML review form. The human rules on each item (approve, revise, reject, select an option, ask a question) and the AI reads the answers back and runs more rounds until every item is decided. Use when your output has many items that need a human decision or feedback, when the user asks for a review form, a decision form or a feedback form, or when the user must work through a long report item by item. Do not use it for one or two quick questions: ask those directly.
+description: Turn a long AI-written report, plan, audit or proposal into a versioned, self-saving HTML review form. The human rules on each item (approve, revise, reject, select an option, ask a question) and the AI reads the answers back and runs more rounds until every item is decided. Use when your output has many items that need a human decision or feedback, when the user asks for a review form, a decision form or a feedback form, when the user asks for results "as a Vermilion review" instead of a long report, or when the user must work through a long report item by item. Do not use it for one or two quick questions: ask those directly.
 ---
 
-# Vermilion (朱批)
+# Vermilion (朱批skill)
 
 In imperial China, ministers sent long memorials to the throne. The emperor read each one and wrote his decision on it in vermilion ink. That decision was the 朱批 (zhūpī). Vermilion gives the human the same role: you (the AI) write the memorial, and the human holds the brush.
 
 **The loop:**
 
 ```
-long report ──► cards (one item = one card) ──► R1.0 form (one HTML file)
-                                                   │  the human answers, then Seal & send
-                                                   ▼
-         R2.0 form ◄── next-round ◄── receive (freeze + extract + log)
-   (confirmed table + only the open cards, each with your reply) ──► … until nothing is open
+long report, or your own work
+        │
+        ▼
+cards (one item = one card) ──► R1.0 form (one HTML file)
+                                   │  the human answers, then Seal & send
+                                   ▼
+R2.0 form ◄── next-round ◄── receive (freeze + extract + log)
+(confirmed table + only the open cards, each with your reply) ──► … until nothing is open
 ```
 
 The form is one HTML file with no server and no dependencies. The answers are saved inside the file. Every issued and returned file is frozen and logged with its sha256, and each card carries a fingerprint, so each answer can be traced to the card set that the human was given.
@@ -31,7 +34,11 @@ If there are only 1–3 questions, ask them in the chat instead.
 
 ## Step 1. Find the items
 
-Read the report and list every item that needs the human. Use one card for one item:
+There are two starts:
+- **The user gives you a long report:** read it and list every item that needs the human.
+- **The user asks for your result as a Vermilion review** (no report): do the work, then list every item that needs the human. Do not write a long report first. Keep the facts that the cards cite in short files (for example `review/notes.md`, logs or test output), so that each claim has a `[src: …]`.
+
+Use one card for one item:
 - **decision**: the human selects one of 2–4 options. You recommend exactly one.
 - **review**: a finding or a proposed action. The human agrees, asks for a change, disagrees, defers it or asks for more information.
 - **info**: something that the human must know, but not decide (for example the limits of the review). The human marks it as noted.
