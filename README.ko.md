@@ -13,7 +13,7 @@ AI는 상소문을 씁니다. 붉은 붓은 당신이 듭니다.
 [![Claude Code and Codex skill](https://img.shields.io/badge/Claude%20Code%20%7C%20Codex-skill-c8361d)](#설치)
 [![의존성 없음](https://img.shields.io/badge/dependencies-0-2e7d4f)](#얻을-수-있는-것)
 [![HTML 파일 하나](https://img.shields.io/badge/form-one%20HTML%20file-1f1a17)](#얻을-수-있는-것)
-[![MIT](https://img.shields.io/badge/license-MIT-6b625a)](LICENSE)
+[![BSD-2-Clause](https://img.shields.io/badge/license-BSD--2--Clause-6b625a)](LICENSE)
 
 <a href="assets/granted-demo.mp4"><img src="assets/granted-demo.gif" width="860" alt="AI의 긴 보고서가 하나의 리뷰 양식이 되고, 리뷰어가 카드마다 결정을 내리며, 2라운드에는 미결 항목만 남습니다"></a>
 
@@ -157,4 +157,4 @@ Haoran Jack Zhang · [@HaoranZhang122](https://github.com/HaoranZhang122)
 
 ## 라이선스
 
-MIT. [LICENSE](LICENSE)를 참고하세요.
+BSD-2-Clause. [LICENSE](LICENSE)를 참고하세요.

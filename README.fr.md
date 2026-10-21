@@ -13,7 +13,7 @@ Votre IA rédige le mémoire. Vous tenez le pinceau vermillon.
 [![Claude Code and Codex skill](https://img.shields.io/badge/Claude%20Code%20%7C%20Codex-skill-c8361d)](#installation)
 [![Zéro dépendance](https://img.shields.io/badge/dependencies-0-2e7d4f)](#ce-que-vous-obtenez)
 [![Un seul fichier HTML](https://img.shields.io/badge/form-one%20HTML%20file-1f1a17)](#ce-que-vous-obtenez)
-[![MIT](https://img.shields.io/badge/license-MIT-6b625a)](LICENSE)
+[![BSD-2-Clause](https://img.shields.io/badge/license-BSD--2--Clause-6b625a)](LICENSE)
 
 <a href="assets/granted-demo.mp4"><img src="assets/granted-demo.gif" width="860" alt="Un long rapport d'IA devient un seul formulaire de revue, le relecteur statue sur chaque carte, et le tour 2 ne contient que les points ouverts"></a>
 
@@ -157,4 +157,4 @@ Questions et idées : [ouvrez une issue](https://github.com/HaoranZhang122/gran
 
 ## Licence
 
-MIT. Voir [LICENSE](LICENSE).
+BSD-2-Clause. Voir [LICENSE](LICENSE).

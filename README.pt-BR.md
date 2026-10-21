@@ -13,7 +13,7 @@ Sua IA escreve o memorial. Você segura o pincel vermelhão.
 [![Claude Code and Codex skill](https://img.shields.io/badge/Claude%20Code%20%7C%20Codex-skill-c8361d)](#instalação)
 [![Zero dependências](https://img.shields.io/badge/dependencies-0-2e7d4f)](#o-que-você-recebe)
 [![Um arquivo HTML](https://img.shields.io/badge/form-one%20HTML%20file-1f1a17)](#o-que-você-recebe)
-[![MIT](https://img.shields.io/badge/license-MIT-6b625a)](LICENSE)
+[![BSD-2-Clause](https://img.shields.io/badge/license-BSD--2--Clause-6b625a)](LICENSE)
 
 <a href="assets/granted-demo.mp4"><img src="assets/granted-demo.gif" width="860" alt="Um relatório longo de IA vira um único formulário de revisão, o revisor decide sobre cada cartão e a rodada 2 traz só os itens em aberto"></a>
 
@@ -157,4 +157,4 @@ Dúvidas e ideias: [abra uma issue](https://github.com/HaoranZhang122/granted-re
 
 ## Licença
 
-MIT. Veja [LICENSE](LICENSE).
+BSD-2-Clause. Veja [LICENSE](LICENSE).

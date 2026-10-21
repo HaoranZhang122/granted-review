@@ -13,7 +13,7 @@
 [![Claude Code and Codex skill](https://img.shields.io/badge/Claude%20Code%20%7C%20Codex-skill-c8361d)](#установка)
 [![Без зависимостей](https://img.shields.io/badge/dependencies-0-2e7d4f)](#что-вы-получаете)
 [![Один HTML-файл](https://img.shields.io/badge/form-one%20HTML%20file-1f1a17)](#что-вы-получаете)
-[![MIT](https://img.shields.io/badge/license-MIT-6b625a)](LICENSE)
+[![BSD-2-Clause](https://img.shields.io/badge/license-BSD--2--Clause-6b625a)](LICENSE)
 
 <a href="assets/granted-demo.mp4"><img src="assets/granted-demo.gif" width="860" alt="Длинный отчёт ИИ превращается в одну форму проверки, проверяющий выносит решение по каждой карточке, а во втором раунде остаются только открытые пункты"></a>
 
@@ -157,4 +157,4 @@ Haoran Jack Zhang · [@HaoranZhang122](https://github.com/HaoranZhang122)
 
 ## Лицензия
 
-MIT. См. [LICENSE](LICENSE).
+BSD-2-Clause. См. [LICENSE](LICENSE).

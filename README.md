@@ -13,7 +13,7 @@ Your AI writes the memorial. You hold the vermilion brush.
 [![Claude Code and Codex skill](https://img.shields.io/badge/Claude%20Code%20%7C%20Codex-skill-c8361d)](#install)
 [![Zero dependencies](https://img.shields.io/badge/dependencies-0-2e7d4f)](#what-you-get)
 [![One HTML file](https://img.shields.io/badge/form-one%20HTML%20file-1f1a17)](#what-you-get)
-[![MIT](https://img.shields.io/badge/license-MIT-6b625a)](LICENSE)
+[![BSD-2-Clause](https://img.shields.io/badge/license-BSD--2--Clause-6b625a)](LICENSE)
 
 <a href="assets/granted-demo.mp4"><img src="assets/granted-demo.gif" width="860" alt="A long AI report becomes one review form, the reviewer rules on each card, and round 2 holds only the open items"></a>
 
@@ -155,4 +155,4 @@ Questions and ideas: [open an issue](https://github.com/HaoranZhang122/granted-r
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+BSD-2-Clause. See [LICENSE](LICENSE).

@@ -13,7 +13,7 @@ AI 上奏，你來准奏。
 [![Claude Code and Codex skill](https://img.shields.io/badge/Claude%20Code%20%7C%20Codex-skill-c8361d)](#安裝)
 [![零依賴](https://img.shields.io/badge/依賴-0-2e7d4f)](#你能得到什麼)
 [![一個 HTML 檔案](https://img.shields.io/badge/表單-一個%20HTML%20檔案-1f1a17)](#你能得到什麼)
-[![MIT](https://img.shields.io/badge/license-MIT-6b625a)](LICENSE)
+[![BSD-2-Clause](https://img.shields.io/badge/license-BSD--2--Clause-6b625a)](LICENSE)
 
 <a href="assets/granted-demo.mp4"><img src="assets/granted-demo.gif" width="860" alt="一份 AI 長報告變成一個審閱表單，審閱人逐張批閱，第二輪只留下未決事項"></a>
 
@@ -157,4 +157,4 @@ Haoran Jack Zhang · [@HaoranZhang122](https://github.com/HaoranZhang122)
 
 ## 授權
 
-MIT。見 [LICENSE](LICENSE)。
+BSD-2-Clause。見 [LICENSE](LICENSE)。

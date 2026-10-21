@@ -13,7 +13,7 @@ AI が上奏し、あなたが裁可する。
 [![Claude Code and Codex skill](https://img.shields.io/badge/Claude%20Code%20%7C%20Codex-skill-c8361d)](#インストール)
 [![依存なし](https://img.shields.io/badge/依存-0-2e7d4f)](#得られるもの)
 [![HTML ファイル 1 つ](https://img.shields.io/badge/フォーム-HTML%20ファイル%201%20つ-1f1a17)](#得られるもの)
-[![MIT](https://img.shields.io/badge/license-MIT-6b625a)](LICENSE)
+[![BSD-2-Clause](https://img.shields.io/badge/license-BSD--2--Clause-6b625a)](LICENSE)
 
 <a href="assets/granted-demo.mp4"><img src="assets/granted-demo.gif" width="860" alt="AI の長いレポートが 1 つのレビューフォームになり、レビュアーがカードごとに裁可し、2 回目には未決の項目だけが残る"></a>
 
@@ -157,4 +157,4 @@ Haoran Jack Zhang · [@HaoranZhang122](https://github.com/HaoranZhang122)
 
 ## ライセンス
 
-MIT。[LICENSE](LICENSE) を参照。
+BSD-2-Clause。[LICENSE](LICENSE) を参照。
