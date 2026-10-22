@@ -98,14 +98,14 @@ Dans Codex, `$granted` appelle le skill.
 **Pour l'agent**
 - Une CLI Python sans aucune dépendance (`granted.py`) : `init`, `check`, `build`, `receive`, `next-round`, `revise`, `rebuild`, `answers`, `status`, `selftest`.
 - `check` valide les cartes, les liens et les figures. Il donne aussi un score de langage clair (environ 80 % ASD-STE100, facultatif).
-- `receive` refuse un fichier d'une autre revue, un aperçu de brouillon, un fichier non enregistré ou un fichier dont les cartes diffèrent du formulaire émis.
+- `receive` refuse un fichier d'une autre revue, un aperçu de brouillon, un fichier non enregistré, un fichier dont les cartes diffèrent du formulaire émis, un fichier qui contient un second bloc de réponses, et une réponse qui n'est pas un choix de sa carte.
 - `next-round` classe chaque point en Confirmé ou Ouvert, avec une justification. Il écrit `DECISIONS_after_R<n>.md` et prépare le jeu de cartes du tour suivant, avec un `TODO(AI)` à chaque endroit où une réponse est attendue. Aucun point ne peut sortir de la revue sans décision.
 
 **Pour les archives**
 - **Les réponses vivent dans le fichier HTML.** Dans Chrome et Edge, le premier enregistrement ouvre la boîte de dialogue d'enregistrement : choisissez le fichier du formulaire lui-même et confirmez le remplacement ; les enregistrements suivants écrivent directement dedans. Les autres navigateurs et l'aperçu de VS Code téléchargent une copie mise à jour.
 - **Chaque fichier émis et renvoyé est figé** (une copie en lecture seule) et consigné avec son sha256 dans `REVIEW_LOG.md`. Chaque carte porte une empreinte de son texte, et `receive` la compare au formulaire émis : chaque réponse renvoie ainsi au jeu de cartes qui vous a été remis.
 - **Les versions** sont de la forme `R<round>.<revision>`. Les lettres des options ne changent jamais de sens. Une révision (R1.1) corrige la formulation et conserve vos réponses. Un nouveau tour (R2.0) ne demande que ce qui est ouvert.
-- **Privé par construction.** Pas de serveur, pas d'appel réseau, pas de CDN. Le formulaire est un seul fichier sur votre disque.
+- **Privé par construction.** Pas de serveur, pas d'appel réseau, pas de CDN. Une Content-Security-Policy dans le fichier bloque toute requête que la page pourrait faire d'elle-même (fetch, images, polices, cadres, envois de formulaire) ; elle ne couvre pas les liens sur lesquels vous cliquez. Le formulaire est un seul fichier sur votre disque. Tant qu'un enregistrement n'a pas écrit vos réponses dans le fichier du formulaire lui-même, votre navigateur en garde une copie dans son stockage local, où d'autres fichiers HTML locaux peuvent la lire. Le formulaire supprime cette copie quand il enregistre dans le fichier du formulaire (une copie téléchargée ne compte pas ; une copie que le formulaire vous propose encore reste jusqu'à ce que vous choisissiez) et efface les copies de plus de 30 jours chaque fois que vous ouvrez un formulaire Granted.
 
 ## Commandes
 
@@ -129,13 +129,13 @@ Les détails se trouvent dans [SKILL.md](skills/granted/SKILL.md) et dans [refer
 
 **Quel navigateur ?** Dans Chrome ou Edge, le premier enregistrement demande où enregistrer : choisissez le fichier du formulaire lui-même. Firefox, Safari et l'aperçu de VS Code fonctionnent aussi : l'enregistrement télécharge une copie mise à jour. Donnez cette copie à l'agent.
 
-**J'ai fermé l'onglet sans enregistrer.** Ouvrez le même fichier dans le même navigateur. Le formulaire vous propose les réponses que le navigateur a conservées.
+**J'ai fermé l'onglet sans enregistrer.** Ouvrez le même fichier dans le même navigateur dans les 30 jours. Le formulaire vous propose les réponses que le navigateur a conservées : cliquez sur **Use the browser answers**.
 
 **Puis-je me fier à ce que l'agent dit avoir décidé ?** Le fichier des décisions liste chaque point avec son statut et la justification. Chaque réponse renvoie à une copie figée du fichier que vous avez enregistré, avec son sha256. Vos commentaires sont transmis à l'agent comme vos propres mots. L'agent lit chaque commentaire et répond sur chaque carte ouverte au tour suivant.
 
 **Granted fonctionne-t-il avec d'autres agents (Cursor, Gemini CLI) ?** Claude Code et Codex sont pris en charge directement (voir Installation). La CLI est écrite en Python pur et SKILL.md en Markdown brut : tout autre agent capable de lire un fichier et d'exécuter une commande peut donc le suivre aussi.
 
-**Mes données sont-elles envoyées quelque part ?** Non. Le formulaire ne fait aucune requête réseau. Les figures sont intégrées au fichier.
+**Mes données sont-elles envoyées quelque part ?** Non. Le formulaire ne fait aucune requête réseau, et sa Content-Security-Policy bloque toute requête que la page pourrait faire d'elle-même. Les figures sont intégrées au fichier.
 
 ## Historique des étoiles
 

@@ -96,14 +96,14 @@ In Codex, `$granted` calls the skill.
 **For the agent**
 - A zero-dependency Python CLI (`granted.py`): `init`, `check`, `build`, `receive`, `next-round`, `revise`, `rebuild`, `answers`, `status`, `selftest`.
 - `check` validates the cards, the links and the figures. It also gives a plain-language score (about 80% ASD-STE100, optional).
-- `receive` refuses a file of another review, a draft preview, an unsaved file or a file whose cards differ from the issued form.
+- `receive` refuses a file of another review, a draft preview, an unsaved file, a file whose cards differ from the issued form, a file with a second answers block, and an answer that is not a choice of its card.
 - `next-round` sorts every item into Confirmed or Open, with a reason. It writes `DECISIONS_after_R<n>.md` and drafts the next card set, with a `TODO(AI)` in each place where a reply is due. Nothing can drop out of the review without a decision.
 
 **For the record**
 - **The answers live inside the HTML file.** In Chrome and Edge, the first Save opens a Save dialog: choose the form file itself and confirm Replace, and later saves write into it directly. Other browsers and the VS Code preview download an updated copy.
 - **Every issued and returned file is frozen** (a read-only copy) and logged with its sha256 in `REVIEW_LOG.md`. Each card carries a fingerprint of its text, and `receive` checks it against the issued form, so each answer traces to the card set that you were given.
 - **Versions** are `R<round>.<revision>`. Option letters never change their meaning. A revision (R1.1) fixes wording and keeps your answers. A new round (R2.0) asks only what is open.
-- **Private by design.** There is no server, no network call and no CDN. The form is one file on your disk.
+- **Private by design.** There is no server, no network call and no CDN. A Content-Security-Policy in the file blocks every request that the page could make by itself (fetch, images, fonts, frames, form posts); it does not cover links that you click. The form is one file on your disk. Until a save writes your answers into the form file itself, your browser keeps a copy in its local storage, where other local HTML files can read it. The form deletes that copy when it saves into the form file (a downloaded copy does not count; a copy that the form still offers you stays until you choose), and it removes copies older than 30 days whenever you open a Granted form.
 
 ## Commands
 
@@ -127,13 +127,13 @@ The details are in [SKILL.md](skills/granted/SKILL.md) and [references/](skills/
 
 **Which browser?** In Chrome or Edge, the first Save asks where to save: choose the form file itself. Firefox, Safari and the VS Code preview work too: Save downloads an updated copy. Give that copy to the agent.
 
-**I closed the tab without saving.** Open the same file in the same browser. The form offers the answers that the browser kept.
+**I closed the tab without saving.** Open the same file in the same browser within 30 days. The form offers the answers that the browser kept: click **Use the browser answers**.
 
 **Can I trust what the agent says it decided?** The decisions file lists every item with its status and the reason. Each answer traces to a frozen copy of the file that you saved, with its sha256. Your comments go to the agent as your words. The agent reads every comment and replies on each open card in the next round.
 
 **Does it work with other agents (Cursor, Gemini CLI)?** Claude Code and Codex are supported directly (see Install). The CLI is plain Python and SKILL.md is plain Markdown, so any other agent that can read a file and run a command can follow it too.
 
-**Is my data sent anywhere?** No. The form makes no network requests. Figures are embedded in the file.
+**Is my data sent anywhere?** No. The form makes no network requests, and its Content-Security-Policy blocks any request that the page could make by itself. Figures are embedded in the file.
 
 ## Star history
 

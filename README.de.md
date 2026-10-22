@@ -98,14 +98,14 @@ In Codex ruft `$granted` den Skill auf.
 **Für den Agenten**
 - Eine Python-CLI ohne Abhängigkeiten (`granted.py`): `init`, `check`, `build`, `receive`, `next-round`, `revise`, `rebuild`, `answers`, `status`, `selftest`.
 - `check` prüft die Karten, die Links und die Abbildungen. Es gibt außerdem eine Punktzahl für einfache Sprache aus (etwa 80 % ASD-STE100, optional).
-- `receive` weist eine Datei zurück, wenn sie zu einem anderen Review gehört, eine Entwurfsvorschau ist, nie gespeichert wurde oder Karten hat, die vom ausgegebenen Formular abweichen.
+- `receive` weist eine Datei zurück, wenn sie zu einem anderen Review gehört, eine Entwurfsvorschau ist, nie gespeichert wurde, Karten hat, die vom ausgegebenen Formular abweichen, oder einen zweiten Antwortblock enthält. Ebenso weist es eine Antwort zurück, die keine Auswahl ihrer Karte ist.
 - `next-round` ordnet jeden Punkt mit Begründung als „Bestätigt“ oder „Offen“ ein. Es schreibt `DECISIONS_after_R<n>.md` und entwirft den Kartensatz der nächsten Runde, mit einem `TODO(AI)` an jeder Stelle, an der eine Antwort fällig ist. Nichts kann ohne Entscheidung aus dem Review herausfallen.
 
 **Fürs Protokoll**
 - **Die Antworten stecken in der HTML-Datei selbst.** In Chrome und Edge öffnet das erste Speichern einen Speichern-Dialog: Wähle die Formulardatei selbst und bestätige „Ersetzen“; spätere Speichervorgänge schreiben dann direkt in diese Datei. Andere Browser und die VS-Code-Vorschau laden eine aktualisierte Kopie herunter.
 - **Jede ausgegebene und zurückgegebene Datei wird eingefroren** (eine schreibgeschützte Kopie) und mit ihrem sha256 in `REVIEW_LOG.md` protokolliert. Jede Karte trägt einen Fingerabdruck ihres Textes, und `receive` gleicht ihn mit dem ausgegebenen Formular ab. So lässt sich jede Antwort auf den Kartensatz zurückführen, den du bekommen hast.
 - **Versionen** heißen `R<round>.<revision>`. Optionsbuchstaben ändern nie ihre Bedeutung. Eine Revision (R1.1) korrigiert den Wortlaut und behält deine Antworten. Eine neue Runde (R2.0) fragt nur nach dem, was offen ist.
-- **Von Grund auf privat.** Es gibt keinen Server, keinen Netzwerkaufruf und kein CDN. Das Formular ist eine Datei auf deiner Festplatte.
+- **Von Grund auf privat.** Es gibt keinen Server, keinen Netzwerkaufruf und kein CDN. Eine Content-Security-Policy in der Datei blockiert jede Anfrage, die die Seite selbst stellen könnte (fetch, Bilder, Schriften, Frames, Formular-Posts); Links, die du anklickst, deckt sie nicht ab. Das Formular ist eine Datei auf deiner Festplatte. Bis eine Speicherung deine Antworten in die Formulardatei selbst schreibt, hält dein Browser eine Kopie in seinem lokalen Speicher, wo andere lokale HTML-Dateien sie lesen können. Das Formular löscht diese Kopie, wenn es in die Formulardatei speichert (eine heruntergeladene Kopie zählt nicht; eine Kopie, die dir das Formular noch anbietet, bleibt, bis du dich entscheidest), und entfernt Kopien, die älter als 30 Tage sind, sobald du ein Granted-Formular öffnest.
 
 ## Befehle
 
@@ -129,13 +129,13 @@ Die Details stehen in [SKILL.md](skills/granted/SKILL.md) und [references/](skil
 
 **Welcher Browser?** In Chrome oder Edge fragt das erste Speichern, wohin gespeichert werden soll: Wähle die Formulardatei selbst. Firefox, Safari und die VS-Code-Vorschau funktionieren auch: Speichern lädt eine aktualisierte Kopie herunter. Gib diese Kopie dem Agenten.
 
-**Ich habe den Tab ohne Speichern geschlossen.** Öffne dieselbe Datei im selben Browser. Das Formular bietet dir die Antworten an, die der Browser behalten hat.
+**Ich habe den Tab ohne Speichern geschlossen.** Öffne dieselbe Datei innerhalb von 30 Tagen im selben Browser. Das Formular bietet dir die Antworten an, die der Browser behalten hat: Klicke auf **Use the browser answers**.
 
 **Kann ich mich darauf verlassen, was laut Agent entschieden wurde?** Die Entscheidungsdatei führt jeden Punkt mit seinem Status und der Begründung auf. Jede Antwort lässt sich auf eine eingefrorene Kopie der von dir gespeicherten Datei zurückführen, samt ihrem sha256. Deine Kommentare erreichen den Agenten in deinen eigenen Worten. Der Agent liest jeden Kommentar und antwortet in der nächsten Runde auf jeder offenen Karte.
 
 **Funktioniert es mit anderen Agenten (Cursor, Gemini CLI)?** Claude Code und Codex werden direkt unterstützt (siehe Installation). Die CLI ist reines Python, und SKILL.md ist reines Markdown. Deshalb kann auch jeder andere Agent, der eine Datei lesen und einen Befehl ausführen kann, den Anweisungen in SKILL.md folgen.
 
-**Werden meine Daten irgendwohin gesendet?** Nein. Das Formular stellt keine Netzwerkanfragen. Abbildungen sind in die Datei eingebettet.
+**Werden meine Daten irgendwohin gesendet?** Nein. Das Formular stellt keine Netzwerkanfragen, und seine Content-Security-Policy blockiert jede Anfrage, die die Seite selbst stellen könnte. Abbildungen sind in die Datei eingebettet.
 
 ## Star-Verlauf
 

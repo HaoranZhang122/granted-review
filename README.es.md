@@ -98,14 +98,14 @@ En Codex, `$granted` invoca la skill.
 **Para el agente**
 - Una CLI en Python sin dependencias (`granted.py`): `init`, `check`, `build`, `receive`, `next-round`, `revise`, `rebuild`, `answers`, `status`, `selftest`.
 - `check` valida las tarjetas, los enlaces y las figuras. También da una puntuación de lenguaje claro (en torno al 80 % de ASD-STE100, opcional).
-- `receive` rechaza un archivo de otra revisión, un borrador, un archivo que nunca se guardó o un archivo cuyas tarjetas no coinciden con el formulario emitido.
+- `receive` rechaza un archivo de otra revisión, un borrador, un archivo que nunca se guardó, un archivo cuyas tarjetas no coinciden con el formulario emitido, un archivo con un segundo bloque de respuestas y una respuesta que no es una opción de su tarjeta.
 - `next-round` clasifica cada punto como Confirmado o Abierto, con el motivo. Escribe `DECISIONS_after_R<n>.md` y prepara las tarjetas de la ronda siguiente, con un `TODO(AI)` en cada sitio donde falta una respuesta. Ningún punto puede salir de la revisión sin una decisión.
 
 **Para el registro**
 - **Las respuestas viven dentro del archivo HTML.** En Chrome y Edge, el primer guardado abre un diálogo: elige el propio archivo del formulario y confirma que lo reemplazas; los guardados siguientes escriben directamente en él. Otros navegadores y la vista previa de VS Code descargan una copia actualizada.
 - **Cada archivo emitido y devuelto se congela** (una copia de solo lectura) y se registra con su sha256 en `REVIEW_LOG.md`. Cada tarjeta lleva una huella de su texto, y `receive` la compara con el formulario emitido, así que cada respuesta remite al conjunto de tarjetas que recibiste.
 - **Las versiones** son `R<ronda>.<revisión>`. Las letras de las opciones nunca cambian de significado. Una revisión (R1.1) corrige la redacción y conserva tus respuestas. Una ronda nueva (R2.0) solo pregunta lo que sigue abierto.
-- **Privado por diseño.** Sin servidor, sin llamadas de red y sin CDN. El formulario es un archivo en tu disco.
+- **Privado por diseño.** Sin servidor, sin llamadas de red y sin CDN. Una Content-Security-Policy en el archivo bloquea cualquier petición que la página pudiera hacer por sí misma (fetch, imágenes, fuentes, marcos, envíos de formularios); no cubre los enlaces en los que haces clic. El formulario es un archivo en tu disco. Hasta que un guardado escribe tus respuestas en el propio archivo del formulario, tu navegador conserva una copia en su almacenamiento local, donde otros archivos HTML locales pueden leerla. El formulario borra esa copia cuando guarda en el archivo del formulario (una copia descargada no cuenta; una copia que el formulario todavía te ofrece se queda hasta que elijas) y elimina las copias de más de 30 días cada vez que abres un formulario de Granted.
 
 ## Comandos
 
@@ -129,13 +129,13 @@ Los detalles están en [SKILL.md](skills/granted/SKILL.md) y en [references/](sk
 
 **¿Qué navegador?** En Chrome o Edge, el primer guardado pregunta dónde guardar: elige el propio archivo del formulario. Firefox, Safari y la vista previa de VS Code también sirven: al guardar se descarga una copia actualizada. Dale esa copia al agente.
 
-**Cerré la pestaña sin guardar.** Abre el mismo archivo en el mismo navegador. El formulario te ofrece las respuestas que conservó el navegador.
+**Cerré la pestaña sin guardar.** Abre el mismo archivo en el mismo navegador antes de que pasen 30 días. El formulario te ofrece las respuestas que conservó el navegador: haz clic en **Use the browser answers**.
 
 **¿Puedo fiarme de lo que el agente dice que decidió?** El archivo de decisiones lista cada punto con su estado y el motivo. Cada respuesta remite a una copia congelada del archivo que guardaste, con su sha256. Tus comentarios llegan al agente con tus propias palabras. El agente lee cada comentario y responde en cada tarjeta abierta de la ronda siguiente.
 
 **¿Funciona con otros agentes (Cursor, Gemini CLI)?** Claude Code y Codex tienen soporte directo (consulta Instalación). La CLI es Python puro y SKILL.md es Markdown simple, así que cualquier otro agente que pueda leer un archivo y ejecutar un comando también puede seguirlo.
 
-**¿Se envían mis datos a algún sitio?** No. El formulario no hace ninguna petición de red. Las figuras van incrustadas en el archivo.
+**¿Se envían mis datos a algún sitio?** No. El formulario no hace ninguna petición de red, y su Content-Security-Policy bloquea cualquier petición que la página pudiera hacer por sí misma. Las figuras van incrustadas en el archivo.
 
 ## Historial de estrellas
 

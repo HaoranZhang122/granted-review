@@ -1,6 +1,6 @@
 {
   "name": "granted",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Review long AI reports like an emperor: one card per decision, answers saved inside one HTML file, versioned rounds until every item is decided.",
   "author": {
     "name": "HaoranZhang122",

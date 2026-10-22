@@ -2,6 +2,7 @@
 <html lang="en" data-form-id="%%FORM_ID%%" data-version="%%VERSION%%" data-round="%%ROUND%%" data-granted="%%TOOL_VERSION%%" data-review-id="%%REVIEW_ID%%"%%DRAFT_ATTR%%>
 <head>
 <meta data-f charset="utf-8">
+<meta data-f http-equiv="Content-Security-Policy" content="%%CSP%%">
 <meta data-f name="viewport" content="width=device-width, initial-scale=1">
 <meta data-f name="generator" content="Granted %%TOOL_VERSION%%">
 <title data-f>%%TITLE%% · %%VERSION%%</title>
@@ -9,7 +10,7 @@
 </head>
 <body>
 <div data-f id="topbar">
-  <div class="brand" title="%%TITLE%% · round %%ROUND%%, version %%VERSION%%"><span class="brand-seal">准</span><b>%%SHORT_TITLE%%</b><span class="ver">%%VERSION%%</span></div>
+  <div class="brand" title="%%TITLE_ATTR%% · round %%ROUND%%, version %%VERSION%%"><span class="brand-seal">准</span><b>%%SHORT_TITLE%%</b><span class="ver">%%VERSION%%</span></div>
   <div class="grp"><div id="progress"><div></div></div><span id="progress-text"></span></div>
   <div class="grp main">
     <button id="save-btn" class="primary" title="Write your answers into this HTML file (Ctrl/Cmd+S)">Save</button>
@@ -36,7 +37,7 @@
   <div id="selftestbar" class="notice warn"><b>Self-test mode.</b> The form ran its self-test on a copy of the answers. Nothing here is saved, and the stored answers are not touched. Open the file without <code>#selftest</code> to answer.</div>
   <div id="draftbar" class="notice warn"><b>Draft preview.</b> This file is for checking the cards. Answers in it are kept apart from the issued form, and the AI does not accept it as a reply.</div>
   <div id="storagebar" class="notice warn"><b>This browser does not keep your answers between visits</b> (its local storage is blocked). Click <b>Save</b> often.</div>
-  <div id="restorebar" class="notice warn">This browser has answers from <b id="restore-time"></b>. They are newer than the answers in this file (<span id="restore-file-time"></span>). The form shows the browser answers.<span id="restore-dropped"></span> Click <b>Save</b> to write them into the file, or <button id="use-file-version">use the answers in the file</button> <button id="dismiss-restore">hide</button></div>
+  <div id="restorebar" class="notice warn"><span id="restore-msg"></span><span id="restore-dropped"></span> <button id="use-browser-version">Use the browser answers</button> <button id="use-file-version">Keep the file answers</button></div>
   <div class="notice"><b>How it works.</b> Read a card, then answer below it. A card with a recommendation has an <b>Accept</b> button (key <span class="kbd">A</span>). The browser keeps each change. Click <b>Save</b> (or push Ctrl/Cmd+S) to write your answers <i>into this HTML file</i>. When you finish, click <b>Seal &amp; send</b>: it shows what is still open, saves your answers, and copies a short summary for the AI. Then tell the AI that you saved, or paste the summary. <span id="save-hint"></span> Push <span class="kbd">?</span> to see all keys.</div>
   <table class="kv">
     %%VERSION_ROW%%

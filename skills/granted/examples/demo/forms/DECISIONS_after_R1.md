@@ -1,6 +1,6 @@
 # Decisions after round 1
 
-From the answers to R1.0 (`R1/answers/answers_R1.0_2026-10-19T2237Z.json`). Written 2026-10-19T22:37:20Z.
+From the answers to R1.0 (`R1/answers/answers_R1.0_2026-10-22T1526Z.json`). Written 2026-10-22T15:26:45Z.
 
 ## Confirmed (9)
 
@@ -13,14 +13,14 @@ From the answers to R1.0 (`R1/answers/answers_R1.0_2026-10-19T2237Z.json`). Writ
 | **F6** Nobody has tested a restore or a rollback, and point-in-time recovery fails today | Agree: do the proposed action | Fix the binlog upload now. Add an alert for the case that no file arrives in 1 hour. Repeat the restore test, with point-in-time recovery. Build the reverse replication. Rehearse a full rollback in staging two times. Make two passed rehearsals a go/no-go gate (D5). Effort: 6.5 days. | R1.0 |  |
 | **D1** Select the cutover method for the orders database | Option b: CDC replication, then a 15-minute switch | CDC replication, then a 15-minute switch: Downtime: about 15 minutes (10 min write freeze, 5 min switch). Effort: 3 days for CDC setup, in the estimate (F7). Risk: low to medium. A CDC mapping error can copy wrong values. Row counts and checksums find them before the switch. | R1.0 |  |
 | **D4** Select the freeze period for schema changes around the cutover | Option a: Full freeze from the start of the copy to the end of the rollback window | Full freeze from the start of the copy to the end of the rollback window: Dates: 5–17 January 2027 (12 days), with D3 option b. Cost: about 1–2 schema changes wait. Risk: low. | R1.0 |  |
-| **D5** Name who approves the go and who can start a rollback | Option b: You approve the go. The on-call database lead can start a rollback alone | You approve the go. The on-call database lead can start a rollback alone: Effect: you approve the go at 01:30 against the checklist. After 02:00, the database lead starts a rollback without a call. Risk: low. | R1.0 | Good. Also invite the support lead to the go call as an observer. |
+| **D5** Name who approves the go and who can start a rollback | Option b: You approve the go. The on-call database lead can start a rollback alone | You approve the go. The on-call database lead can start a rollback alone: Effect: you approve the go at 01:30 against the checklist. After 02:00, the database lead starts a rollback without a call. Risk: low. | R1.0 | "Good. Also invite the support lead to the go call as an observer." |
 | **N1** This review did not cover analytics jobs, peak load, security or the payment database | Noted | Five areas are outside this review. Confirm that you read the list, or name an owner for a gap in your comment. | R1.0 |  |
 
 ## Needs a decision (4)
 
 | Item | Why it is open | Your answer | Your comment |
 |---|---|---|---|
-| **F4** Three DATETIME columns hold local time, and the other 31 hold UTC | You answered: Agree with the problem, but change the action | Agree with the problem, but change the action | Convert to UTC, but keep the old columns for 30 days, so the reports team can compare. |
-| **F7** The move costs about $27,700 once and saves about $2,700 per month | You answered: I need more information | I need more information | What are the $2,900 of costs outside engineering? Are they one-time costs? |
-| **D2** Select the date and the 30-minute downtime window for the cutover | You selected Other | Option other: Other (see the comment) | Use Sunday 17 January 2027 at 02:00. The winter sale ends on 15 January. |
+| **F4** Three DATETIME columns hold local time, and the other 31 hold UTC | You answered: Agree with the problem, but change the action | Agree with the problem, but change the action | "Convert to UTC, but keep the old columns for 30 days, so the reports team can compare." |
+| **F7** The move costs about $27,700 once and saves about $2,700 per month | You answered: I need more information | I need more information | "What are the $2,900 of costs outside engineering? Are they one-time costs?" |
+| **D2** Select the date and the 30-minute downtime window for the cutover | You selected Other | Option other: Other (see the comment) | "Use Sunday 17 January 2027 at 02:00. The winter sale ends on 15 January." |
 | **D3** Select how long to keep the MySQL standby for a rollback | You were unsure | Option b: 7 days |  |

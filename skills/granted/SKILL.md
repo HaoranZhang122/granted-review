@@ -67,7 +67,7 @@ Write one JSON file per card into `review/cards/R1.0/`. Put figures into `review
 ```
 VM check --dir review --version R1.0            # schema, figures, link targets, plain-language score
 VM build --dir review --version R1.0 --draft    # review/<slug>_R1.0_DRAFT.html: a preview with its own form id, not logged
-VM selftest review/<slug>_R1.0_DRAFT.html       # needs Chrome, Chromium or Edge
+VM selftest review/<slug>_R1.0_DRAFT.html       # needs Chrome, Chromium or Edge; as root it needs --no-sandbox (only for trusted forms)
 VM build --dir review --version R1.0            # issue: working copy + frozen copy + log entry
 ```
 
@@ -88,7 +88,7 @@ VM receive --dir review --find                  # receives every new save in rev
 VM receive --dir review --file <saved html>     # or give the path
 ```
 
-This freezes each file into `review/R1/received/`, extracts the answers into `review/R1/answers/` (`.md` and `.json`) and logs both. It refuses a file of another review, a draft, a file that was never saved, a file with an impossible save time and a file whose card text differs from the issued form (every card carries a fingerprint), and it says why. Never edit a returned file. If the user only pasted the summary, ask them to save: the summary is a convenience, the file is the record.
+This freezes each file into `review/R1/received/`, extracts the answers into `review/R1/answers/` (`.md` and `.json`) and logs both. It refuses a file of another review, a draft, a file that was never saved, a file with an impossible save time, a file whose card text differs from the issued form (every card carries a fingerprint), a file that was changed outside the form (for example a second, hidden answers block) and an answer that is not a choice of its card, and it says why. Never edit a returned file. If the user only pasted the summary, ask them to save: the summary is a convenience, the file is the record.
 
 If the save belongs to a round that `next-round` has closed already, `receive` says so, lists the answers that changed, and gives the command to decide the round again (`next-round --amend --answers <file>`), as long as the next round is not issued.
 
@@ -131,7 +131,7 @@ VM check --dir review --version R1.1 --wording-only     # compares with the prev
 VM build --dir review --version R1.1 --carry <the received save> --note "R1.1 fixes the wording of D3 only."
 ```
 
-A revision never changes the content or the options of a card that the user answered, and never removes a card: that needs a new round. `build` enforces this for every revision, and so does the browser when it offers answers typed into an earlier revision: it compares each card with the version that the reader answered (numbers, code, citations, option keys and meaning words such as "not", "only", "low", "high") and refuses the build if a card changed more than its wording. With `--force`, those cards get no carried or restored answers (only the comments come back), and the reader answers them again. The check is a guard, not a proof: let a verifier compare the meaning of each changed sentence. If the user typed answers into R1.0 without saving, R1.1 offers them when it opens in the same browser. A closed round (one that `next-round` decided) gets no more revisions.
+A revision never changes the content or the options of a card that the user answered, and never removes a card: that needs a new round. `build` enforces this for every revision, and so does the browser when it offers answers typed into an earlier revision: it compares each card with the version that the reader answered (numbers, code, citations, option keys and meaning words such as "not", "only", "low", "high") and refuses the build if a card changed more than its wording. With `--force`, those cards get no carried or restored answers (only the comments come back), and the reader answers them again. An answer is not carried either if the label of the chosen option changed. The check is a guard, not a proof: let a verifier compare the meaning of each changed sentence. If the user typed answers into R1.0 without saving, R1.1 offers them when it opens in the same browser (the user clicks **Use the browser answers**). A closed round (one that `next-round` decided) gets no more revisions.
 
 ## Other commands
 
